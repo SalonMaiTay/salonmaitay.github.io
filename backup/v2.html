@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Salon - Mai Tây & Hiền Trần</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Sử dụng font Inter làm font chữ chính */
+        body {
+            font-family: 'Inter', sans-serif;
+            overscroll-behavior: none; /* Ngăn "kéo để làm mới" trên mobile */
+        }
+        
+        /* Giao diện giống Mobile App */
+        #app-container {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Nút điều hướng đang hoạt động */
+        .nav-button.active {
+            color: #2563EB; /* text-blue-600 */
+        }
+        
+        /* Nút tab đang hoạt động */
+        .tab-button.active {
+            border-bottom-color: #2563EB; /* border-blue-600 */
+            color: #2563EB; /* text-blue-600 */
+            font-weight: 600;
+        }
+        
+        /* Lớp tiện ích để ẩn/hiện */
+        .hidden {
+            display: none;
+        }
+        
+        /* Tùy chỉnh thanh cuộn cho đẹp (trên desktop) */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db; /* gray-300 */
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; /* gray-400 */
+        }
+    </style>
+</head>
+<body class="bg-gray-200">
+
+    <!-- 
+      Container chính, mô phỏng giao diện điện thoại
+    -->
+    <div id="app-container" class="max-w-md mx-auto min-h-screen bg-white shadow-lg relative overflow-hidden flex flex-col">
+
+        <!-- 
+          Phần nội dung chính
+        -->
+        <main id="content-container" class="flex-grow overflow-y-auto pb-20">
+
+            <!-- ======================================== -->
+            <!-- TRANG GIỚI THIỆU (Mặc định)             -->
+            <!-- ======================================== -->
+            <div id="page-home" class="page-content p-4 space-y-4">
+                <h1 class="text-2xl font-bold text-gray-900">Giới thiệu Salon</h1>
+                
+                <div id="about-content" class="w-full space-y-6">
+                    
+                    <div class="space-y-3 border-b pb-4">
+                        <h3 class="text-lg font-semibold">Liên hệ & Vị trí</h3>
+                        <p class="text-gray-700 text-sm">Đây là nội dung placeholder cho thông tin chung. Bạn có thể thêm địa chỉ, số điện thoại liên hệ, giờ mở cửa và bản đồ ở đây.</p>
+                        <p class="text-gray-700 text-sm"><i class="fas fa-phone mr-2"></i> 0123.456.789</p>
+                        <p class="text-gray-700 text-sm"><i class="fas fa-map-marker-alt mr-2"></i> 123 Đường ABC, Phường XYZ, Quận 1, TP. HCM</p>
+                    </div>
+                    <div class="space-y-3 border-b pb-4">
+                        <h3 class="text-lg font-semibold">Về Mai Tây Hair Salon</h3>
+                        <p class="text-gray-700 text-sm">Nội dung giới thiệu về Mai Tây Hair Salon. Tập trung vào phong cách, triết lý và những gì làm nên sự đặc biệt của Mai Tây.</p>
+                    </div>
+                    <div class="space-y-3 border-b pb-4">
+                        <h3 class="text-lg font-semibold">Về Hiền Trần Hair Studio</h3>
+                        <p class="text-gray-700 text-sm">Nội dung giới thiệu về Hiền Trần Hair Studio. Nêu bật các dịch vụ, không gian và cam kết chất lượng của Hiền Trần.</p>
+                    </div>
+                    <div class="space-y-3 border-b pb-4">
+                        <h3 class="text-lg font-semibold">Quá trình phát triển</h3>
+                        <p class="text-gray-700 text-sm">Câu chuyện về hành trình từ những ngày đầu thành lập cho đến hiện tại, các cột mốc quan trọng.</p>
+                    </div>
+                    <div class="space-y-3 border-b pb-4">
+                        <h3 class="text-lg font-semibold">Sứ mệnh</h3>
+                        <p class="text-gray-700 text-sm">Tầm nhìn và sứ mệnh của salon, cam kết mang lại giá trị gì cho khách hàng và cộng đồng.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <h3 class="text-lg font-semibold">Đội ngũ</h3>
+                        <p class="text-gray-700 text-sm">Giới thiệu chung về đội ngũ stylist, kỹ thuật viên. (Chi tiết từng người sẽ ở phần đặt lịch).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- TRANG ĐẶT LỊCH (ĐỒNG BỘ)                -->
+            <!-- ======================================== -->
+            <div id="page-booking" class="page-content p-4 space-y-4 hidden">
+                <h1 class="text-2xl font-bold text-gray-900">Đặt lịch hẹn</h1>
+                
+                <!-- Tab Đặt lịch / Lịch sử -->
+                <div id="booking-tabs" class="w-full">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex -mb-px" aria-label="Tabs">
+                            <button data-tab-button="tab-new-booking" class="tab-button active w-1/2 py-3 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent">
+                                Đặt lịch mới
+                            </button>
+                            <button data-tab-button="tab-booking-history" class="tab-button w-1/2 py-3 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent">
+                                Lịch sử của tôi
+                            </button>
+                        </nav>
+                    </div>
+                    
+                    <div class="py-4">
+                        <!-- Panel Đặt lịch mới -->
+                        <div data-tab-panel="tab-new-booking" class="tab-panel space-y-6">
+                            
+                            <!-- Tiến trình đặt lịch (wizard) -->
+                            <!-- Bước 1: Chọn chi nhánh -->
+                            <div id="booking-step-1" class="booking-step space-y-3">
+                                <h3 class="text-lg font-semibold">1. Chọn chi nhánh</h3>
+                                <div id="branch-list" class="space-y-2">
+                                    <p class="text-sm text-gray-500">Đang tải chi nhánh...</p>
+                                    <!-- Chi nhánh sẽ được render bởi JS -->
+                                </div>
+                            </div>
+                            
+                            <!-- Bước 2: Chọn ngày -->
+                            <div id="booking-step-2" class="booking-step space-y-3 hidden">
+                                <h3 class="text-lg font-semibold">2. Chọn ngày</h3>
+                                <div id="date-list" class="grid grid-cols-4 gap-2">
+                                    <!-- Ngày sẽ được render bởi JS -->
+                                </div>
+                            </div>
+                            
+                            <!-- Bước 3: Chọn khung giờ -->
+                            <div id="booking-step-3" class="booking-step space-y-3 hidden">
+                                <h3 class="text-lg font-semibold">3. Chọn khung giờ</h3>
+                                <div id="timeslot-list" class="grid grid-cols-3 gap-2">
+                                    <p class="text-sm text-gray-500 col-span-3">Đang tải khung giờ...</p>
+                                </div>
+                            </div>
+
+                            <!-- Bước 4: Chọn kỹ thuật viên -->
+                            <div id="booking-step-4" class="booking-step space-y-3 hidden">
+                                <h3 class="text-lg font-semibold">4. Chọn kỹ thuật viên</h3>
+                                <div id="technician-list" class="space-y-3">
+                                    <p class="text-sm text-gray-500">Đang tải danh sách...</p>
+                                </div>
+                            </div>
+
+                            <!-- Bước 5: Thông tin khách hàng -->
+                            <div id="booking-step-5" class="booking-step space-y-4 hidden">
+                                <h3 class="text-lg font-semibold">5. Thông tin của bạn</h3>
+                                <div>
+                                    <label for="client-name" class="block text-sm font-medium text-gray-700">Tên của bạn *</label>
+                                    <input type="text" id="client-name" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Phương thức liên hệ *</label>
+                                    <div class="mt-2 flex space-x-4">
+                                        <label class="flex items-center">
+                                            <input type="radio" name="contact-method" value="phone" class="form-radio text-blue-600 focus:ring-blue-500" checked>
+                                            <span class="ml-2 text-sm text-gray-700">Gọi điện</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="radio" name="contact-method" value="social" class="form-radio text-blue-600 focus:ring-blue-500">
+                                            <span class="ml-2 text-sm text-gray-700">Mạng xã hội</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div id="contact-phone-group">
+                                    <label for="client-phone" class="block text-sm font-medium text-gray-700">Số điện thoại *</label>
+                                    <input type="tel" id="client-phone" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+
+                                <div id="contact-social-group" class="hidden space-y-2">
+                                    <label for="social-platform" class="block text-sm font-medium text-gray-700">Nền tảng *</label>
+                                    <select id="social-platform" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="facebook">Facebook</option>
+                                        <option value="zalo">Zalo</option>
+                                        <option value="instagram">Instagram</option>
+                                    </select>
+                                    <label for="social-detail" class="block text-sm font-medium text-gray-700">Link / Username / SĐT *</label>
+                                    <input type="text" id="social-detail" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+
+                                <div>
+                                    <label for="priority-code" class="block text-sm font-medium text-gray-700">Mã ưu tiên (nếu có)</label>
+                                    <input type="text" id="priority-code" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                
+                                <button id="submit-booking" class="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">
+                                    Xác nhận đặt lịch
+                                </button>
+                            </div>
+                            
+                            <!-- Bước 6: Xác nhận -->
+                            <div id="booking-step-6" class="booking-step space-y-4 text-center hidden">
+                                <i class="fas fa-check-circle text-green-500 text-5xl"></i>
+                                <h3 class="text-xl font-semibold">Đặt lịch thành công!</h3>
+                                <p class="text-gray-700">Cảm ơn bạn đã đặt lịch. Mã đặt chỗ của bạn là:</p>
+                                <div class="bg-gray-100 p-3 rounded-lg">
+                                    <p id="booking-code" class="text-2xl font-bold text-blue-700 tracking-wider"></p>
+                                </div>
+                                <p class="text-sm text-gray-600">Vui lòng kiểm tra mục "Lịch sử của tôi" để xem chi tiết.</p>
+                                <button id="new-booking-button" class="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg font-medium hover:bg-gray-300 transition">
+                                    Đặt lịch mới
+                                </button>
+                            </div>
+                            
+                            <!-- Nút Quay lại (sẽ hiển thị từ bước 2) -->
+                            <button id="booking-back-button" class="text-sm text-blue-600 hover:underline hidden">&larr; Quay lại</button>
+
+                        </div>
+
+                        <!-- Panel Lịch sử đặt lịch -->
+                        <div data-tab-panel="tab-booking-history" class="tab-panel hidden space-y-4">
+                            <div id="booking-history-list" class="space-y-3">
+                                <p class="text-sm text-gray-500 text-center">Không có lịch sử đặt chỗ.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- TRANG BỘ SƯU TẬP (ĐỒNG BỘ)             -->
+            <!-- ======================================== -->
+            <div id="page-gallery" class="page-content p-4 space-y-4 hidden">
+                <h1 class="text-2xl font-bold text-gray-900">Bộ sưu tập & Đánh giá</h1>
+                <p class="text-sm text-gray-600">Những khoảnh khắc và tác phẩm từ khách hàng của chúng tôi.</p>
+                
+                <div id="gallery-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    <p class="text-sm text-gray-500 col-span-full text-center">Đang tải bộ sưu tập...</p>
+                    <!-- Ảnh sẽ được load từ Firebase -->
+                </div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- TRANG TIN TỨC & ƯU ĐÃI                -->
+            <!-- ======================================== -->
+            <div id="page-news" class="page-content p-4 space-y-4 hidden">
+                <h1 class="text-2xl font-bold text-gray-900">Tin tức & Ưu đãi</h1>
+                
+                <div id="news-tabs" class="w-full">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex -mb-px" aria-label="Tabs">
+                            <button data-tab-button="tab-news-all" class="tab-button active w-1/2 py-3 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent">
+                                Tin tức & Ưu đãi
+                            </button>
+                            <button data-tab-button="tab-news-recruit" class="tab-button w-1/2 py-3 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent">
+                                Tuyển sinh
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="py-4 space-y-3">
+                        <div data-tab-panel="tab-news-all" class="tab-panel space-y-3" id="news-all-container">
+                            <p class="text-sm text-gray-500 text-center">Đang tải...</p>
+                            <!-- Bài viết & Ưu đãi render ở đây -->
+                        </div>
+                        <div data-tab-panel="tab-news-recruit" class="tab-panel hidden space-y-3">
+                            <h3 class="text-lg font-semibold">Chương trình tuyển sinh</h3>
+                            <p class="text-gray-700 text-sm">Thông tin về các khóa học, tuyển dụng học viên, thợ phụ. Liên hệ hotline... để biết thêm chi tiết.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- TRANG ĐÁNH GIÁ & CSKH                 -->
+            <!-- ======================================== -->
+            <div id="page-review" class="page-content p-4 space-y-6 hidden">
+                <h1 class="text-2xl font-bold text-gray-900">Đánh giá & CSKH</h1>
+                
+                <!-- CSKH -->
+                <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold text-blue-800">Yêu cầu Chăm sóc khách hàng</h3>
+                    <p class="text-sm text-blue-700 my-2">Nếu bạn có bất kỳ thắc mắc hoặc cần hỗ trợ, vui lòng liên hệ với chúng tôi qua Facebook.</p>
+                    <a href="#" class="inline-block bg-blue-600 text-white py-2 px-4 rounded-lg font-medium text-sm hover:bg-blue-700 transition">
+                        <i class="fab fa-facebook-messenger mr-2"></i> Nhắn tin ngay
+                    </a>
+                </div>
+                
+                <!-- Form Đánh giá -->
+                <div id="review-form-container" class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Gửi đánh giá của bạn</h3>
+                    <div>
+                        <label for="review-name" class="block text-sm font-medium text-gray-700">Tên khách hàng *</label>
+                        <input type="text" id="review-name" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="review-phone" class="block text-sm font-medium text-gray-700">Số điện thoại *</label>
+                        <input type="tel" id="review-phone" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="review-anonymous" class="form-checkbox text-blue-600 rounded focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-gray-700">Đánh giá ẩn danh</span>
+                    </label>
+                    
+                    <!-- Đánh giá sao -->
+                    <div class="space-y-3">
+                        <div class="star-rating-group">
+                            <label class="block text-sm font-medium text-gray-700">Dịch vụ</label>
+                            <div data-rating-for="service" class="flex space-x-1 text-gray-400 text-2xl cursor-pointer">
+                                <i class="fas fa-star" data-value="1"></i>
+                                <i class="fas fa-star" data-value="2"></i>
+                                <i class="fas fa-star" data-value="3"></i>
+                                <i class="fas fa-star" data-value="4"></i>
+                                <i class="fas fa-star" data-value="5"></i>
+                            </div>
+                            <input type="hidden" id="rating-service" value="0">
+                            <input type="text" id="rating-detail-service" class="mt-2 hidden w-full border-gray-300 rounded-lg shadow-sm text-sm" placeholder="Bạn không hài lòng về điều gì? (không bắt buộc)">
+                        </div>
+                        
+                        <div class="star-rating-group">
+                            <label class="block text-sm font-medium text-gray-700">Thái độ</label>
+                            <div data-rating-for="attitude" class="flex space-x-1 text-gray-400 text-2xl cursor-pointer">
+                                <i class="fas fa-star" data-value="1"></i>
+                                <i class="fas fa-star" data-value="2"></i>
+                                <i class="fas fa-star" data-value="3"></i>
+                                <i class="fas fa-star" data-value="4"></i>
+                                <i class="fas fa-star" data-value="5"></i>
+                            </div>
+                            <input type="hidden" id="rating-attitude" value="0">
+                            <input type="text" id="rating-detail-attitude" class="mt-2 hidden w-full border-gray-300 rounded-lg shadow-sm text-sm" placeholder="Bạn không hài lòng về điều gì? (không bắt buộc)">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="review-feedback" class="block text-sm font-medium text-gray-700">Cảm nhận của bạn</label>
+                        <textarea id="review-feedback" rows="4" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    
+                    <button id="submit-review" class="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">
+                        Gửi đánh giá
+                    </button>
+                </div>
+
+                <!-- Thông báo cảm ơn -->
+                <div id="review-thank-you" class="hidden text-center space-y-3 p-4 bg-green-50 rounded-lg">
+                    <i class="fas fa-check-circle text-green-500 text-4xl"></i>
+                    <h3 class="text-lg font-semibold text-green-800">Cảm ơn bạn đã đánh giá!</h3>
+                    <p class="text-sm text-green-700">Ý kiến của bạn rất quan trọng để chúng tôi cải thiện dịch vụ.</p>
+                </div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- TRANG QUẢN LÝ (Placeholder)            -->
+            <!-- ======================================== -->
+            <div id="page-admin" class="page-content p-6 space-y-4 hidden text-center">
+                <h1 class="text-2xl font-bold text-gray-900">Khu vực Quản lý</h1>
+                <p class="text-gray-600">Đây là khu vực dành riêng cho quản lý và nhân viên salon.</p>
+                <!-- Liên kết đến trang admin.html -->
+                <a href="./admin.html" target="_blank" class="w-full max-w-xs mx-auto bg-gray-800 text-white py-2.5 px-4 rounded-lg font-medium shadow-md hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700 transition duration-200 inline-block">
+                    Đăng nhập Quản lý
+                </a>
+            </div>
+
+        </main>
+        
+        <!-- 
+          Thanh điều hướng cố định dưới cùng
+        -->
+        <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-200 flex justify-around p-2 z-10">
+            <button data-page="page-home" class="nav-button active flex-1 flex flex-col items-center justify-center text-gray-600 hover:text-blue-600 p-2 rounded-lg transition-colors">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs font-medium mt-1">Giới thiệu</span>
+            </button>
+            <button data-page="page-booking" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-600 hover:text-blue-600 p-2 rounded-lg transition-colors">
+                <i class="fas fa-calendar-alt text-xl"></i>
+                <span class="text-xs font-medium mt-1">Đặt lịch</span>
+            </button>
+            <button data-page="page-gallery" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-600 hover:text-blue-600 p-2 rounded-lg transition-colors">
+                <i class="fas fa-images text-xl"></i>
+                <span class="text-xs font-medium mt-1">Bộ sưu tập</span>
+            </button>
+            <button data-page="page-news" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-600 hover:text-blue-600 p-2 rounded-lg transition-colors">
+                <i class="fas fa-newspaper text-xl"></i>
+                <span class="text-xs font-medium mt-1">Tin tức</span>
+            </button>
+            <button data-page="page-review" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-600 hover:text-blue-600 p-2 rounded-lg transition-colors">
+                <i class="fas fa-star text-xl"></i>
+                <span class="text-xs font-medium mt-1">Đánh giá</span>
+            </button>
+            <button data-page="page-admin" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-600 hover:text-blue-600 p-2 rounded-lg transition-colors">
+                <i class="fas fa-user-shield text-xl"></i>
+                <span class="text-xs font-medium mt-1">Quản lý</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- Modal (Dùng cho thông báo lỗi, xác nhận...) -->
+    <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50 hidden">
+      <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+          <h3 id="modal-title" class="text-lg leading-6 font-medium text-gray-900">Thông báo</h3>
+          <div class="mt-2 px-7 py-3">
+            <p id="modal-message" class="text-sm text-gray-500"></p>
+          </div>
+          <div class="items-center px-4 py-3">
+            <button id="modal-close-button" class="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              Đã hiểu
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+<script src="./main.js" type="module"></script>
+</html>

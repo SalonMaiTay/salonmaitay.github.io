@@ -1,0 +1,642 @@
+/* (ĐIỀU CHỈNH) Bảng màu "Elegant Neutral" - Giữ nguyên màu nhấn */
+:root {
+    --color-accent: #b9a17c;
+    --color-accent-light-bg: #ffffff;
+    /* --color-bg-main: #F9F9F7; */
+    /* (MỚI) Không dùng nền trơn nữa */
+    --color-bg-card: #FFFFFF;
+    --color-border: #EAE8E4;
+    --color-text-main: #333333;
+    --color-text-sec: #777777;
+    --color-star: #EAAA08;
+
+    /* (ĐIỀU CHỈNH) Màu cho Glassmorphism (Trong suốt hơn) */
+    --color-glass-bg: rgba(255, 255, 255, 0.45);
+    --color-glass-bg-light: rgba(255, 255, 255, 0.3);
+    --color-glass-border: rgba(234, 232, 228, 0.4);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    overscroll-behavior: none;
+    color: var(--color-text-main);
+
+    /* (ĐIỀU CHỈNH) Nền "Aurora" Vàng Gold theo yêu cầu */
+    background-color: #FDFBF8;
+    /* Fallback (Màu Be nhạt) */
+    background-image:
+        radial-gradient(at 0% 0%, hsla(45, 70%, 70%, 0.25) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(55, 80%, 80%, 0.3) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, hsla(40, 70%, 80%, 0.2) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, hsla(50, 80%, 80%, 0.3) 0px, transparent 50%);
+}
+
+.font-serif {
+    font-family: 'Lora', serif;
+}
+
+#app-wrapper {
+    transition: margin-left 0.3s ease;
+}
+
+@media (min-width: 768px) {
+    #app-wrapper {
+        margin-left: 16rem;
+    }
+}
+
+/* (ĐIỀU CHỈNH) Sidebar Desktop (Blur nhiều hơn) */
+#desktop-nav {
+    background-color: var(--color-glass-bg);
+    backdrop-filter: blur(32px) saturate(180%);
+    /* (MỚI) Tăng blur từ 20 -> 32 */
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    border-right: 1px solid var(--color-glass-border);
+}
+
+.desktop-nav-button {
+    color: var(--color-text-sec);
+    transition: all 0.2s ease;
+    border-radius: 1rem;
+}
+
+.desktop-nav-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: var(--color-text-main);
+}
+
+.desktop-nav-button.active {
+    background-color: var(--color-accent);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(176, 143, 93, 0.3);
+    transform: scale(1.02);
+}
+
+/* (ĐIỀU CHỈNH) Header Mobile (Blur nhiều hơn) */
+#mobile-header {
+    background-color: var(--color-glass-bg);
+    backdrop-filter: blur(32px) saturate(180%);
+    /* (MỚI) Tăng blur từ 20 -> 32 */
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    border-bottom: 1px solid var(--color-glass-border);
+}
+
+/* (ĐIỀU CHỈNH) Điều hướng Mobile thành "Floating Pill" */
+#bottom-nav {
+    /* (MỚI) Định vị lơ lửng (thay vì dính sát) */
+    bottom: 1rem;
+    /* 16px */
+    left: 1rem;
+    right: 1rem;
+
+    /* (MỚI) Dạng "viên thuốc" */
+    border-radius: 9999px;
+    border: 1px solid var(--color-glass-border);
+    /* Thay vì chỉ border-top */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    /* Thêm bóng để nổi lên */
+
+    /* (GIỮ NGUYÊN) Hiệu ứng Glass */
+    background-color: var(--color-glass-bg);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+
+    /* (MỚI) Đảm bảo các icon bên trong không bị tràn */
+    overflow: hidden;
+    padding: 6px;
+}
+
+.nav-button {
+    color: var(--color-text-sec);
+    /* (MỚI) Animation co dãn mượt mà */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 9999px;
+    /* (MỚI) Luôn là viên thuốc */
+    padding: 0.75rem;
+    /* (MỚI) 12px padding */
+
+    /* (MỚI) Kích thước cố định (44px) khi KHÔNG active */
+    width: 2.75rem;
+    height: 3.40rem;
+    overflow: hidden;
+    white-space: nowrap;
+    /* (MỚI) Ngăn text vỡ dòng khi dãn */
+}
+
+/* (MỚI) Ẩn text (span) mặc định */
+.nav-button .nav-text {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+}
+
+.nav-button.active {
+    color: var(--color-accent);
+    /* (MỚI) Nền cho viên thuốc active */
+    background-color: var(--color-accent-light-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    /* (MỚI) Tự động dãn rộng ra để chứa text */
+    width: auto;
+    padding-left: 1rem;
+    /* 16px */
+    padding-right: 1.25rem;
+    /* 20px */
+    /* transform: translateY(-2px); */
+    /* (MỚI) Bỏ transform này đi */
+}
+
+/* (MỚI) Hiển thị text khi active */
+.nav-button.active .nav-text {
+    display: inline;
+    opacity: 1;
+    transition-delay: 0.1s;
+    /* (MỚI) Cho text hiện ra sau khi pill dãn */
+}
+
+.nav-button.active i {
+    /* (MỚI) Bỏ text-shadow, dùng màu đậm hơn */
+    color: var(--color-accent);
+}
+
+.nav-button:active {
+    transform: scale(0.95);
+    /* Giữ nguyên */
+}
+
+.page-content {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    pointer-events: none;
+}
+
+.page-content.active {
+    opacity: 1;
+    transform: translateY(0);
+    position: relative;
+    pointer-events: auto;
+}
+
+.page-content-wrapper {
+    width: 100%;
+    max-width: 56rem;
+    margin: 0 auto;
+}
+
+.tab-button {
+    color: var(--color-text-sec);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.tab-button:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.tab-button.active {
+    background-color: rgba(255, 255, 255, 0.6);
+    /* (MỚI) Giảm độ đục */
+    border-bottom-color: var(--color-accent);
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+@keyframes shimmer-light {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 1.5rem;
+    animation: shimmer-light 1.5s infinite linear;
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0.1) 100%);
+    background-size: 200% 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(145deg, var(--color-accent), #9A794E);
+    color: white;
+    padding: 0.625rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    box-shadow: 0 6px 20px rgba(176, 143, 93, 0.4),
+        inset 0px 2px 2px 0px rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(145deg, #c4a06a, #a58254);
+    box-shadow: 0 8px 25px rgba(176, 143, 93, 0.5),
+        inset 0px 2px 2px 0px rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: scale(0.98) translateY(-1px);
+    box-shadow: 0 2px 10px rgba(176, 143, 93, 0.3),
+        inset 0px 2px 2px 0px rgba(255, 255, 255, 0.3);
+}
+
+/* (MỚI) Thêm Nút phụ (Secondary Button) cho "Gọi ngay", "Bản đồ" */
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    /* 8px 16px */
+    border-radius: 9999px;
+    /* Pill shape */
+    font-weight: 500;
+    font-size: 0.875rem;
+    /* text-sm */
+
+    /* (MỚI) Hiệu ứng Glass */
+    background-color: var(--color-glass-bg-light);
+    border: 1px solid var(--color-glass-border);
+    color: var(--color-text-main);
+
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-color: rgba(176, 143, 93, 0.5);
+    /* Accent mờ */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.btn-secondary:active {
+    transform: scale(0.96);
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.selectable-item {
+    background-color: var(--color-glass-bg-light);
+    border: 1px solid var(--color-glass-border);
+    color: var(--color-text-main);
+    transition: all 0.2s ease;
+    border-radius: 1rem;
+}
+
+.selectable-item:hover {
+    border-color: rgba(176, 143, 93, 0.7);
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.selectable-item.active {
+    border-color: var(--color-accent);
+    color: white;
+    background-color: var(--color-accent);
+    box-shadow: 0 4px 15px rgba(176, 143, 93, 0.4);
+    transform: scale(1.03);
+}
+
+.selectable-item:disabled {
+    background-color: rgba(249, 249, 247, 0.5);
+    color: #AAAAAA;
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+.selectable-item:disabled:hover {
+    border-color: var(--color-glass-border);
+}
+
+.form-input-light {
+    border: 1px solid var(--color-glass-border);
+    background-color: var(--color-glass-bg-light);
+    color: var(--color-text-main);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.form-input-light:focus {
+    --tw-ring-color: var(--color-accent);
+    border-color: var(--color-accent);
+    background-color: rgba(255, 255, 255, 0.6);
+    /* (MỚI) Giảm độ đục */
+}
+
+.form-radio-light {
+    color: var(--color-accent);
+}
+
+.form-radio-light:focus {
+    --tw-ring-color: var(--color-accent);
+}
+
+.form-checkbox-light {
+    color: var(--color-accent);
+    border-radius: 0.25rem;
+}
+
+.form-checkbox-light:focus {
+    --tw-ring-color: var(--color-accent);
+}
+
+/* (ĐIỀU CHỈNH) Thẻ Card (Glass & Liquid) (Blur nhiều hơn) */
+.card-light {
+    background-color: var(--color-glass-bg);
+    /* (MỚI) Dùng var đã update */
+    backdrop-filter: blur(24px) saturate(150%);
+    /* (MỚI) Tăng blur từ 10 -> 24 */
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+#booking-tabs.card-light,
+#news-tabs.card-light {
+    border-radius: 1.5rem;
+    overflow: hidden;
+}
+
+#booking-tabs .border-b,
+#news-tabs .border-b {
+    border-bottom-color: var(--color-glass-border);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* (ĐIỀU CHỈNH) Form Inputs (Cao hơn, Rõ ràng hơn) */
+        .form-input-light {
+            /* (MỚI) Cao hơn (tăng padding-top/bottom) */
+            padding-top: 0.75rem;    /* 12px */
+            padding-bottom: 0.75rem; /* 12px */
+            padding-left: 1rem;      /* 16px */
+            padding-right: 1rem;     /* 16px */
+            
+            /* (MỚI) Chữ dễ nhìn hơn (to hơn) */
+            font-size: 1rem; /* 16px */
+            color: var(--color-text-main);
+            
+            /* (MỚI) Nền nổi bật hơn (Tăng độ đục lên 60%) */
+            background-color: rgba(255, 255, 255, 0.6); 
+            backdrop-filter: blur(8px);
+            
+            /* (MỚI) Viền rõ ràng hơn */
+            border: 1px solid var(--color-glass-border); 
+            
+            border-radius: 0.75rem; /* Giữ bo góc */
+            transition: all 0.2s ease-in-out;
+            
+            /* (MỚI) Bỏ shadow "lõm" (inset), dùng shadow phẳng nhẹ */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .form-input-light:focus {
+            --tw-ring-color: var(--color-accent);
+            border-color: var(--color-accent);
+            
+            /* (MỚI) Nền khi focus (sáng hơn) */
+            background-color: rgba(255, 255, 255, 0.8);
+            
+            /* Giữ hiệu ứng "Phát sáng" */
+            box-shadow: 0 0 20px 0 rgba(176, 143, 93, 0.4);
+        }
+
+.star-rating-group div[data-rating-for] {
+    color: #D1D5DB;
+}
+
+.star-rating-group i {
+    transition: color 0.2s ease;
+}
+
+.star-rating-group div[data-rating-for]:hover i.fa-star {
+    color: var(--color-star);
+}
+
+.star-rating-group i.fa-star:hover~i.fa-star {
+    color: #D1D5DB;
+}
+
+.star-rating-group i.fa-star.active {
+    color: var(--color-star);
+}
+
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    will-change: opacity, transform;
+}
+
+.scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#lightbox-modal {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#lightbox-modal.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#lightbox-img {
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    border-radius: 1rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+#lightbox-modal.visible #lightbox-img {
+    transform: scale(1);
+}
+
+#modal>div {
+    background-color: rgba(255, 255, 255, 0.65) !important;
+    /* (MỚI) Tăng độ trong */
+    backdrop-filter: blur(24px) saturate(180%);
+    /* (MỚI) Tăng blur */
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1.5rem !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15) !important;
+}
+
+/* (MỚI) CSS cho nút Slideshow (thay cho .slider-dot) */
+.slider-btn {
+    width: 2.5rem;
+    /* 40px */
+    height: 2.5rem;
+    /* 40px */
+    border-radius: 50%;
+    /* Nút tròn */
+
+    /* (MỚI) Hiệu ứng Glass */
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    color: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slider-btn:hover {
+    opacity: 1;
+    /* Phải giữ lại translate-y-1/2 từ Tailwind */
+}
+
+
+.slider-btn:disabled {
+    /* (MỚI) Làm mờ nút khi bị vô hiệu hóa */
+    opacity: 0.3;
+    cursor: not-allowed;
+    /* Reset transform */
+}
+
+/* (MỚI) CSS cho nút Pause/Play của Slideshow */
+#slider-pause-btn .fa-play {
+    display: none;
+    /* Ẩn icon Play mặc định */
+}
+
+#slider-pause-btn.paused .fa-play {
+    display: inline-block;
+    /* Hiện icon Play khi .paused */
+}
+
+#slider-pause-btn.paused .fa-pause {
+    display: none;
+    /* Ẩn icon Pause khi .paused */
+}
+
+/* (MỚI) Thêm bóng đổ cho tiêu đề trên slideshow để dễ đọc */
+#slideshow-title {
+    display: none;
+    padding: 10px 10px 0 20px;
+    border-radius: 0 0 10px 0;
+}
+#slideshow-title h1,
+#slideshow-title p {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* (MỚI) Thêm đệm dưới cho nội dung (Mobile) để nav 'fixed' không che */
+@media (max-width: 767px) {
+    #content-container {
+        padding-bottom: 5rem;
+        /* ~80px */
+    }
+}
+
+/* (MỚI) CSS cho Nút chuyển đổi View Gallery */
+.gallery-toggle-btn {
+    width: 2.75rem;
+    /* 44px */
+    height: 2.75rem;
+    /* 44px */
+    border-radius: 9999px;
+    color: var(--color-text-sec);
+    transition: all 0.2s ease;
+}
+
+.gallery-toggle-btn.active {
+    background-color: var(--color-accent);
+    color: white;
+    box-shadow: 0 4px 10px rgba(176, 143, 93, 0.4);
+}
+
+/* (MỚI) CSS cho Gallery chế độ "Feed" (Thư viện) */
+#gallery-grid.feed-view {
+    /* Ghi đè class 'grid' của Tailwind */
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    /* Tương đương space-y-5 */
+    grid-template-columns: 1fr;
+    /* Tắt grid cols */
+}
+
+/* (MỚI) CSS cho item ảnh trong chế độ "Feed" */
+#gallery-grid.feed-view .gallery-item-feed {
+    /* Vẫn là card, bo tròn liquid */
+    border-radius: 1.5rem;
+    /* rounded-3xl */
+    overflow: hidden;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    background-color: var(--color-glass-bg);
+    /* Glass */
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 1px solid var(--color-glass-border);
+}
+
+#gallery-grid.feed-view .gallery-item-feed img {
+    /* Ảnh sẽ 100% rộng, cao tự động (giữ nguyên tỷ lệ) */
+    width: 100%;
+    height: auto;
+    aspect-ratio: unset;
+    /* Ghi đè aspect-ratio cũ */
+    object-fit: contain;
+    /* (MỚI) Thêm nền mờ cho ảnh (nếu ảnh có nền trong suốt) */
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+#gallery-grid.feed-view .gallery-item-feed .caption {
+    /* Caption sẽ nằm BÊN DƯỚI ảnh */
+    padding: 0.75rem 1rem;
+    /* p-3 p-4 */
+    background-color: rgba(255, 255, 255, 0.2);
+    font-size: 0.875rem;
+    /* text-sm */
+    color: var(--color-text-main);
+    text-align: left;
+}
+
+/* (MỚI) Thêm bo góc và hiệu ứng cho Justified Gallery */
+.fj-gallery-item {
+    /* (MỚI) Bo góc (1rem = 16px, giống hệt rounded-2xl của grid) */
+    border-radius: 1rem;
+    /* (MỚI) Quan trọng: Cắt ảnh/caption bị tràn */
+    overflow: hidden;
+
+    /* Thêm hiệu ứng bóng đổ nhẹ cho nhất quán */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.fj-gallery-item:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* (MỚI) Đảm bảo ảnh bên trong lấp đầy 100% */
+.fj-gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* Bỏ khoảng trắng thừa (nếu có) */
+}

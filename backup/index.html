@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Salon - Mai Tây & Hiền Trần</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Sử dụng font Inter làm font chữ chính */
+        body {
+            font-family: 'Inter', sans-serif;
+            overscroll-behavior: none; /* Ngăn "kéo để làm mới" trên mobile */
+        }
+        
+        /* Giao diện giống Mobile App */
+        #app-container {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Nút điều hướng đang hoạt động */
+        .nav-button.active {
+            color: #2563EB; /* text-blue-600 */
+        }
+        
+        /* Nút tab đang hoạt động */
+        .tab-button.active {
+            border-bottom-color: #2563EB; /* border-blue-600 */
+            color: #2563EB; /* text-blue-600 */
+            font-weight: 600;
+        }
+        
+        /* Lớp tiện ích để ẩn/hiện */
+        .hidden {
+            display: none;
+        }
+        
+        /* Tùy chỉnh thanh cuộn cho đẹp (trên desktop) */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db; /* gray-300 */
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; /* gray-400 */
+        }
+    </style>
+</head>
+<body class="bg-gray-200">
+
+    <!-- 
+      Container chính, mô phỏng giao diện điện thoại
+    -->
+    <div id="app-container" class="max-w-md mx-auto min-h-screen bg-white shadow-lg relative overflow-hidden flex flex-col">
+
+        <!-- 
+          Phần nội dung chính
+        -->
+        <main id="content-container" class="flex-grow overflow-y-auto pb-20">
+
+            <!-- ======================================== -->
+            <!-- TRANG GIỚI THIỆU (Mặc định)             -->
+            <!-- ======================================== -->
+            <div id="page-home" class="page-content p-4 space-y-4">
+                <h1 class="text-2xl font-bold text-gray-900">Giới thiệu Salon</h1>
+                
+                <div id="about-content" class="w-full space-y-6">
+                    
+                    <div class="space-y-3 border-b pb-4">
+                        <h3 class="text-lg font-semibold">Liên hệ & Vị trí</h3>
+                        <p class="text-gray-700 text-sm">Đây là nội dung placeholder cho thông tin chung. Bạn có thể thêm địa chỉ, số điện thoại liên hệ, giờ mở cửa và bản đồ ở đây.</p>
+                        <p class="text-gray-700 text-sm"><i class="fas fa-phone mr-2"></i> 0123.456.789</p>
+                        <p class="text-gray-700 text-sm"><i class="fas fa-map-marker-alt mr-2"></i> 123 Đường ABC, Phường XYZ, Quận 1, TP. HCM</p>
+                    </div>
+                    <div class="space-y-3 border-b pb-4">
+                        <h3 class="text-lg font-semibold">Về Mai Tây Hair Salon</h3>
+                        <p class="text-gray-700 text-sm">Nội dung giới thiệu về Mai Tây Hair Salon. Tập trung vào phong cách, triết lý và những gì làm nên sự đặc biệt của Mai Tây.</p>
+                    </div>
+                    <div class="space-y-3 border-b pb-4">
+                        <h3 class="text-lg font-semibold">Về Hiền Trần Hair Studio</h3>
+                        <p class="text-gray-700 text-sm">Nội dung giới thiệu về Hiền Trần Hair Studio. Nêu bật các dịch vụ, không gian và cam kết chất lượng của Hiền Trần.</p>
+                    </div>
+                    <div class="space-y-3 border-b pb-4">
+                        <h3 class="text-lg font-semibold">Quá trình phát triển</h3>
+                        <p class="text-gray-700 text-sm">Câu chuyện về hành trình từ những ngày đầu thành lập cho đến hiện tại, các cột mốc quan trọng.</p>
+                    </div>
+                    <div class="space-y-3 border-b pb-4">
+                        <h3 class="text-lg font-semibold">Sứ mệnh</h3>
+                        <p class="text-gray-700 text-sm">Tầm nhìn và sứ mệnh của salon, cam kết mang lại giá trị gì cho khách hàng và cộng đồng.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <h3 class="text-lg font-semibold">Đội ngũ</h3>
+                        <p class="text-gray-700 text-sm">Giới thiệu chung về đội ngũ stylist, kỹ thuật viên. (Chi tiết từng người sẽ ở phần đặt lịch).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- TRANG ĐẶT LỊCH (ĐỒNG BỘ)                -->
+            <!-- ======================================== -->
+            <div id="page-booking" class="page-content p-4 space-y-4 hidden">
+                <h1 class="text-2xl font-bold text-gray-900">Đặt lịch hẹn</h1>
+                
+                <!-- Tab Đặt lịch / Lịch sử -->
+                <div id="booking-tabs" class="w-full">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex -mb-px" aria-label="Tabs">
+                            <button data-tab-button="tab-new-booking" class="tab-button active w-1/2 py-3 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent">
+                                Đặt lịch mới
+                            </button>
+                            <button data-tab-button="tab-booking-history" class="tab-button w-1/2 py-3 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent">
+                                Lịch sử của tôi
+                            </button>
+                        </nav>
+                    </div>
+                    
+                    <div class="py-4">
+                        <!-- Panel Đặt lịch mới -->
+                        <div data-tab-panel="tab-new-booking" class="tab-panel space-y-6">
+                            
+                            <!-- Tiến trình đặt lịch (wizard) -->
+                            <!-- Bước 1: Chọn chi nhánh -->
+                            <div id="booking-step-1" class="booking-step space-y-3">
+                                <h3 class="text-lg font-semibold">1. Chọn chi nhánh</h3>
+                                <div id="branch-list" class="space-y-2">
+                                    <p class="text-sm text-gray-500">Đang tải chi nhánh...</p>
+                                    <!-- Chi nhánh sẽ được render bởi JS -->
+                                </div>
+                            </div>
+                            
+                            <!-- Bước 2: Chọn ngày -->
+                            <div id="booking-step-2" class="booking-step space-y-3 hidden">
+                                <h3 class="text-lg font-semibold">2. Chọn ngày</h3>
+                                <div id="date-list" class="grid grid-cols-4 gap-2">
+                                    <!-- Ngày sẽ được render bởi JS -->
+                                </div>
+                            </div>
+                            
+                            <!-- Bước 3: Chọn khung giờ -->
+                            <div id="booking-step-3" class="booking-step space-y-3 hidden">
+                                <h3 class="text-lg font-semibold">3. Chọn khung giờ</h3>
+                                <div id="timeslot-list" class="grid grid-cols-3 gap-2">
+                                    <p class="text-sm text-gray-500 col-span-3">Đang tải khung giờ...</p>
+                                </div>
+                            </div>
+
+                            <!-- Bước 4: Chọn kỹ thuật viên -->
+                            <div id="booking-step-4" class="booking-step space-y-3 hidden">
+                                <h3 class="text-lg font-semibold">4. Chọn kỹ thuật viên</h3>
+                                <div id="technician-list" class="space-y-3">
+                                    <p class="text-sm text-gray-500">Đang tải danh sách...</p>
+                                </div>
+                            </div>
+
+                            <!-- Bước 5: Thông tin khách hàng -->
+                            <div id="booking-step-5" class="booking-step space-y-4 hidden">
+                                <h3 class="text-lg font-semibold">5. Thông tin của bạn</h3>
+                                <div>
+                                    <label for="client-name" class="block text-sm font-medium text-gray-700">Tên của bạn *</label>
+                                    <input type="text" id="client-name" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Phương thức liên hệ *</label>
+                                    <div class="mt-2 flex space-x-4">
+                                        <label class="flex items-center">
+                                            <input type="radio" name="contact-method" value="phone" class="form-radio text-blue-600 focus:ring-blue-500" checked>
+                                            <span class="ml-2 text-sm text-gray-700">Gọi điện</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="radio" name="contact-method" value="social" class="form-radio text-blue-600 focus:ring-blue-500">
+                                            <span class="ml-2 text-sm text-gray-700">Mạng xã hội</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div id="contact-phone-group">
+                                    <label for="client-phone" class="block text-sm font-medium text-gray-700">Số điện thoại *</label>
+                                    <input type="tel" id="client-phone" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+
+                                <div id="contact-social-group" class="hidden space-y-2">
+                                    <label for="social-platform" class="block text-sm font-medium text-gray-700">Nền tảng *</label>
+                                    <select id="social-platform" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="facebook">Facebook</option>
+                                        <option value="zalo">Zalo</option>
+                                        <option value="instagram">Instagram</option>
+                                    </select>
+                                    <label for="social-detail" class="block text-sm font-medium text-gray-700">Link / Username / SĐT *</label>
+                                    <input type="text" id="social-detail" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+
+                                <div>
+                                    <label for="priority-code" class="block text-sm font-medium text-gray-700">Mã ưu tiên (nếu có)</label>
+                                    <input type="text" id="priority-code" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                
+                                <button id="submit-booking" class="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">
+                                    Xác nhận đặt lịch
+                                </button>
+                            </div>
+                            
+                            <!-- Bước 6: Xác nhận -->
+                            <div id="booking-step-6" class="booking-step space-y-4 text-center hidden">
+                                <i class="fas fa-check-circle text-green-500 text-5xl"></i>
+                                <h3 class="text-xl font-semibold">Đặt lịch thành công!</h3>
+                                <p class="text-gray-700">Cảm ơn bạn đã đặt lịch. Mã đặt chỗ của bạn là:</p>
+                                <div class="bg-gray-100 p-3 rounded-lg">
+                                    <p id="booking-code" class="text-2xl font-bold text-blue-700 tracking-wider"></p>
+                                </div>
+                                <p class="text-sm text-gray-600">Vui lòng kiểm tra mục "Lịch sử của tôi" để xem chi tiết.</p>
+                                <button id="new-booking-button" class="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg font-medium hover:bg-gray-300 transition">
+                                    Đặt lịch mới
+                                </button>
+                            </div>
+                            
+                            <!-- Nút Quay lại (sẽ hiển thị từ bước 2) -->
+                            <button id="booking-back-button" class="text-sm text-blue-600 hover:underline hidden">&larr; Quay lại</button>
+
+                        </div>
+
+                        <!-- Panel Lịch sử đặt lịch -->
+                        <div data-tab-panel="tab-booking-history" class="tab-panel hidden space-y-4">
+                            <div id="booking-history-list" class="space-y-3">
+                                <p class="text-sm text-gray-500 text-center">Không có lịch sử đặt chỗ.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- TRANG BỘ SƯU TẬP (ĐỒNG BỘ)             -->
+            <!-- ======================================== -->
+            <div id="page-gallery" class="page-content p-4 space-y-4 hidden">
+                <h1 class="text-2xl font-bold text-gray-900">Bộ sưu tập & Đánh giá</h1>
+                <p class="text-sm text-gray-600">Những khoảnh khắc và tác phẩm từ khách hàng của chúng tôi.</p>
+                
+                <div id="gallery-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    <p class="text-sm text-gray-500 col-span-full text-center">Đang tải bộ sưu tập...</p>
+                    <!-- Ảnh sẽ được load từ Firebase -->
+                </div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- TRANG TIN TỨC & ƯU ĐÃI                -->
+            <!-- ======================================== -->
+            <div id="page-news" class="page-content p-4 space-y-4 hidden">
+                <h1 class="text-2xl font-bold text-gray-900">Tin tức & Ưu đãi</h1>
+                
+                <div id="news-tabs" class="w-full">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex -mb-px" aria-label="Tabs">
+                            <button data-tab-button="tab-news-all" class="tab-button active w-1/2 py-3 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent">
+                                Tin tức & Ưu đãi
+                            </button>
+                            <button data-tab-button="tab-news-recruit" class="tab-button w-1/2 py-3 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent">
+                                Tuyển sinh
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="py-4 space-y-3">
+                        <div data-tab-panel="tab-news-all" class="tab-panel space-y-3" id="news-all-container">
+                            <p class="text-sm text-gray-500 text-center">Đang tải...</p>
+                            <!-- Bài viết & Ưu đãi render ở đây -->
+                        </div>
+                        <div data-tab-panel="tab-news-recruit" class="tab-panel hidden space-y-3">
+                            <h3 class="text-lg font-semibold">Chương trình tuyển sinh</h3>
+                            <p class="text-gray-700 text-sm">Thông tin về các khóa học, tuyển dụng học viên, thợ phụ. Liên hệ hotline... để biết thêm chi tiết.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- TRANG ĐÁNH GIÁ & CSKH                 -->
+            <!-- ======================================== -->
+            <div id="page-review" class="page-content p-4 space-y-6 hidden">
+                <h1 class="text-2xl font-bold text-gray-900">Đánh giá & CSKH</h1>
+                
+                <!-- CSKH -->
+                <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold text-blue-800">Yêu cầu Chăm sóc khách hàng</h3>
+                    <p class="text-sm text-blue-700 my-2">Nếu bạn có bất kỳ thắc mắc hoặc cần hỗ trợ, vui lòng liên hệ với chúng tôi qua Facebook.</p>
+                    <a href="#" class="inline-block bg-blue-600 text-white py-2 px-4 rounded-lg font-medium text-sm hover:bg-blue-700 transition">
+                        <i class="fab fa-facebook-messenger mr-2"></i> Nhắn tin ngay
+                    </a>
+                </div>
+                
+                <!-- Form Đánh giá -->
+                <div id="review-form-container" class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Gửi đánh giá của bạn</h3>
+                    <div>
+                        <label for="review-name" class="block text-sm font-medium text-gray-700">Tên khách hàng *</label>
+                        <input type="text" id="review-name" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="review-phone" class="block text-sm font-medium text-gray-700">Số điện thoại *</label>
+                        <input type="tel" id="review-phone" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="review-anonymous" class="form-checkbox text-blue-600 rounded focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-gray-700">Đánh giá ẩn danh</span>
+                    </label>
+                    
+                    <!-- Đánh giá sao -->
+                    <div class="space-y-3">
+                        <div class="star-rating-group">
+                            <label class="block text-sm font-medium text-gray-700">Dịch vụ</label>
+                            <div data-rating-for="service" class="flex space-x-1 text-gray-400 text-2xl cursor-pointer">
+                                <i class="fas fa-star" data-value="1"></i>
+                                <i class="fas fa-star" data-value="2"></i>
+                                <i class="fas fa-star" data-value="3"></i>
+                                <i class="fas fa-star" data-value="4"></i>
+                                <i class="fas fa-star" data-value="5"></i>
+                            </div>
+                            <input type="hidden" id="rating-service" value="0">
+                            <input type="text" id="rating-detail-service" class="mt-2 hidden w-full border-gray-300 rounded-lg shadow-sm text-sm" placeholder="Bạn không hài lòng về điều gì? (không bắt buộc)">
+                        </div>
+                        
+                        <div class="star-rating-group">
+                            <label class="block text-sm font-medium text-gray-700">Thái độ</label>
+                            <div data-rating-for="attitude" class="flex space-x-1 text-gray-400 text-2xl cursor-pointer">
+                                <i class="fas fa-star" data-value="1"></i>
+                                <i class="fas fa-star" data-value="2"></i>
+                                <i class="fas fa-star" data-value="3"></i>
+                                <i class="fas fa-star" data-value="4"></i>
+                                <i class="fas fa-star" data-value="5"></i>
+                            </div>
+                            <input type="hidden" id="rating-attitude" value="0">
+                            <input type="text" id="rating-detail-attitude" class="mt-2 hidden w-full border-gray-300 rounded-lg shadow-sm text-sm" placeholder="Bạn không hài lòng về điều gì? (không bắt buộc)">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="review-feedback" class="block text-sm font-medium text-gray-700">Cảm nhận của bạn</label>
+                        <textarea id="review-feedback" rows="4" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    
+                    <button id="submit-review" class="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">
+                        Gửi đánh giá
+                    </button>
+                </div>
+
+                <!-- Thông báo cảm ơn -->
+                <div id="review-thank-you" class="hidden text-center space-y-3 p-4 bg-green-50 rounded-lg">
+                    <i class="fas fa-check-circle text-green-500 text-4xl"></i>
+                    <h3 class="text-lg font-semibold text-green-800">Cảm ơn bạn đã đánh giá!</h3>
+                    <p class="text-sm text-green-700">Ý kiến của bạn rất quan trọng để chúng tôi cải thiện dịch vụ.</p>
+                </div>
+            </div>
+
+            <!-- ======================================== -->
+            <!-- TRANG QUẢN LÝ (Placeholder)            -->
+            <!-- ======================================== -->
+
+        </main>
+        
+        <!-- 
+          Thanh điều hướng cố định dưới cùng
+        -->
+        <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-200 flex justify-around p-2 z-10">
+            <button data-page="page-home" class="nav-button active flex-1 flex flex-col items-center justify-center text-gray-600 hover:text-blue-600 p-2 rounded-lg transition-colors">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs font-medium mt-1">Giới thiệu</span>
+            </button>
+            <button data-page="page-booking" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-600 hover:text-blue-600 p-2 rounded-lg transition-colors">
+                <i class="fas fa-calendar-alt text-xl"></i>
+                <span class="text-xs font-medium mt-1">Đặt lịch</span>
+            </button>
+            <button data-page="page-gallery" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-600 hover:text-blue-600 p-2 rounded-lg transition-colors">
+                <i class="fas fa-images text-xl"></i>
+                <span class="text-xs font-medium mt-1">Bộ sưu tập</span>
+            </button>
+            <button data-page="page-news" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-600 hover:text-blue-600 p-2 rounded-lg transition-colors">
+                <i class="fas fa-newspaper text-xl"></i>
+                <span class="text-xs font-medium mt-1">Tin tức</span>
+            </button>
+            <button data-page="page-review" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-600 hover:text-blue-600 p-2 rounded-lg transition-colors">
+                <i class="fas fa-star text-xl"></i>
+                <span class="text-xs font-medium mt-1">Đánh giá</span>
+            </button>
+
+        </nav>
+
+    </div>
+
+    <!-- Modal (Dùng cho thông báo lỗi, xác nhận...) -->
+    <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50 hidden">
+      <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+          <h3 id="modal-title" class="text-lg leading-6 font-medium text-gray-900">Thông báo</h3>
+          <div class="mt-2 px-7 py-3">
+            <p id="modal-message" class="text-sm text-gray-500"></p>
+          </div>
+          <div class="items-center px-4 py-3">
+            <button id="modal-close-button" class="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              Đã hiểu
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import các hàm Firebase cần thiết
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            signInWithCustomToken, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc, 
+            getDocs, 
+            addDoc, 
+            setDoc, 
+            updateDoc, 
+            deleteDoc, 
+            onSnapshot, 
+            collection, 
+            query, 
+            where, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Cấu hình Firebase (như bạn cung cấp) ---
+        const firebaseConfigFromUser = {
+            apiKey: "AIzaSyCTnDNOzI-8JYFfrxtJclFxe7vY27PM6FU",
+            authDomain: "salon-mt.firebaseapp.com",
+            projectId: "salon-mt",
+            storageBucket: "salon-mt.firebasestorage.app",
+            messagingSenderId: "1086041756251",
+            appId: "1:1086041756251:web:5f7c4cc7144cc59be8a57e",
+            measurementId: "G-3BV9HNVP29"
+        };
+        
+        // --- Biến toàn cục từ Canvas (nếu có) ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : firebaseConfigFromUser;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // --- Khởi tạo Firebase ---
+        let app, db, auth;
+        let userId = null; // Sẽ được gán khi auth thành công
+        
+        // --- Trạng thái ứng dụng ---
+        let currentBookingState = {}; // Lưu trữ lựa chọn khi đặt lịch
+        let currentBookingStep = 1;
+        
+        // --- Hàm tiện ích ---
+
+        // Hiển thị Modal thông báo
+        function showModal(title, message, confirmCallback = null) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('modal').classList.remove('hidden');
+
+            const modalCloseBtn = document.getElementById('modal-close-button');
+            const newBtn = modalCloseBtn.cloneNode(true); // Sao chép nút
+            
+            if (confirmCallback) {
+                // Nếu là modal xác nhận (ví dụ: huỷ lịch)
+                newBtn.textContent = "Xác nhận";
+                newBtn.onclick = () => {
+                    confirmCallback();
+                    document.getElementById('modal').classList.add('hidden');
+                    newBtn.replaceWith(modalCloseBtn); // Khôi phục nút cũ
+                };
+            } else {
+                // Nếu là modal thông báo
+                newBtn.textContent = "Đã hiểu";
+                newBtn.onclick = () => {
+                    document.getElementById('modal').classList.add('hidden');
+                    newBtn.replaceWith(modalCloseBtn); // Khôi phục nút cũ
+                };
+            }
+            modalCloseBtn.replaceWith(newBtn); // Thay thế nút
+        }
+
+        // Đóng Modal (Nút gốc, giờ chỉ dùng để nhân bản)
+        document.getElementById('modal-close-button').addEventListener('click', () => {
+            document.getElementById('modal').classList.add('hidden');
+        });
+
+        // (Thêm) Hàm định dạng timestamp
+        function formatFirebaseTimestamp(timestamp) {
+            if (timestamp && typeof timestamp.toDate === 'function') {
+                return timestamp.toDate().toLocaleString('vi-VN');
+            }
+            return 'Không có ngày';
+        }
+        
+        // (Thêm) Hàm lấy ngày YYYY-MM-DD
+        function getTodayString() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // Hàm chuyển trang chính
+        function showPage(pageId) {
+            // Ẩn tất cả các trang
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.add('hidden');
+            });
+            // Hiển thị trang được yêu cầu
+            const activePage = document.getElementById(pageId);
+            if (activePage) {
+                activePage.classList.remove('hidden');
+                // Cuộn lên đầu trang
+                document.getElementById('content-container').scrollTop = 0;
+            }
+            
+            // Cập nhật trạng thái active cho nav
+            document.querySelectorAll('.nav-button').forEach(button => {
+                if (button.dataset.page === pageId) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+
+            // Tải dữ liệu khi chuyển trang
+            if (pageId === 'page-news') {
+                loadNewsAndOffers();
+            }
+            if (pageId === 'page-gallery') {
+                loadGallery(); // (Thay đổi 2)
+            }
+        }
+        
+        // Hàm thiết lập logic Tab
+        function setupTabs(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const tabButtons = container.querySelectorAll('[data-tab-button]');
+            const tabPanels = container.querySelectorAll('[data-tab-panel]');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabName = button.dataset.tabButton;
+                    
+                    // Cập nhật nút
+                    tabButtons.forEach(btn => {
+                        if (btn === button) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    });
+                    
+                    // Cập nhật panel
+                    tabPanels.forEach(panel => {
+                        if (panel.dataset.tabPanel === tabName) {
+                            panel.classList.remove('hidden');
+                        } else {
+                            panel.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        }
+
+        // --- Logic Đặt lịch (Booking) ---
+
+        // Hiển thị bước đặt lịch
+        function showBookingStep(step) {
+            document.querySelectorAll('.booking-step').forEach(el => el.classList.add('hidden'));
+            const stepEl = document.getElementById(`booking-step-${step}`);
+            if (stepEl) {
+                stepEl.classList.remove('hidden');
+            }
+            
+            if (step === 5) {
+                loadClientInfo();
+            }
+            
+            currentBookingStep = step;
+            
+            // Hiển thị nút quay lại nếu không phải bước 1
+            const backButton = document.getElementById('booking-back-button');
+            if (step > 1 && step < 6) { // Không hiển thị ở bước 1 và bước 6 (xác nhận)
+                backButton.classList.remove('hidden');
+            } else {
+                backButton.classList.add('hidden');
+            }
+        }
+        
+        // Quay lại bước trước
+        function previousBookingStep() {
+            if (currentBookingStep > 1) {
+                showBookingStep(currentBookingStep - 1);
+            }
+        }
+        
+        // Reset luồng đặt lịch
+        function resetBookingFlow() {
+            currentBookingState = {};
+            currentBookingStep = 1;
+            showBookingStep(1);
+            // Xóa các lựa chọn đã đánh dấu (nếu có)
+            document.querySelectorAll('#branch-list button, #date-list button, #timeslot-list button, #technician-list button').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                if (!btn.disabled) { // Chỉ reset nút không bị vô hiệu hóa
+                    btn.classList.add('bg-gray-100', 'text-gray-700');
+                }
+            });
+        }
+        
+        // Tải danh sách chi nhánh
+        async function loadBranches() {
+            const listEl = document.getElementById('branch-list');
+            listEl.innerHTML = '<p class="text-sm text-gray-500">Đang tải chi nhánh...</p>';
+            
+            try {
+                const branchCollection = collection(db, `artifacts/${appId}/public/data/branches`);
+                const branchSnapshot = await getDocs(branchCollection);
+                
+                if (branchSnapshot.empty) {
+                    listEl.innerHTML = '<p class="text-sm text-red-500">Chưa có chi nhánh nào được thiết lập. Vui lòng quay lại sau.</p>';
+                    return;
+                }
+                
+                listEl.innerHTML = ''; // Xóa loading
+                const today = getTodayString(); 
+
+                branchSnapshot.forEach(doc => {
+                    const branch = doc.data();
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition";
+                    btn.innerHTML = `
+                        <p class="font-medium">${branch.name}</p>
+                        <p class="text-sm text-gray-600">${branch.address}</p>
+                    `;
+
+                    // Kiểm tra lịch nghỉ
+                    let isClosedToday = false;
+                    let closeNote = "Tạm nghỉ";
+                    
+                    if (branch.specialSchedule && branch.specialSchedule[today]) {
+                        const schedule = branch.specialSchedule[today];
+                        if (schedule.status === 'closed') {
+                            isClosedToday = true;
+                            closeNote = schedule.note || "Tạm nghỉ";
+                        }
+                    }
+
+                    if (isClosedToday) {
+                        btn.disabled = true;
+                        btn.classList.add('opacity-60', 'bg-gray-200', 'cursor-not-allowed');
+                        btn.classList.remove('hover:bg-gray-200');
+                        btn.innerHTML += `<span class="block text-sm font-semibold text-red-600 mt-1">${closeNote}</span>`;
+                    } else {
+                        btn.onclick = () => {
+                            currentBookingState.branchId = doc.id;
+                            currentBookingState.branchData = branch;
+                            
+                            // Đánh dấu nút được chọn
+                            listEl.querySelectorAll('button').forEach(b => {
+                                if (!b.disabled) {
+                                    b.classList.remove('bg-blue-600', 'text-white');
+                                    b.classList.add('bg-gray-100', 'text-gray-700');
+                                }
+                            });
+                            btn.classList.add('bg-blue-600', 'text-white');
+                            btn.classList.remove('bg-gray-100', 'text-gray-700');
+                            
+                            loadDates(); // Tải ngày
+                            showBookingStep(2);
+                        };
+                    }
+                    listEl.appendChild(btn);
+                });
+            } catch (error) {
+                console.error("Lỗi khi tải chi nhánh: ", error);
+                listEl.innerHTML = '<p class="text-sm text-red-500">Lỗi khi tải chi nhánh.</p>';
+            }
+        }
+        
+        // Tải ngày (30 ngày tới)
+        function loadDates() {
+            const listEl = document.getElementById('date-list');
+            listEl.innerHTML = '';
+            const today = new Date();
+            
+            for (let i = 0; i < 30; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                
+                const dateString = date.toISOString().split('T')[0]; // YYYY-MM-DD
+                const day = date.getDate();
+                const month = date.getMonth() + 1;
+                const weekday = date.toLocaleDateString('vi-VN', { weekday: 'short' });
+                
+                const btn = document.createElement('button');
+                btn.className = "p-2 border rounded-lg text-sm text-center bg-gray-100 text-gray-700 hover:bg-gray-200 transition";
+                btn.innerHTML = `
+                    <span class="font-medium">${weekday}</span>
+                    <span class="block">${day}/${month}</span>
+                `;
+                btn.onclick = () => {
+                    currentBookingState.date = dateString;
+                    
+                    // Đánh dấu nút
+                    listEl.querySelectorAll('button').forEach(b => {
+                        b.classList.remove('bg-blue-600', 'text-white');
+                        b.classList.add('bg-gray-100', 'text-gray-700');
+                    });
+                    btn.classList.add('bg-blue-600', 'text-white');
+                    btn.classList.remove('bg-gray-100', 'text-gray-700');
+                    
+                    loadTimeSlots();
+                    showBookingStep(3);
+                };
+                listEl.appendChild(btn);
+            }
+        }
+        
+        // (Nâng cấp) Hàm kiểm tra khung giờ bị khoá
+        function isTimeSlotBlocked(timeSlot, blockedPeriods) {
+            // timeSlot = "09:30"
+            for (const period of blockedPeriods) {
+                // period.start = "09:00", period.end = "10:00"
+                if (timeSlot >= period.startTime && timeSlot < period.endTime) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // (Nâng cấp) Tải khung giờ
+        async function loadTimeSlots() {
+            const listEl = document.getElementById('timeslot-list');
+            listEl.innerHTML = '<p class="text-sm text-gray-500 col-span-3">Đang tải khung giờ...</p>';
+            
+            const branch = currentBookingState.branchData;
+            const date = currentBookingState.date;
+            
+            if (!branch || !date) {
+                listEl.innerHTML = '<p class="text-sm text-red-500 col-span-3">Vui lòng chọn chi nhánh và ngày trước.</p>';
+                return;
+            }
+            
+            const totalSeats = branch.totalSeats || 5; 
+            const startTime = parseInt(branch.openingTime.split(':')[0]); // 9:00 -> 9
+            const endTime = parseInt(branch.closingTime.split(':')[0]); // 18:00 -> 18
+            
+            // (Mới) Lấy số ghế vãng lai (tempUsedSeats) từ admin
+            const overrides = branch.dailyOverrides;
+            const tempUsedSeats = (overrides && overrides[date] && overrides[date].tempUsedSeats)
+                                ? overrides[date].tempUsedSeats
+                                : 0;
+
+            let bookedCounts = {};
+            let blockedPeriods = [];
+            
+            try {
+                // Lấy các booking đã có
+                const q_bookings = query(
+                    collection(db, `artifacts/${appId}/public/data/bookings`),
+                    where("branchId", "==", currentBookingState.branchId),
+                    where("date", "==", date),
+                    where("status", "==", "confirmed")
+                );
+                const bookingSnapshot = await getDocs(q_bookings);
+                bookingSnapshot.forEach((doc) => {
+                    const booking = doc.data();
+                    bookedCounts[booking.time] = (bookedCounts[booking.time] || 0) + 1;
+                });
+                
+                // (Mới) Lấy các lịch bận (blocked_slots)
+                const q_blocked = query(
+                    collection(db, `artifacts/${appId}/public/data/blocked_slots`),
+                    where("branchId", "==", currentBookingState.branchId),
+                    where("date", "==", date)
+                );
+                const blockedSnapshot = await getDocs(q_blocked);
+                blockedSnapshot.forEach((doc) => {
+                    blockedPeriods.push(doc.data()); // { startTime: "09:00", endTime: "10:30", ... }
+                });
+
+            } catch (error) {
+                console.error("Lỗi khi kiểm tra lịch: ", error);
+                listEl.innerHTML = '<p class="text-sm text-red-500 col-span-3">Lỗi khi tải lịch. Vui lòng thử lại.</p>';
+                return;
+            }
+            
+            listEl.innerHTML = '';
+            let hasSlot = false;
+            
+            const now = new Date();
+            const isToday = (date === now.toISOString().split('T')[0]);
+
+            for (let hour = startTime; hour < endTime; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+                    
+                    const booked = bookedCounts[timeString] || 0;
+                    // (Nâng cấp) Tổng số ghế đã dùng = đặt online + vãng lai (admin nhập)
+                    const totalUsedSeats = booked + tempUsedSeats; 
+                    const availableSeats = totalSeats - totalUsedSeats;
+                    
+                    // Kiểm tra thời gian trong quá khứ
+                    const slotTime = new Date(`${date}T${timeString}`);
+                    const isPast = isToday && (slotTime < now); // Chỉ ktra nếu là hôm nay
+                    
+                    // (Nâng cấp) Kiểm tra lịch bận
+                    const isBlocked = isTimeSlotBlocked(timeString, blockedPeriods);
+                    
+                    const btn = document.createElement('button');
+                    btn.className = "p-2 border rounded-lg text-sm text-center bg-gray-100 text-gray-700 hover:bg-gray-200 transition";
+                    
+                    let statusText = `(${availableSeats}/${totalSeats} ghế)`;
+                    if (isPast) statusText = `(Đã qua)`;
+                    else if (isBlocked) statusText = `(Đã bị khoá)`;
+                    else if (availableSeats <= 0) statusText = `(Hết ghế)`;
+
+                    btn.innerHTML = `
+                        ${timeString}
+                        <span class="block text-xs">${statusText}</span>
+                    `;
+                    
+                    // (Nâng cấp) Vô hiệu hóa nếu hết ghế HOẶC đã qua HOẶC bị khoá
+                    if (availableSeats <= 0 || isPast || isBlocked) {
+                        btn.disabled = true;
+                        btn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-gray-200', 'text-gray-500');
+                        btn.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+                    }
+                    
+                    if (!btn.disabled) { // Chỉ gán click cho nút hợp lệ
+                        btn.onclick = () => {
+                            currentBookingState.time = timeString;
+                            
+                            // Đánh dấu
+                            listEl.querySelectorAll('button').forEach(b => {
+                                if (!b.disabled) {
+                                    b.classList.remove('bg-blue-600', 'text-white');
+                                    b.classList.add('bg-gray-100', 'text-gray-700');
+                                }
+                            });
+                            btn.classList.add('bg-blue-600', 'text-white');
+                            btn.classList.remove('bg-gray-100', 'text-gray-700');
+                            
+                            loadTechnicians();
+                            showBookingStep(4);
+                        };
+                    }
+                    listEl.appendChild(btn);
+                    hasSlot = true;
+                }
+            }
+            
+            if (!hasSlot) {
+                listEl.innerHTML = '<p class="text-sm text-gray-500 col-span-3">Không có khung giờ nào cho chi nhánh này.</p>';
+            }
+        }
+        
+        // Tải kỹ thuật viên
+        async function loadTechnicians() {
+            const listEl = document.getElementById('technician-list');
+            listEl.innerHTML = '<p class="text-sm text-gray-500">Đang tải danh sách...</p>';
+            
+            try {
+                const q = query(
+                    collection(db, `artifacts/${appId}/public/data/technicians`),
+                    where("branchId", "==", currentBookingState.branchId)
+                );
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    listEl.innerHTML = '<p class="text-sm text-gray-500">Không tìm thấy kỹ thuật viên nào cho chi nhánh này.</p>';
+                } else {
+                    listEl.innerHTML = ''; // Xóa loading
+                }
+                
+                // Tùy chọn "Bất kỳ ai" / "Để salon sắp xếp"
+                const anyBtn = document.createElement('button');
+                anyBtn.className = "w-full text-left p-3 border rounded-lg hover:bg-gray-100 flex items-center space-x-3 bg-gray-100 text-gray-700";
+                anyBtn.innerHTML = `
+                    <i class="fas fa-users w-12 h-12 flex items-center justify-center text-2xl text-gray-500"></i>
+                    <div>
+                        <p class="font-medium">Để salon sắp xếp</p>
+                        <p class="text-sm text-gray-600">Chúng tôi sẽ chọn stylist phù hợp nhất cho bạn.</p>
+                    </div>
+                `;
+                anyBtn.onclick = () => {
+                    currentBookingState.technicianId = 'any';
+                    currentBookingState.technicianName = 'Salon sắp xếp';
+                    // Đánh dấu
+                    listEl.querySelectorAll('button').forEach(b => {
+                        b.classList.remove('bg-blue-600', 'text-white');
+                        b.classList.add('bg-gray-100', 'text-gray-700');
+                    });
+                    anyBtn.classList.add('bg-blue-600', 'text-white');
+                    showBookingStep(5);
+                };
+                listEl.appendChild(anyBtn);
+
+                querySnapshot.forEach(doc => {
+                    const tech = doc.data();
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-3 border rounded-lg hover:bg-gray-100 flex items-center space-x-3 bg-gray-100 text-gray-700";
+                    
+                    const photoUrl = tech.photoUrl || `https://placehold.co/60x60/E2E8F0/64748B?text=${tech.name[0]}`;
+                    
+                    btn.innerHTML = `
+                        <img src="${photoUrl}" alt="${tech.name}" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <p class="font-medium">${tech.name}</p>
+                            <p class="text-sm text-gray-600">${tech.title} (${tech.experience} năm KN)</p>
+                        </div>
+                    `;
+                    btn.onclick = () => {
+                        currentBookingState.technicianId = doc.id;
+                        currentBookingState.technicianName = tech.name;
+                        // Đánh dấu
+                        listEl.querySelectorAll('button').forEach(b => {
+                            b.classList.remove('bg-blue-600', 'text-white');
+                            b.classList.add('bg-gray-100', 'text-gray-700');
+                        });
+                        btn.classList.add('bg-blue-600', 'text-white');
+                        showBookingStep(5);
+                    };
+                    listEl.appendChild(btn);
+                });
+                
+            } catch (error) {
+                console.error("Lỗi khi tải kỹ thuật viên: ", error);
+                listEl.innerHTML = '<p class="text-sm text-red-500">Lỗi khi tải danh sách. Vui lòng thử lại.</p>';
+                 const skipBtn = document.createElement('button');
+                 skipBtn.className = "w-full p-2 bg-gray-200 text-gray-800 rounded-lg mt-2";
+                 skipBtn.textContent = "Bỏ qua & tiếp tục";
+                 skipBtn.onclick = () => {
+                    currentBookingState.technicianId = 'any';
+                    currentBookingState.technicianName = 'Salon sắp xếp';
+                    showBookingStep(5);
+                 };
+                 listEl.appendChild(skipBtn);
+            }
+        }
+        
+        // Xử lý phương thức liên hệ
+        document.querySelectorAll('input[name="contact-method"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const phoneGroup = document.getElementById('contact-phone-group');
+                const socialGroup = document.getElementById('contact-social-group');
+                if (e.target.value === 'phone') {
+                    phoneGroup.classList.remove('hidden');
+                    socialGroup.classList.add('hidden');
+                } else {
+                    phoneGroup.classList.add('hidden');
+                    socialGroup.classList.remove('hidden');
+                }
+            });
+        });
+        
+        // Gửi (submit) đơn đặt lịch
+        document.getElementById('submit-booking').addEventListener('click', async () => {
+            if (!userId) {
+                showModal("Lỗi", "Bạn cần đăng nhập để đặt lịch. Vui lòng tải lại trang.");
+                return;
+            }
+
+            // Thu thập dữ liệu
+            const clientName = document.getElementById('client-name').value.trim();
+            const contactMethod = document.querySelector('input[name="contact-method"]:checked').value;
+            const clientPhone = document.getElementById('client-phone').value.trim();
+            const socialPlatform = document.getElementById('social-platform').value;
+            const socialDetail = document.getElementById('social-detail').value.trim();
+            const priorityCode = document.getElementById('priority-code').value.trim();
+            
+            // Validate
+            if (!clientName) {
+                showModal("Thông báo", "Vui lòng nhập tên của bạn.");
+                return;
+            }
+            if (contactMethod === 'phone' && !clientPhone) {
+                showModal("Thông báo", "Vui lòng nhập số điện thoại.");
+                return;
+            }
+            if (contactMethod === 'social' && !socialDetail) {
+                showModal("Thông báo", "Vui lòng nhập thông tin liên hệ mạng xã hội.");
+                return;
+            }
+            
+            // Lưu thông tin khách hàng vào localStorage
+            const clientInfoToSave = {
+                name: clientName,
+                phone: clientPhone,
+                socialPlatform: socialPlatform,
+                socialDetail: socialDetail,
+                contactMethod: contactMethod
+            };
+            localStorage.setItem('clientBookingInfo', JSON.stringify(clientInfoToSave));
+            
+            const bookingCode = `MaiTay-${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+            
+            const bookingData = {
+                ...currentBookingState,
+                clientId: userId, // Liên kết với user đã auth
+                clientName: clientName,
+                contactMethod: contactMethod,
+                contactDetail: contactMethod === 'phone' ? clientPhone : `${socialPlatform}: ${socialDetail}`,
+                priorityCode: priorityCode,
+                bookingCode: bookingCode,
+                status: 'confirmed', // Trạng thái: confirmed, cancelled
+                createdAt: serverTimestamp(),
+                branchName: currentBookingState.branchData.name 
+            };
+            
+            delete bookingData.branchData;
+            
+            try {
+                const bookingCollection = collection(db, `artifacts/${appId}/public/data/bookings`);
+                await addDoc(bookingCollection, bookingData);
+                
+                // Hiển thị xác nhận
+                document.getElementById('booking-code').textContent = bookingCode;
+                showBookingStep(6);
+                
+                // Tải lại lịch sử
+                loadBookingHistory();
+                
+            } catch (error) {
+                console.error("Lỗi khi đặt lịch: ", error);
+                showModal("Lỗi", "Đã xảy ra lỗi khi đặt lịch. Vui lòng thử lại.");
+            }
+        });
+        
+        // Nút đặt lịch mới (sau khi thành công)
+        document.getElementById('new-booking-button').addEventListener('click', () => {
+            resetBookingFlow();
+        });
+        
+        // Nút quay lại
+        document.getElementById('booking-back-button').addEventListener('click', previousBookingStep);
+
+        // --- Logic Lịch sử Đặt lịch ---
+        
+        async function loadBookingHistory() {
+            if (!userId) return; // Chỉ tải khi đã đăng nhập
+            
+            const listEl = document.getElementById('booking-history-list');
+            listEl.innerHTML = '<p class="text-sm text-gray-500 text-center">Đang tải lịch sử...</p>';
+            
+            try {
+                const q = query(
+                    collection(db, `artifacts/${appId}/public/data/bookings`),
+                    where("clientId", "==", userId)
+                );
+                
+                const querySnapshot = await getDocs(q);
+                let bookings = [];
+                querySnapshot.forEach(doc => {
+                    bookings.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Sắp xếp thủ công trong JS để tránh lỗi index
+                bookings.sort((a, b) => (b.createdAt && a.createdAt) ? b.createdAt.toDate() - a.createdAt.toDate() : 0);
+
+                if (bookings.length === 0) {
+                    listEl.innerHTML = '<p class="text-sm text-gray-500 text-center">Bạn chưa có lịch sử đặt chỗ nào.</p>';
+                    return;
+                }
+                
+                listEl.innerHTML = '';
+                bookings.forEach(booking => {
+                    const card = document.createElement('div');
+                    card.className = "bg-white p-4 rounded-lg shadow border border-gray-200 space-y-1";
+                    
+                    const bookingTime = new Date(`${booking.date}T${booking.time}`);
+                    const now = new Date();
+                    const bookingCreatedAt = booking.createdAt ? booking.createdAt.toDate() : null;
+
+                    // Logic huỷ lịch
+                    let canCancel = false;
+                    if (booking.status === 'confirmed') {
+                        // 1: Huỷ 45 phút TRƯỚC giờ hẹn
+                        const minsBeforeAppointment = (bookingTime.getTime() - now.getTime()) / (1000 * 60);
+                        const condition1 = minsBeforeAppointment > 45;
+                        
+                        // 2: Huỷ trong vòng 15 phút SAU KHI ĐẶT
+                        let condition2 = false;
+                        if (bookingCreatedAt) {
+                            const minsAfterBooking = (now.getTime() - bookingCreatedAt.getTime()) / (1000 * 60);
+                            condition2 = minsAfterBooking < 15;
+                        }
+                        
+                        canCancel = condition1 || condition2;
+                    }
+                    
+                    let statusHtml = '';
+                    if (booking.status === 'confirmed') {
+                        statusHtml = '<p class="text-green-600 font-medium">Đã xác nhận</p>';
+                    } else if (booking.status === 'cancelled') {
+                        statusHtml = '<p class="text-red-600 font-medium">Đã huỷ</p>';
+                    } else if (booking.status === 'completed') {
+                        statusHtml = '<p class="text-blue-600 font-medium">Đã hoàn thành</p>';
+                    } else {
+                        statusHtml = `<p class="text-yellow-600 font-medium capitalize">${booking.status || 'Đang chờ'}</p>`;
+                    }
+                    
+                    card.innerHTML = `
+                        <p class="text-sm font-medium text-gray-500">Mã: ${booking.bookingCode}</p>
+                        <p class="text-lg font-semibold text-gray-900">${booking.branchName || 'Chi nhánh không rõ'}</p>
+                        <p class="text-gray-700">Thời gian: ${booking.time} - ${new Date(booking.date).toLocaleDateString('vi-VN')}</p>
+                        <p class="text-gray-700">Kỹ thuật viên: ${booking.technicianName || 'Salon sắp xếp'}</p>
+                        <div class="pt-2 flex justify-between items-center">
+                            ${statusHtml}
+                            ${canCancel ? `<button data-id="${booking.id}" data-time="${bookingTime.toISOString()}" class="cancel-booking-btn text-sm text-red-600 hover:underline">Huỷ lịch</button>` : ''}
+                        </div>
+                    `;
+                    listEl.appendChild(card);
+                });
+                
+                // Gán sự kiện cho nút huỷ
+                document.querySelectorAll('.cancel-booking-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const bookingId = e.target.dataset.id;
+                        // Hiển thị modal xác nhận
+                        showModal("Xác nhận", "Bạn có chắc chắn muốn huỷ lịch hẹn này không?", () => {
+                            // Hàm callback này sẽ chạy khi nhấn "Xác nhận"
+                            cancelBooking(bookingId);
+                        });
+                    });
+                });
+                
+            } catch (error) {
+                console.error("Lỗi khi tải lịch sử: ", error);
+                listEl.innerHTML = '<p class="text-sm text-red-500 text-center">Lỗi khi tải lịch sử. Vui lòng thử lại.</p>';
+            }
+        }
+        
+        async function cancelBooking(bookingId) {
+            try {
+                const bookingDoc = doc(db, `artifacts/${appId}/public/data/bookings`, bookingId);
+                await updateDoc(bookingDoc, {
+                    status: 'cancelled'
+                });
+                showModal("Thành công", "Đã huỷ lịch hẹn của bạn.");
+                loadBookingHistory(); // Tải lại lịch sử
+            } catch (error) {
+                console.error("Lỗi khi huỷ lịch: ", error);
+                showModal("Lỗi", "Không thể huỷ lịch. Vui lòng thử lại.");
+            }
+        }
+        
+        // Hàm tải tin tức
+        async function loadNewsAndOffers() {
+            const listEl = document.getElementById('news-all-container');
+            listEl.innerHTML = '<p class="text-sm text-gray-500 text-center">Đang tải...</p>';
+            
+            try {
+                const q = query(collection(db, `artifacts/${appId}/public/data/news`));
+                const snapshot = await getDocs(q);
+                
+                let items = [];
+                snapshot.forEach(doc => items.push(doc.data()));
+                
+                // Sắp xếp (mới nhất lên đầu)
+                items.sort((a, b) => (b.createdAt && a.createdAt) ? b.createdAt.toDate() - a.createdAt.toDate() : 0);
+                
+                listEl.innerHTML = '';
+                if (items.length === 0) {
+                    listEl.innerHTML = '<p class="text-sm text-gray-500 text-center">Chưa có tin tức hoặc ưu đãi nào.</p>';
+                    return;
+                }
+                
+                items.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = "bg-white p-4 rounded-lg shadow border border-gray-200";
+                    const typeLabel = item.type === 'offer' 
+                        ? '<span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">Ưu đãi</span>'
+                        : '<span class="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">Tin tức</span>';
+                    
+                    el.innerHTML = `
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="text-lg font-semibold text-gray-900">${item.title}</h3>
+                            ${typeLabel}
+                        </div>
+                        <p class="text-sm text-gray-500 mb-2">${formatFirebaseTimestamp(item.createdAt)}</p>
+                        <!-- Hiển thị nội dung HTML -->
+                        <div class="text-sm text-gray-700 prose prose-sm max-w-none">${item.content}</div>
+                    `;
+                    listEl.appendChild(el);
+                });
+
+            } catch (error) {
+                console.error("Lỗi khi tải tin tức: ", error);
+                listEl.innerHTML = '<p class="text-sm text-red-500 text-center">Lỗi khi tải dữ liệu.</p>';
+            }
+        }
+
+        // (Mới - Thay đổi 2) Hàm tải Bộ sưu tập
+        async function loadGallery() {
+            const listEl = document.getElementById('gallery-grid');
+            listEl.innerHTML = '<p class="text-sm text-gray-500 col-span-full text-center">Đang tải bộ sưu tập...</p>';
+            
+            try {
+                const q = query(collection(db, `artifacts/${appId}/public/data/gallery`));
+                const snapshot = await getDocs(q);
+                
+                let items = [];
+                snapshot.forEach(doc => items.push(doc.data()));
+                
+                // Sắp xếp (mới nhất lên đầu)
+                items.sort((a, b) => (b.createdAt && a.createdAt) ? b.createdAt.toDate() - a.createdAt.toDate() : 0);
+                
+                listEl.innerHTML = '';
+                if (items.length === 0) {
+                    listEl.innerHTML = '<p class="text-sm text-gray-500 col-span-full text-center">Chưa có ảnh nào trong bộ sưu tập.</p>';
+                    return;
+                }
+                
+                items.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = "relative group rounded-lg overflow-hidden shadow";
+                    el.innerHTML = `
+                        <img src="${item.imageUrl}" 
+                             alt="${item.caption || 'Ảnh bộ sưu tập'}" 
+                             class="rounded-lg object-cover w-full h-auto aspect-[4/5]"
+                             onerror="this.src='https://placehold.co/400x500/E2E8F0/64748B?text=Lỗi+ảnh';">
+                        <div class="absolute bottom-0 left-0 right-0 p-2 bg-black bg-opacity-60 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                            ${item.caption || ''}
+                        </div>
+                    `;
+                    listEl.appendChild(el);
+                });
+
+            } catch (error) {
+                console.error("Lỗi khi tải bộ sưu tập: ", error);
+                listEl.innerHTML = '<p class="text-sm text-red-500 col-span-full text-center">Lỗi khi tải dữ liệu.</p>';
+            }
+        }
+
+
+        // --- Logic Đánh giá (Review) ---
+        
+        // Xử lý sao
+        document.querySelectorAll('.star-rating-group div[data-rating-for]').forEach(starContainer => {
+            const stars = starContainer.querySelectorAll('i.fas.fa-star');
+            const ratingFor = starContainer.dataset.ratingFor;
+            const hiddenInput = document.getElementById(`rating-${ratingFor}`);
+            const detailInput = document.getElementById(`rating-detail-${ratingFor}`);
+            
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const value = parseInt(star.dataset.value);
+                    hiddenInput.value = value;
+                    
+                    // Tô màu sao
+                    stars.forEach(s => {
+                        if (parseInt(s.dataset.value) <= value) {
+                            s.classList.remove('text-gray-400');
+                            s.classList.add('text-yellow-400');
+                        } else {
+                            s.classList.remove('text-yellow-400');
+                            s.classList.add('text-gray-400');
+                        }
+                    });
+                    
+                    // Hiển thị input chi tiết nếu dưới 4 sao
+                    if (value < 4) {
+                        detailInput.classList.remove('hidden');
+                    } else {
+                        detailInput.classList.add('hidden');
+                    }
+                });
+            });
+        });
+        
+        // Gửi đánh giá
+        document.getElementById('submit-review').addEventListener('click', async () => {
+            if (!userId) {
+                showModal("Lỗi", "Bạn cần đăng nhập để gửi đánh giá. Vui lòng tải lại trang.");
+                return;
+            }
+
+            // Thu thập dữ liệu
+            const name = document.getElementById('review-name').value.trim();
+            const phone = document.getElementById('review-phone').value.trim();
+            const anonymous = document.getElementById('review-anonymous').checked;
+            
+            const serviceRating = parseInt(document.getElementById('rating-service').value);
+            const attitudeRating = parseInt(document.getElementById('rating-attitude').value);
+            
+            const serviceDetail = document.getElementById('rating-detail-service').value.trim();
+            const attitudeDetail = document.getElementById('rating-detail-attitude').value.trim();
+            
+            const feedback = document.getElementById('review-feedback').value.trim();
+            
+            // Validate
+            if (!name || !phone) {
+                showModal("Thông báo", "Vui lòng nhập Tên và Số điện thoại.");
+                return;
+            }
+            if (serviceRating === 0 || attitudeRating === 0) {
+                showModal("Thông báo", "Vui lòng đánh giá đủ 2 mục (Dịch vụ, Thái độ).");
+                return;
+            }
+            
+            const reviewData = {
+                clientId: userId,
+                clientName: name,
+                clientPhone: phone,
+                anonymous: anonymous,
+                serviceRating: serviceRating,
+                attitudeRating: attitudeRating,
+                serviceDetail: serviceDetail,
+                attitudeDetail: attitudeDetail,
+                feedback: feedback,
+                createdAt: serverTimestamp()
+            };
+            
+            try {
+                const reviewCollection = collection(db, `artifacts/${appId}/public/data/reviews`);
+                await addDoc(reviewCollection, reviewData);
+                
+                // Hiển thị thông báo
+                document.getElementById('review-form-container').classList.add('hidden');
+                document.getElementById('review-thank-you').classList.remove('hidden');
+                
+            } catch (error) {
+                console.error("Lỗi khi gửi đánh giá: ", error);
+                showModal("Lỗi", "Đã xảy ra lỗi. Vui lòng thử lại.");
+            }
+        });
+        
+        
+        // Hàm tải thông tin client từ localStorage
+        function loadClientInfo() {
+            try {
+                const clientData = localStorage.getItem('clientBookingInfo');
+                if (clientData) {
+                    const info = JSON.parse(clientData);
+                    document.getElementById('client-name').value = info.name || '';
+                    document.getElementById('client-phone').value = info.phone || '';
+                    document.getElementById('social-platform').value = info.socialPlatform || 'facebook';
+                    document.getElementById('social-detail').value = info.socialDetail || '';
+                    
+                    const methodRadio = document.querySelector(`input[name="contact-method"][value="${info.contactMethod}"]`);
+                    if (methodRadio) {
+                        methodRadio.checked = true;
+                        // Kích hoạt sự kiện change để ẩn/hiện đúng group
+                        methodRadio.dispatchEvent(new Event('change'));
+                    }
+                }
+            } catch(e) {
+                console.error("Không thể tải thông tin client:", e);
+                // Xoá local storage nếu bị hỏng
+                localStorage.removeItem('clientBookingInfo');
+            }
+        }
+        
+        // --- Hàm Khởi chạy (Main) ---
+        
+        async function main() {
+            // Khởi tạo Firebase
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+            } catch (error) {
+                console.error("Lỗi khởi tạo Firebase:", error);
+                document.getElementById('content-container').innerHTML = 
+                    '<div class="p-4 text-red-600">Lỗi kết nối đến máy chủ. Vui lòng tải lại trang.</div>';
+                return;
+            }
+
+            // Xử lý xác thực
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    // User đã đăng nhập
+                    userId = user.uid;
+                    console.log("User ID:", userId);
+                    
+                    // Tải dữ liệu dành riêng cho user
+                    loadBookingHistory();
+                    
+                } else {
+                    // User chưa đăng nhập, thử đăng nhập
+                    try {
+                        if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                        console.log("Đã đăng nhập ẩn danh hoặc bằng token.");
+                    } catch (error) {
+                        console.error("Lỗi khi đăng nhập:", error);
+                        showModal("Lỗi xác thực", "Không thể kết nối đến dịch vụ. Vui lòng kiểm tra lại.");
+                    }
+                }
+            });
+
+            // Gán sự kiện cho điều hướng chính
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const pageId = button.dataset.page;
+                    showPage(pageId);
+                });
+            });
+            
+            // Thiết lập các hệ thống Tab
+            setupTabs('booking-tabs');
+            setupTabs('news-tabs');
+            
+            // Kích hoạt tab Lịch sử khi nhấn vào
+            document.querySelector('[data-tab-button="tab-booking-history"]').addEventListener('click', () => {
+                loadBookingHistory(); // Tải lại lịch sử khi xem
+            });
+            
+            // Tải dữ liệu ban đầu
+            showPage('page-home'); // Hiển thị trang chủ
+            loadBranches(); // Tải chi nhánh cho trang đặt lịch (tải ngầm)
+            loadNewsAndOffers(); // Tải tin tức (tải ngầm)
+            loadGallery(); // Tải bộ sưu tập (tải ngầm)
+        }
+
+        // Chạy khi DOM đã sẵn sàng
+        document.addEventListener('DOMContentLoaded', main);
+
+    </script>
+</body>
+</html>
+
+

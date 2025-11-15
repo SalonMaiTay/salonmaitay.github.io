@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-zinc-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quản lý Salon - Mai Tây & Hiền Trần</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        // Tùy chỉnh màu chủ đạo sang trọng hơn (Deep Navy)
+                        primary: {
+                            50: '#f0f3ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#3730a3', // Màu chính mới
+                            800: '#312e81',
+                            900: '#1e1b4b',
+                        },
+                        // Màu trung tính ấm áp hơn
+                        gray: {
+                            50: '#fafafa',
+                            100: '#f4f4f5',
+                            200: '#e4e4e7',
+                            300: '#d4d4d8',
+                            400: '#a1a1aa',
+                            500: '#71717a',
+                            600: '#52525b',
+                            700: '#3f3f46',
+                            800: '#27272a',
+                            900: '#18181b',
+                        }
+                    },
+                    borderRadius: {
+                        'xl': '1rem',
+                        '2xl': '1.25rem',
+                        '3xl': '1.5rem',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Global Styles & Resets */
+        body {
+            font-family: 'Inter', sans-serif;
+            overscroll-behavior-y: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Ẩn thanh cuộn nhưng vẫn cuộn được */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* Hiệu ứng chuyển động mượt mà */
+        .smooth-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Active states for Navigation */
+        .nav-button.active {
+            color: #3730a3; /* primary-700 */
+            font-weight: 600;
+        }
+        .nav-button.active i {
+             transform: scale(1.1);
+        }
+        
+        /* Tab active styles */
+        .tab-button.active {
+            color: #3730a3; /* primary-700 */
+            border-bottom-color: #3730a3;
+        }
+
+        /* Input focus styles custom */
+        .form-input:focus {
+            border-color: #3730a3;
+            ring-color: #3730a3;
+        }
+    </style>
+</head>
+<body class="h-full">
+
+    <div id="app-container" class="max-w-md mx-auto h-full min-h-screen bg-gray-50 sm:shadow-2xl relative overflow-hidden flex flex-col sm:border-x sm:border-gray-200">
+
+        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-10 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+             <h2 class="text-lg font-bold text-gray-900 tracking-tight">Salon Manager</h2>
+             <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                 <i class="fas fa-bell text-gray-500 text-sm"></i>
+             </div>
+        </header>
+
+        <main id="content-container" class="flex-grow overflow-y-auto no-scrollbar pb-24 px-4 pt-4">
+
+            <div id="page-home" class="page-content space-y-5 animate-fade-in">
+                <div class="relative h-48 rounded-3xl overflow-hidden shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Salon Banner" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                        <div>
+                            <h1 class="text-white text-2xl font-bold">Chào mừng bạn</h1>
+                            <p class="text-gray-200 text-sm">Trải nghiệm dịch vụ đẳng cấp</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="about-content" class="space-y-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 space-y-3">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                            <i class="fas fa-map-marker-alt text-primary-700 mr-3 bg-primary-50 p-2 rounded-full w-8 h-8 flex items-center justify-center text-sm"></i>
+                            Liên hệ & Vị trí
+                        </h3>
+                        <div class="pl-11 space-y-2">
+                             <p class="text-gray-600 text-sm flex items-center">
+                                <span class="font-medium text-gray-900 mr-2">Hotline:</span> 0123.456.789
+                            </p>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                123 Đường ABC, Phường XYZ, Quận 1, TP. HCM
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 space-y-2">
+                        <h3 class="text-lg font-bold text-gray-900">Về Mai Tây Hair Salon</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">Nội dung giới thiệu về Mai Tây Hair Salon. Tập trung vào phong cách, triết lý và sự đặc biệt.</p>
+                    </div>
+                    
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 space-y-2">
+                        <h3 class="text-lg font-bold text-gray-900">Về Hiền Trần Hair Studio</h3>
+                         <p class="text-gray-600 text-sm leading-relaxed">Nội dung giới thiệu Hiền Trần. Nêu bật dịch vụ, không gian và cam kết chất lượng.</p>
+                    </div>
+                     <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                             <h3 class="font-semibold text-gray-900 mb-1">Sứ mệnh</h3>
+                             <p class="text-gray-500 text-xs">Cam kết mang lại giá trị tốt nhất cho khách hàng.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                             <h3 class="font-semibold text-gray-900 mb-1">Đội ngũ</h3>
+                             <p class="text-gray-500 text-xs">Những chuyên gia hàng đầu trong lĩnh vực tóc.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-booking" class="page-content space-y-5 hidden">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl font-bold text-gray-900">Đặt lịch hẹn</h1>
+                    <span class="bg-primary-50 text-primary-700 text-xs font-semibold px-3 py-1 rounded-full">Dễ dàng & Nhanh chóng</span>
+                </div>
+                
+                <div id="booking-tabs" class="w-full bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="flex p-1 bg-gray-100 m-2 rounded-xl">
+                        <button data-tab-button="tab-new-booking" class="tab-button active flex-1 py-2.5 text-sm font-medium text-center rounded-lg transition-all duration-200">
+                            Đặt lịch mới
+                        </button>
+                        <button data-tab-button="tab-booking-history" class="tab-button flex-1 py-2.5 text-sm font-medium text-center text-gray-500 rounded-lg transition-all duration-200">
+                            Lịch sử
+                        </button>
+                    </div>
+                    
+                    <style>
+                        #booking-tabs .tab-button.active {
+                            background-color: white;
+                            color: #3730a3; /* primary-700 */
+                            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                            border-bottom: none;
+                        }
+                        #booking-tabs .tab-button {
+                            border-bottom: none;
+                        }
+                    </style>
+                    
+                    <div class="p-5">
+                        <div data-tab-panel="tab-new-booking" class="tab-panel space-y-6">
+                            
+                            <div class="hidden" id="wizard-progress">
+                                </div>
+
+                            <div id="booking-step-1" class="booking-step space-y-4">
+                                <h3 class="text-lg font-bold text-gray-900">1. Chọn chi nhánh gần bạn</h3>
+                                <div id="branch-list" class="space-y-3">
+                                    <div class="animate-pulse flex space-x-4">
+                                        <div class="flex-1 space-y-3 py-1">
+                                            <div class="h-16 bg-gray-100 rounded-xl"></div>
+                                            <div class="h-16 bg-gray-100 rounded-xl"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="booking-step-2" class="booking-step space-y-4 hidden">
+                                <h3 class="text-lg font-bold text-gray-900">2. Chọn ngày phù hợp</h3>
+                                <div id="date-list" class="grid grid-cols-4 gap-2 sm:gap-3">
+                                    </div>
+                            </div>
+                            
+                            <div id="booking-step-3" class="booking-step space-y-4 hidden">
+                                <h3 class="text-lg font-bold text-gray-900">3. Chọn giờ đến</h3>
+                                <div id="timeslot-list" class="grid grid-cols-3 gap-3">
+                                    <p class="text-sm text-gray-500 col-span-3 py-4 text-center bg-gray-50 rounded-xl">Đang tải khung giờ...</p>
+                                </div>
+                            </div>
+
+                            <div id="booking-step-4" class="booking-step space-y-4 hidden">
+                                <h3 class="text-lg font-bold text-gray-900">4. Chọn chuyên gia</h3>
+                                <div id="technician-list" class="grid grid-cols-1 gap-3">
+                                     <p class="text-sm text-gray-500 py-4 text-center bg-gray-50 rounded-xl">Đang tải danh sách...</p>
+                                </div>
+                            </div>
+
+                            <div id="booking-step-5" class="booking-step space-y-5 hidden">
+                                <h3 class="text-lg font-bold text-gray-900">5. Hoàn tất thông tin</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="client-name" class="block text-sm font-medium text-gray-700 mb-1">Tên của bạn *</label>
+                                        <input type="text" id="client-name" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none" placeholder="VD: Nguyễn Văn A">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Chúng tôi liên hệ qua *</label>
+                                        <div class="flex space-x-2 p-1 bg-gray-50 rounded-xl border border-gray-100">
+                                             <label class="flex-1 relative cursor-pointer">
+                                                <input type="radio" name="contact-method" value="phone" class="peer sr-only" checked>
+                                                <div class="w-full py-2.5 text-center text-sm font-medium text-gray-500 rounded-lg peer-checked:bg-white peer-checked:text-primary-700 peer-checked:shadow-sm transition-all">Gọi điện</div>
+                                            </label>
+                                            <label class="flex-1 relative cursor-pointer">
+                                                <input type="radio" name="contact-method" value="social" class="peer sr-only">
+                                                 <div class="w-full py-2.5 text-center text-sm font-medium text-gray-500 rounded-lg peer-checked:bg-white peer-checked:text-primary-700 peer-checked:shadow-sm transition-all">Mạng xã hội</div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div id="contact-phone-group">
+                                        <label for="client-phone" class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại *</label>
+                                        <input type="tel" id="client-phone" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none" placeholder="09xx xxx xxx">
+                                    </div>
+
+                                    <div id="contact-social-group" class="hidden space-y-3">
+                                        <div>
+                                            <label for="social-platform" class="block text-sm font-medium text-gray-700 mb-1">Nền tảng *</label>
+                                            <select id="social-platform" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none appearance-none">
+                                                <option value="facebook">Facebook Messenger</option>
+                                                <option value="zalo">Zalo</option>
+                                                <option value="instagram">Instagram Direct</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label for="social-detail" class="block text-sm font-medium text-gray-700 mb-1">Link profile / SĐT Zalo *</label>
+                                            <input type="text" id="social-detail" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none" placeholder="Nhập thông tin...">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label for="priority-code" class="block text-sm font-medium text-gray-700 mb-1">Mã ưu đãi (Nếu có)</label>
+                                        <input type="text" id="priority-code" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none" placeholder="Nhập mã...">
+                                    </div>
+                                </div>
+                                
+                                <button id="submit-booking" class="w-full bg-primary-700 text-white py-4 px-6 rounded-2xl font-semibold text-base shadow-lg shadow-primary-700/30 hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-700/50 transition-all duration-300 mt-6">
+                                    Xác nhận đặt lịch
+                                </button>
+                            </div>
+                            
+                            <div id="booking-step-6" class="booking-step hidden">
+                                <div class="flex flex-col items-center text-center space-y-5 py-8">
+                                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-2">
+                                        <i class="fas fa-check text-green-600 text-4xl"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-900">Đặt lịch thành công!</h3>
+                                    <p class="text-gray-600">Cảm ơn bạn đã lựa chọn chúng tôi. Mã đặt chỗ của bạn là:</p>
+                                    
+                                    <div class="bg-primary-50 border-dashed border-2 border-primary-200 p-6 rounded-2xl w-full">
+                                        <p id="booking-code" class="text-3xl font-mono font-bold text-primary-700 tracking-widest"></p>
+                                    </div>
+                                    
+                                    <p class="text-sm text-gray-500">Vui lòng chụp màn hình hoặc kiểm tra tab "Lịch sử" để xem lại thông tin.</p>
+                                    
+                                    <button id="new-booking-button" class="w-full bg-gray-100 text-gray-800 py-3 px-6 rounded-xl font-medium hover:bg-gray-200 transition mt-4">
+                                        Tạo lịch đặt mới
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <button id="booking-back-button" class="hidden flex items-center text-sm font-medium text-gray-500 hover:text-primary-700 py-2 px-3 -ml-3 rounded-lg transition-colors">
+                                <i class="fas fa-chevron-left mr-2 text-xs"></i> Quay lại bước trước
+                            </button>
+
+                        </div>
+
+                        <div data-tab-panel="tab-booking-history" class="tab-panel hidden space-y-4 min-h-[300px]">
+                            <div id="booking-history-list" class="space-y-3">
+                                <div class="flex flex-col items-center justify-center py-10 text-gray-400 space-y-3">
+                                    <i class="far fa-calendar-times text-4xl opacity-50"></i>
+                                    <p class="text-sm">Bạn chưa có lịch đặt nào.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-gallery" class="page-content space-y-5 hidden">
+                <div class="bg-white p-6 rounded-3xl shadow-sm text-center space-y-2">
+                    <h1 class="text-xl font-bold text-gray-900">Tác phẩm & Khoảnh khắc</h1>
+                     <p class="text-sm text-gray-500">Cảm hứng từ những khách hàng tuyệt vời</p>
+                </div>
+                
+                <div id="gallery-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <div class="aspect-square bg-gray-200 rounded-2xl animate-pulse"></div>
+                    <div class="aspect-square bg-gray-200 rounded-2xl animate-pulse"></div>
+                    <div class="aspect-square bg-gray-200 rounded-2xl animate-pulse"></div>
+                    <div class="aspect-square bg-gray-200 rounded-2xl animate-pulse"></div>
+                </div>
+            </div>
+
+            <div id="page-news" class="page-content space-y-5 hidden">
+                <h1 class="text-2xl font-bold text-gray-900 px-2">Tin tức & Sự kiện</h1>
+                
+                <div id="news-tabs" class="w-full">
+                    <div class="flex space-x-4 border-b border-gray-200 px-2 mb-4">
+                         <button data-tab-button="tab-news-all" class="tab-button active pb-3 text-sm font-semibold text-gray-900 border-b-2 border-primary-700 transition-all">
+                            Nổi bật
+                        </button>
+                        <button data-tab-button="tab-news-recruit" class="tab-button pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 transition-all">
+                            Tuyển dụng
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div data-tab-panel="tab-news-all" class="tab-panel space-y-4" id="news-all-container">
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 animate-pulse space-y-3">
+                                <div class="h-32 bg-gray-200 rounded-xl w-full"></div>
+                                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                                <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                            </div>
+                        </div>
+                        <div data-tab-panel="tab-news-recruit" class="tab-panel hidden">
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-3">
+                                <div class="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center mb-2">
+                                    <i class="fas fa-graduation-cap text-primary-700 text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900">Chương trình đào tạo & Tuyển dụng</h3>
+                                <p class="text-gray-600 text-sm leading-relaxed">Chúng tôi liên tục tuyển sinh các khóa học từ cơ bản đến nâng cao, và tìm kiếm những đồng đội tài năng.</p>
+                                <button class="text-primary-700 text-sm font-semibold mt-2 flex items-center">
+                                    Xem chi tiết <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-review" class="page-content space-y-6 hidden">
+                <h1 class="text-2xl font-bold text-gray-900 px-2">Góc Khách Hàng</h1>
+                
+                <div class="bg-gradient-to-br from-primary-700 to-primary-900 p-6 rounded-3xl text-white shadow-lg shadow-primary-900/20 relative overflow-hidden">
+                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                    
+                    <div class="relative z-10">
+                        <h3 class="text-lg font-bold mb-2">Bạn cần hỗ trợ ngay?</h3>
+                        <p class="text-primary-100 text-sm mb-4 pr-8">Đội ngũ CSKH luôn sẵn sàng lắng nghe mọi thắc mắc của bạn.</p>
+                        <a href="#" class="inline-flex items-center bg-white text-primary-900 py-2.5 px-5 rounded-xl font-semibold text-sm hover:bg-gray-50 transition shadow-sm">
+                            <i class="fab fa-facebook-messenger mr-2.5 text-lg text-primary-700"></i> Chat ngay
+                        </a>
+                    </div>
+                </div>
+                
+                <div id="review-form-container" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 space-y-5">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Gửi đánh giá</h3>
+                        <p class="text-gray-500 text-sm">Chia sẻ trải nghiệm của bạn với chúng tôi</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <input type="text" id="review-name" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none" placeholder="Tên của bạn *">
+                        <input type="tel" id="review-phone" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none" placeholder="Số điện thoại *">
+                        
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg -ml-2 transition">
+                            <div class="relative">
+                                <input type="checkbox" id="review-anonymous" class="sr-only peer">
+                                <div class="w-10 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-700">Đánh giá ẩn danh</span>
+                        </label>
+                    </div>
+                    
+                    <div class="space-y-6 py-4 border-t border-b border-gray-100">
+                        <div class="star-rating-group text-center sm:text-left">
+                            <label class="block text-sm font-semibold text-gray-900 mb-2">Chất lượng dịch vụ</label>
+                            <div data-rating-for="service" class="flex justify-center sm:justify-start space-x-3 text-3xl cursor-pointer text-gray-300">
+                                <i class="fas fa-star transition-all hover:scale-110" data-value="1"></i>
+                                <i class="fas fa-star transition-all hover:scale-110" data-value="2"></i>
+                                <i class="fas fa-star transition-all hover:scale-110" data-value="3"></i>
+                                <i class="fas fa-star transition-all hover:scale-110" data-value="4"></i>
+                                <i class="fas fa-star transition-all hover:scale-110" data-value="5"></i>
+                            </div>
+                            <input type="hidden" id="rating-service" value="0">
+                            <input type="text" id="rating-detail-service" class="mt-3 hidden w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none" placeholder="Chúng tôi cần cải thiện điều gì?">
+                        </div>
+                        
+                        <div class="star-rating-group text-center sm:text-left">
+                            <label class="block text-sm font-semibold text-gray-900 mb-2">Thái độ phục vụ</label>
+                             <div data-rating-for="attitude" class="flex justify-center sm:justify-start space-x-3 text-3xl cursor-pointer text-gray-300">
+                                <i class="fas fa-star transition-all hover:scale-110" data-value="1"></i>
+                                <i class="fas fa-star transition-all hover:scale-110" data-value="2"></i>
+                                <i class="fas fa-star transition-all hover:scale-110" data-value="3"></i>
+                                <i class="fas fa-star transition-all hover:scale-110" data-value="4"></i>
+                                <i class="fas fa-star transition-all hover:scale-110" data-value="5"></i>
+                            </div>
+                            <input type="hidden" id="rating-attitude" value="0">
+                            <input type="text" id="rating-detail-attitude" class="mt-3 hidden w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none" placeholder="Chúng tôi cần cải thiện điều gì?">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="review-feedback" class="block text-sm font-medium text-gray-700 mb-2">Cảm nhận khác (Không bắt buộc)</label>
+                        <textarea id="review-feedback" rows="3" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all outline-none resize-none" placeholder="Nhập nội dung..."></textarea>
+                    </div>
+                    
+                    <button id="submit-review" class="w-full bg-gray-900 text-white py-4 px-6 rounded-2xl font-semibold text-base shadow-md hover:bg-black transition-all duration-300">
+                        Gửi đánh giá
+                    </button>
+                </div>
+
+                <div id="review-thank-you" class="hidden flex flex-col items-center justify-center py-10 bg-white rounded-3xl shadow-sm border border-gray-100 space-y-4 px-6 text-center">
+                     <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center animate-bounce-small">
+                        <i class="fas fa-heart text-green-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900">Cảm ơn bạn rất nhiều!</h3>
+                    <p class="text-gray-600">Những đóng góp của bạn là động lực to lớn để chúng tôi ngày càng hoàn thiện hơn.</p>
+                </div>
+            </div>
+
+            <div id="page-admin" class="page-content p-6 space-y-6 hidden text-center flex flex-col items-center justify-center min-h-[60vh]">
+                <div class="w-24 h-24 bg-gray-100 rounded-3xl flex items-center justify-center mb-4 rotate-12 shadow-sm">
+                    <i class="fas fa-shield-alt text-gray-400 text-5xl -rotate-12"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-900">Khu vực Quản lý</h1>
+                <p class="text-gray-500 max-w-xs mx-auto">Dành riêng cho quản lý và nhân viên salon để vận hành hệ thống.</p>
+                <a href="./admin.html" class="mt-4 inline-flex items-center bg-gray-900 text-white py-3 px-8 rounded-2xl font-semibold shadow-lg hover:bg-black transition-all">
+                    <i class="fas fa-sign-in-alt mr-3"></i> Đăng nhập hệ thống
+                </a>
+            </div>
+
+        </main>
+        
+        <div class="fixed bottom-0 left-0 right-0 p-4 z-20 pointer-events-none flex justify-center">
+            <nav id="bottom-nav" class="w-full max-w-md pointer-events-auto bg-white/95 backdrop-blur-md rounded-3xl shadow-xl shadow-gray-200/50 border border-white/50 flex justify-around p-2 sm:mb-4">
+                <button data-page="page-home" class="nav-button active flex-1 flex flex-col items-center justify-center text-gray-400 hover:text-primary-600 py-2 rounded-2xl transition-all duration-300 group">
+                    <i class="fas fa-home text-xl mb-1 transition-transform group-active:scale-90"></i>
+                    <span class="text-[10px] font-semibold">Trang chủ</span>
+                </button>
+                <button data-page="page-booking" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-400 hover:text-primary-600 py-2 rounded-2xl transition-all duration-300 group">
+                    <i class="fas fa-calendar-alt text-xl mb-1 transition-transform group-active:scale-90"></i>
+                    <span class="text-[10px] font-semibold">Đặt lịch</span>
+                </button>
+                <button data-page="page-gallery" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-400 hover:text-primary-600 py-2 rounded-2xl transition-all duration-300 group">
+                    <i class="fas fa-photo-video text-xl mb-1 transition-transform group-active:scale-90"></i>
+                    <span class="text-[10px] font-semibold">Thư viện</span>
+                </button>
+                <button data-page="page-news" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-400 hover:text-primary-600 py-2 rounded-2xl transition-all duration-300 group">
+                    <i class="fas fa-newspaper text-xl mb-1 transition-transform group-active:scale-90"></i>
+                    <span class="text-[10px] font-semibold">Tin tức</span>
+                </button>
+                <button data-page="page-review" class="nav-button flex-1 flex flex-col items-center justify-center text-gray-400 hover:text-primary-600 py-2 rounded-2xl transition-all duration-300 group">
+                    <i class="fas fa-star text-xl mb-1 transition-transform group-active:scale-90"></i>
+                    <span class="text-[10px] font-semibold">Đánh giá</span>
+                </button>
+                <button data-page="page-admin" class="nav-button flex-none w-10 flex flex-col items-center justify-center text-gray-300 hover:text-gray-800 py-2 rounded-2xl transition-all duration-300 ml-1">
+                     <i class="fas fa-cog text-lg"></i>
+                </button>
+            </nav>
+        </div>
+
+    </div>
+
+    <div id="modal" class="fixed inset-0 bg-gray-900/30 backdrop-blur-sm overflow-y-auto h-full w-full flex items-center justify-center z-50 hidden transition-opacity duration-300">
+      <div class="relative mx-4 p-6 border-0 w-full max-w-sm shadow-2xl rounded-3xl bg-white scale-100 transition-transform duration-300">
+        <div class="text-center space-y-4">
+          <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-primary-100">
+              <i class="fas fa-info text-primary-700 text-xl"></i>
+          </div>
+          <h3 id="modal-title" class="text-xl leading-6 font-bold text-gray-900">Thông báo</h3>
+          <div class="py-2">
+            <p id="modal-message" class="text-sm text-gray-500 leading-relaxed"></p>
+          </div>
+          <div class="">
+            <button id="modal-close-button" class="w-full px-4 py-3 bg-gray-900 text-white text-base font-semibold rounded-2xl shadow-md hover:bg-black focus:outline-none transition-all">
+              Đã hiểu
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+<script src="./main.js" type="module"></script>
+</html>

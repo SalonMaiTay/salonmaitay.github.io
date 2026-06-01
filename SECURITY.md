@@ -23,7 +23,7 @@ Hiện tại, chúng tôi chỉ tập trung vá lỗi và hỗ trợ bảo mật
 
 Nếu bạn phát hiện ra bất kỳ sự cố, nguy cơ dính mã độc, hay lỗ hổng khai thác dữ liệu nào liên quan đến hệ thống quản lý lịch hẹn hoặc phân vùng lưu trữ thông tin phản hồi, hãy thực hiện theo quy trình sau:
 
-1. **Gửi thông tin kín:** Vui lòng gửi email mô tả chi tiết lỗi kèm theo các bước tái diễn (Proof of Concept) về địa chỉ hòm thư quản trị trực tiếp: `maitay.hairsalon@gmail.com` (Hoặc liên hệ qua Hotline/Zalo chính thức của Salon).
+1. **Gửi thông tin kín:** Vui lòng gửi email mô tả chi tiết lỗi kèm theo các bước tái diễn (Proof of Concept) về địa chỉ hòm thư quản trị trực tiếp: `admin@mhung.site` (Hoặc liên hệ qua Hotline/Zalo chính thức của Salon).
 2. **Nội dung cung cấp:**
    * Mô tả ngắn gọn về lỗ hổng an toàn bảo mật.
    * Các bước cụ thể hoặc đoạn mã minh họa để tái hiện lỗi.

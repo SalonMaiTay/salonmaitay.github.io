@@ -1,21 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  // Chỉ định Tailwind quét nghiêm ngặt trong thư mục /asset/ viết thường của bạn
+  // Điền chính xác đường dẫn này để Tailwind không bỏ sót bất kỳ class nào trong file js
   content: [
     "./index.html",
-    "./asset/*.js",
-    "./asset/*.css"
+    "./asset/main.js",          // Quét trực tiếp file logic chính
+    "./asset/iOS.js",           // Quét file giao diện bổ trợ
+    "./asset/**/*.js"           // Dự phòng quét toàn bộ file js khác trong thư mục asset
   ],
   theme: {
     extend: {
+      // Đăng ký cứng các class z-index tùy biến để không bao giờ bị xóa nhầm
       zIndex: {
         '25': '25',
         '30': '30',
-      },
-      colors: {
-        zinc: {
-          950: '#09090b',
-        }
       }
     },
   },

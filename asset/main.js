@@ -6,7 +6,7 @@ const BRAND_CONFIG = {
         name: "Mai Tây Hair Salon",
         slogan: "Premium Hair Studio",
         rating: "5.0",
-        version: "v1.0.3"
+        version: "v1.0.5"
     },
     contact: {
         phoneDisplay: "0909 123 456",

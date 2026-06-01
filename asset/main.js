@@ -72,7 +72,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const firebaseDb = getFirestore(app);
 const auth = getAuth(app);
-const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwV7f8lE_evphu_A1ZwYsM_pPexjPvS8ZRNdFtAcEhvS6852vUljW49H-wuV6TgPYeFaQ/exec';
+const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbzASFl92p2uuHqB34T4Tbwv2Rk0ffwAvcmSA_g_w4Vzy5cWpStkPIkaM0OFo15SXTIr6Q/exec';
 
 // ==========================================
 // 3. GLOBAL VARIABLES & WINDOW BINDINGS
@@ -95,6 +95,7 @@ window.submitBooking = submitBooking;
 window.lookupBooking = lookupBooking;
 window.cancelBooking = cancelBooking;
 window.togglePlay = togglePlay;
+
 // Khởi tạo trạng thái Auto Scroll toàn cục an toàn cho ES6 Module
 if (window.isAutoScrollEnabled === undefined) {
     window.isAutoScrollEnabled = false;
@@ -164,13 +165,10 @@ async function init() {
         renderBranches();
         renderDateSelector();
 
-        const currentVersion = appConfig.general.version;
-        const localVersion = localStorage.getItem('MAITAY_APP_VERSION');
-        if (localVersion && localVersion !== currentVersion) {
-            localStorage.setItem('MAITAY_APP_VERSION', currentVersion);
-            window.location.replace(`${window.location.href.split('?')[0]}?v=${new Date().getTime()}`);
-            return;
-        } else if (!localVersion) localStorage.setItem('MAITAY_APP_VERSION', currentVersion);
+        // Ưu tiên nạp và kiểm soát phiên bản thông minh qua dữ liệu động
+        const liveVersion = systemData.version || appConfig.general.version;
+        const hasUpdate = checkAndUpgradeVersion(liveVersion);
+        if (hasUpdate) return; // Dừng tiến trình nạp nếu bắt đầu chu trình cập nhật
 
     } catch (e) {
         console.error("Lỗi Firestore: ", e);
@@ -178,10 +176,62 @@ async function init() {
     } finally { setTimeout(finishLoadingAnimation, 800); }
 }
 
+// ==========================================
+// HÀM KIỂM SOÁT VÀ NÂNG CẤP PHIÊN BẢN CHỦ ĐỘNG
+// ==========================================
+function checkAndUpgradeVersion(targetVersion) {
+    const localVersion = localStorage.getItem('MAITAY_APP_VERSION');
+
+    if (localVersion && localVersion !== targetVersion) {
+        console.log(`[Version Control] Phát hiện phiên bản mới: ${targetVersion} (Bản cũ: ${localVersion}). Tiến hành dọn dẹp cache...`);
+        
+        // BƯỚC 1: Cập nhật ngay phiên bản mới vào LocalStorage để ngăn chặn hoàn toàn vòng lặp tải trang vô hạn
+        localStorage.setItem('MAITAY_APP_VERSION', targetVersion);
+
+        // BƯỚC 2: Hiển thị thông báo Premium (Sử dụng hàm showCustomAlert có sẵn của hệ thống)
+        if (typeof showCustomAlert === 'function') {
+            showCustomAlert(
+                "Nâng cấp hệ thống", 
+                "Mai Tây Hair Salon đang tự động tối ưu hóa dữ liệu lên phiên bản mới nhất nhằm đem lại trải nghiệm mượt mà nhất cho bạn.", 
+                "info"
+            );
+        }
+
+        // BƯỚC 3: Dọn dẹp triệt để Cache Storage và tiến hành nạp lại trang sạch
+        setTimeout(() => {
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    return Promise.all(
+                        names.map(function(name) {
+                            return caches.delete(name);
+                        })
+                    );
+                }).then(function() {
+                    forceCleanReload();
+                }).catch(function() {
+                    forceCleanReload();
+                });
+            } else {
+                forceCleanReload();
+            }
+        }, 2000); // Trì hoãn 2 giây để khách kịp đọc thông báo mượt mà
+
+        return true; // Đã kích hoạt tiến trình nâng cấp
+    } else if (!localVersion) {
+        // Lần đầu tiên truy cập ứng dụng
+        localStorage.setItem('MAITAY_APP_VERSION', targetVersion);
+    }
+    return false; // Không có bản cập nhật mới
+}
+
+// Hàm bổ trợ thực hiện ép tải lại loại bỏ hoàn toàn dấu vết URL/Query cũ
+function forceCleanReload() {
+    const cleanUrl = window.location.href.split('?')[0];
+    // Sử dụng tham số cập nhật kèm timestamp để ép CDN/WebView bỏ qua cache tĩnh
+    window.location.replace(`${cleanUrl}?update=${new Date().getTime()}`);
+}
+
 init();
-
-
-
 
 // ==========================================
 // 5. COMPONENT RENDER ENGINES
@@ -197,7 +247,10 @@ function applyConfig() {
     const cleanPhone = String(appConfig.contact.phoneLink).replace(/[^0-9]/g, '');
     if (document.getElementById('config-phone-link')) document.getElementById('config-phone-link').href = "tel:" + cleanPhone;
     if (document.getElementById('config-zalo-link')) document.getElementById('config-zalo-link').href = appConfig.contact.zaloLink;
-    if (document.getElementById('config-version')) document.getElementById('config-version').innerText = appConfig.general.version;
+    if (document.getElementById('config-version')) {
+        // Hiển thị phiên bản động lưu hành trên Firestore cấu hình
+        document.getElementById('config-version').innerText = appConfig.version || appConfig.general.version;
+    }
 }
 
 function renderHeroSlider() {
@@ -217,10 +270,10 @@ function renderHeroSlider() {
 }
 
 function renderDynamicHero() {
-    const container = document.getElementById('dynamicHeroBlock'); if(!container) return; clearInterval(countdownInterval);
+    const container = document.getElementById('dynamicHeroBlock'); if (!container) return; clearInterval(countdownInterval);
     if (appConfig.heroBlock?.isFlashSale) {
         const conf = appConfig.heroBlock.flashSale;
-        
+
         // Cập nhật cấu trúc HTML: Thêm ô Ngày (cd-day) vào bộ đếm ngược
         container.innerHTML = `
             <div class="relative overflow-hidden rounded-[1.5rem] p-6 shadow-[0_12px_40px_-10px_rgba(159,18,57,0.4)] border border-rose-900/20 bg-[#2a0410]">
@@ -250,7 +303,7 @@ function renderDynamicHero() {
         `;
 
         const endTime = new Date(conf.endTime).getTime();
-        
+
         countdownInterval = setInterval(() => {
             const diff = endTime - new Date().getTime();
             if (diff > 0) {
@@ -261,16 +314,16 @@ function renderDynamicHero() {
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
 
                 // Đổ dữ liệu vào Khối Hero chính ngoài màn hình
-                if(document.getElementById('cd-day')) document.getElementById('cd-day').innerText = String(d).padStart(2, '0');
-                if(document.getElementById('cd-hour')) document.getElementById('cd-hour').innerText = String(h).padStart(2, '0');
-                if(document.getElementById('cd-min')) document.getElementById('cd-min').innerText = String(m).padStart(2, '0');
-                if(document.getElementById('cd-sec')) document.getElementById('cd-sec').innerText = String(s).padStart(2, '0');
-                
+                if (document.getElementById('cd-day')) document.getElementById('cd-day').innerText = String(d).padStart(2, '0');
+                if (document.getElementById('cd-hour')) document.getElementById('cd-hour').innerText = String(h).padStart(2, '0');
+                if (document.getElementById('cd-min')) document.getElementById('cd-min').innerText = String(m).padStart(2, '0');
+                if (document.getElementById('cd-sec')) document.getElementById('cd-sec').innerText = String(s).padStart(2, '0');
+
                 // Đồng bộ mượt mà sang Dynamic Island (Nếu giao diện của bạn có hỗ trợ các ID này)
-                if(document.getElementById('di-day')) document.getElementById('di-day').innerText = String(d).padStart(2, '0');
-                if(document.getElementById('di-hour')) document.getElementById('di-hour').innerText = String(h).padStart(2, '0');
-                if(document.getElementById('di-min')) document.getElementById('di-min').innerText = String(m).padStart(2, '0');
-                if(document.getElementById('di-sec')) document.getElementById('di-sec').innerText = String(s).padStart(2, '0');
+                if (document.getElementById('di-day')) document.getElementById('di-day').innerText = String(d).padStart(2, '0');
+                if (document.getElementById('di-hour')) document.getElementById('di-hour').innerText = String(h).padStart(2, '0');
+                if (document.getElementById('di-min')) document.getElementById('di-min').innerText = String(m).padStart(2, '0');
+                if (document.getElementById('di-sec')) document.getElementById('di-sec').innerText = String(s).padStart(2, '0');
             } else {
                 clearInterval(countdownInterval);
                 // Xử lý khi hết thời gian Flash Sale: ẩn block hoặc chuyển trạng thái
@@ -282,10 +335,11 @@ function renderDynamicHero() {
         document.getElementById('dynamic-island')?.classList.remove('max-h-0', 'opacity-0');
         document.getElementById('dynamic-island')?.classList.add('max-h-[100px]', 'opacity-100');
     } else {
-        container.innerHTML = ''; 
+        container.innerHTML = '';
         document.getElementById('dynamic-island')?.classList.add('max-h-0', 'opacity-0');
     }
 }
+
 function renderHomeFeatures() {
     const feat = appConfig.homeFeatures;
     const marqueeContainer = document.getElementById('homeMarquee');
@@ -344,16 +398,16 @@ function renderFeed() {
         const displayFomoText = fd.fomoText || "";
         const displayFomoIcon = fd.fomoIcon || "fa-bolt";
         const displayTitle = fd.title || "Tác phẩm thiết kế tóc cao cấp tại Mai Tây";
-        
+
         // Dùng URL hoặc Title làm ID định danh bài viết để lưu vào nội dung báo cáo
-        const feedId = encodeURIComponent(cleanUrl.substring(cleanUrl.lastIndexOf('/') + 1)); 
+        const feedId = encodeURIComponent(cleanUrl.substring(cleanUrl.lastIndexOf('/') + 1));
 
         if (isVideoFile) {
             mediaTemplate = `
                 <video src="${fd.url}" muted loop playsinline class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-20 scale-105 pointer-events-none z-0"></video>
                 <video src="${fd.url}" loop playsinline class="feed-media-main relative w-full h-full object-cover transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] z-10" onclick="window.togglePlay(this.closest('.feed-item'))"></video>
             `;
-            
+
             overlayTemplate = `
                 <div class="play-btn-overlay absolute inset-0 flex items-center justify-center bg-black/10 transition-opacity duration-300 z-20 pointer-events-auto cursor-pointer" onclick="window.togglePlay(this.closest('.feed-item'))">
                     <div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/30 shadow-lg">
@@ -425,12 +479,9 @@ function renderFeed() {
     setupFeedObserver(container);
 }
 
-/**
- * Quản lý trạng thái đệm tải dữ liệu thực tế và tính toán bước nhảy trang tự động khi hết nội dung
- */
 function setupFeedObserver(container) {
     if (window.feedObserver) window.feedObserver.disconnect();
-    
+
     window.feedObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             const video = entry.target.querySelector('video.feed-media-main');
@@ -472,16 +523,13 @@ function setupFeedObserver(container) {
     document.querySelectorAll('#feedContainer > .feed-item').forEach(el => window.feedObserver.observe(el));
 }
 
-/**
- * Xử lý bật/tắt tính năng Auto Scroll từ nút nhấn giao diện của người dùng
- */
 function toggleAutoScroll(buttonElement) {
     isAutoScrollEnabled = !isAutoScrollEnabled;
-    
+
     document.querySelectorAll('.auto-scroll-btn').forEach(btn => {
         const label = btn.nextElementSibling;
         const icon = btn.querySelector('i');
-        
+
         if (isAutoScrollEnabled) {
             btn.className = "auto-scroll-btn w-11 h-11 rounded-full backdrop-blur-md border flex items-center justify-center shadow-lg active:scale-90 transition-all text-amber-400 bg-slate-900 border-amber-400/30";
             if (icon) icon.className = "fa-solid fa-square-caret-down text-base";
@@ -497,10 +545,6 @@ function toggleAutoScroll(buttonElement) {
     if (container) setupFeedObserver(container);
 }
 
-
-/**
- * Xử lý co giãn định dạng hiển thị Media (Tràn khung <=> Giữ nguyên tỉ lệ thực 4:5)
- */
 function toggleMediaFormat(buttonElement) {
     const feedItem = buttonElement.closest('.feed-item');
     if (!feedItem) return;
@@ -508,7 +552,7 @@ function toggleMediaFormat(buttonElement) {
     const mainMedia = feedItem.querySelector('.feed-media-main');
     const label = buttonElement.querySelector('.format-label');
     const icon = buttonElement.querySelector('i');
-    
+
     if (!mainMedia) return;
 
     if (mainMedia.classList.contains('object-cover')) {
@@ -523,40 +567,29 @@ function toggleMediaFormat(buttonElement) {
         if (icon) icon.className = "fa-solid fa-expand text-base";
     }
 }
-/**
- * Hàm xử lý bật/tắt phát Video khi chạm màn hình
- * Tách biệt hoàn toàn phân lớp để cô lập vùng chạm, tránh lỗi xung đột với cụm nút bấm
- */
+
 function togglePlay(element) {
-    // Nhận diện chính xác video chính đang hiển thị của feed-item đó
     const video = element.querySelector('video.feed-media-main');
     const overlay = element.querySelector('.play-btn-overlay');
     if (!video) return;
 
     if (video.paused) {
-        // Nếu video đang dừng -> Kích hoạt phát tiếp và ẩn nút Play mồi
         video.play().catch(() => { });
         if (overlay) {
             overlay.classList.add('opacity-0', 'pointer-events-none');
         }
     } else {
-        // Nếu video đang chạy -> Tạm dừng và hiển thị lại nút Play mồi
         video.pause();
         if (overlay) {
             overlay.classList.remove('opacity-0', 'pointer-events-none');
         }
     }
 }
-// Đảm bảo gán lại vào môi trường toàn cục window để các thẻ HTML gọi trực tiếp được
 window.togglePlay = togglePlay;
-
 
 window.openReportModal = openReportModal;
 window.submitReport = submitReport;
 
-/**
- * Mở modal báo cáo bài viết, tự động bắt ID và Tiêu đề bài viết đó
- */
 function openReportModal(feedId, feedTitle) {
     const overlay = document.getElementById('custom-modal-overlay');
     const modalBox = document.getElementById('custom-modal-box');
@@ -568,16 +601,13 @@ function openReportModal(feedId, feedTitle) {
 
     if (!overlay || !modalBox) return;
 
-    // Tạm dừng mọi video đang phát để khách hàng tập trung thao tác
     document.querySelectorAll('#feedContainer video.feed-media-main').forEach(v => v.pause());
 
-    // Thiết kế lại giao diện bên trong của Custom Modal thành Form Báo cáo Premium
     iconContainer.className = "w-14 h-14 rounded-full flex items-center justify-center mb-4 bg-rose-50 text-rose-600 transition-all duration-300";
     icon.className = "fa-solid fa-triangle-exclamation text-xl";
-    
+
     titleEl.innerText = "Báo cáo nội dung";
-    
-    // Hiển thị ID bài viết kèm menu chọn lý do tinh tế
+
     messageEl.innerHTML = `
         <p class="text-[11px] text-slate-400 mb-3 text-left font-mono truncate bg-slate-50 p-2 rounded border">ID bài: ${decodeURIComponent(feedId)}</p>
         <div class="text-left space-y-2 w-full" id="reportOptionsGroup">
@@ -597,13 +627,11 @@ function openReportModal(feedId, feedTitle) {
         <textarea id="reportNote" placeholder="Mô tả chi tiết thêm nếu có..." rows="2" class="w-full mt-3 bg-slate-50 border p-3 rounded-xl text-xs font-medium outline-none focus:bg-white focus:border-slate-300 resize-none"></textarea>
     `;
 
-    // Thay đổi 2 nút hành động bám đáy của modal
     modalActions.innerHTML = `
         <button id="report-btn-cancel" class="flex-1 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest bg-slate-100 text-slate-600 hover:bg-slate-200 active:scale-95 transition-all">Hủy</button>
         <button id="report-btn-submit" class="flex-1 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest bg-rose-600 text-white shadow-md hover:bg-rose-700 active:scale-95 transition-all">Gửi báo cáo</button>
     `;
 
-    // Kích hoạt hiệu ứng mở popup mượt mà
     overlay.classList.remove('hidden');
     overlay.classList.add('flex');
     setTimeout(() => {
@@ -613,20 +641,15 @@ function openReportModal(feedId, feedTitle) {
         modalBox.classList.add('scale-100');
     }, 10);
 
-    // Xử lý sự kiện nút Hủy
     document.getElementById('report-btn-cancel').onclick = () => {
         closeReportModal();
     };
 
-    // Xử lý sự kiện nút Gửi
     document.getElementById('report-btn-submit').onclick = () => {
         window.submitReport(feedId, feedTitle);
     };
 }
 
-/**
- * Đóng modal và khôi phục lại cấu trúc nút bấm mặc định cho Custom Modal
- */
 function closeReportModal() {
     const overlay = document.getElementById('custom-modal-overlay');
     const modalBox = document.getElementById('custom-modal-box');
@@ -636,12 +659,11 @@ function closeReportModal() {
     overlay.classList.add('opacity-0');
     modalBox.classList.remove('scale-100');
     modalBox.classList.add('scale-95');
-    
+
     setTimeout(() => {
         overlay.classList.remove('flex');
         overlay.classList.add('hidden');
-        
-        // Trả lại cấu trúc nút "Đồng ý" mặc định cho Custom Modal để không làm hỏng các tính năng khác
+
         document.getElementById('modal-actions').innerHTML = `
             <button id="modal-btn-cancel" class="hidden flex-1 py-3.5 rounded-xl font-bold text-[11px] uppercase tracking-widest bg-slate-100 text-slate-600 hover:bg-slate-200 active:scale-95 transition-all">Hủy</button>
             <button id="modal-btn-confirm" class="flex-1 py-3.5 rounded-xl font-bold text-[11px] uppercase tracking-widest bg-slate-900 text-white shadow-md hover:bg-slate-800 active:scale-95 transition-all">Đồng ý</button>
@@ -649,9 +671,6 @@ function closeReportModal() {
     }, 300);
 }
 
-/**
- * Đẩy dữ liệu báo cáo lên danh mục 'MaiTayData/Core/Reports' của Firebase
- */
 async function submitReport(feedId, feedTitle) {
     const btnSubmit = document.getElementById('report-btn-submit');
     if (!btnSubmit) return;
@@ -673,16 +692,13 @@ async function submitReport(feedId, feedTitle) {
     };
 
     try {
-        // Lưu trữ vào Firestore bộ sưu tập Reports độc lập
         await addDoc(collection(firebaseDb, "MaiTayData/Core/Reports"), reportData);
-        
         closeReportModal();
-        
-        // Thao tác thành công -> Gọi Custom Alert thông báo lại cho khách bằng giao diện Success sạch sẽ
+
         setTimeout(() => {
             showCustomAlert(
-                "Đã ghi nhận báo cáo", 
-                "Cảm ơn sự đóng góp của bạn. Ban quản trị Mai Tây sẽ tiến hành xác minh nội dung và xử lý trong vòng 24h.", 
+                "Đã ghi nhận báo cáo",
+                "Cảm ơn sự đóng góp của bạn. Ban quản trị Mai Tây sẽ tiến hành xác minh nội dung và xử lý trong vòng 24h.",
                 "success"
             );
         }, 400);
@@ -716,7 +732,7 @@ function switchTab(tabName) {
         activeNav.classList.add('active');
         activeNav.classList.remove('text-slate-400');
         activeNav.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    }   
+    }
 
     const bottomNav = document.querySelector('.bottom-nav');
     if (bottomNav) {
@@ -732,8 +748,7 @@ function switchTab(tabName) {
             checkAndShowSwipeHint();
 
         } else {
-
-            bottomNav.classList.remove('!bg-black/40', '!border-white/10', '!shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]','!w-full', '!max-w-full', '!bottom-0', '!rounded-none');
+            bottomNav.classList.remove('!bg-black/40', '!border-white/10', '!shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]', '!w-full', '!max-w-full', '!bottom-0', '!rounded-none');
             bottomNav.classList.add('bg-white/95', 'border-slate-200');
             if (activeNav) activeNav.classList.add('text-slate-900');
         }
@@ -761,7 +776,6 @@ function switchTab(tabName) {
         if (bookingAction) bookingAction.classList.add('hidden');
     }
 }
-
 
 function switchBookingSubTab(subTab) {
     const flow = document.getElementById('booking-flow-container'), lookup = document.getElementById('booking-lookup-container');
@@ -826,45 +840,42 @@ function selectDate(isoDate) {
 }
 
 async function fetchTimeSlots() {
-    if (!selection.date || !selection.branch) return; // Đổi điều kiện kiểm tra từ staff sang branch
+    if (!selection.date || !selection.branch) return;
     document.getElementById('timeSlotGrid').innerHTML = '';
     document.getElementById('timeLoading').classList.remove('hidden');
     try {
-        // Quét toàn bộ lịch hẹn ĐÃ NHẬN của CHI NHÁNH hiện tại trong ngày được chọn
         const q = query(
-            collection(firebaseDb, "MaiTayData/Core/Bookings"), 
-            where("branchName", "==", selection.branch.name), 
+            collection(firebaseDb, "MaiTayData/Core/Bookings"),
+            where("branchName", "==", selection.branch.name),
             where("status", "==", "Đã nhận")
         );
         const snapshot = await getDocs(q);
         const busySlots = [];
-        
+
         snapshot.forEach(docSnap => {
             const b = docSnap.data();
-            // Lọc chính xác các lịch hẹn nằm trong ngày đang chọn
             if (b.startTime.startsWith(selection.date)) {
-                busySlots.push({ 
-                    start: new Date(b.startTime).getTime(), 
-                    end: new Date(b.endTime).getTime() 
+                busySlots.push({
+                    start: new Date(b.startTime).getTime(),
+                    end: new Date(b.endTime).getTime()
                 });
             }
         });
         generateGrid(busySlots);
-    } catch (e) { 
-        console.error("Lỗi lấy lịch hẹn:", e); 
-        generateGrid([]); 
+    } catch (e) {
+        console.error("Lỗi lấy lịch hẹn:", e);
+        generateGrid([]);
     }
     document.getElementById('timeLoading').classList.add('hidden');
 }
 
 function generateGrid(busySlots) {
-    const grid = document.getElementById('timeSlotGrid'); if(!grid) return; 
+    const grid = document.getElementById('timeSlotGrid'); if (!grid) return;
     const dur = parseInt(selection.service.duration);
     const parseTime = str => parseInt(String(str).split(':')[0] || 0) * 60 + parseInt(String(str).split(':')[1] || 0);
-    
+
     const branch = selection.branch || { openTime: "08:00", closeTime: "20:00", seats: 1 };
-    // Lấy số ghế cấu hình từ chi nhánh, nếu không có mặc định là 1 ghế
-    const maxSeats = Number(branch.seats) || 1; 
+    const maxSeats = Number(branch.seats) || 1;
 
     const currentMins = new Date().getHours() * 60 + new Date().getMinutes();
     const isToday = selection.date === new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0];
@@ -875,27 +886,23 @@ function generateGrid(busySlots) {
         const timeLabel = `${Math.floor(m / 60).toString().padStart(2, '0')}:${(m % 60).toString().padStart(2, '0')}`;
         const slotStart = new Date(`${selection.date}T${timeLabel}:00+07:00`).getTime();
         const slotEnd = slotStart + (dur * 60000);
-        
+
         let isBusy = false;
-        
-        // 1. Khóa ca nếu là hôm nay và thời gian đã trôi qua
+
         if (isToday && m <= currentMins) {
             isBusy = true;
         } else {
-            // 2. ĐẾM SỐ GHẾ ĐÃ ĐƯỢC ĐẶT TRONG KHUNG GIỜ NÀY
             let bookedCount = 0;
-            for (let busy of busySlots) { 
-                // Kiểm tra nếu lịch hẹn cũ và ca đặt mới có khoảng thời gian đè lên nhau
+            for (let busy of busySlots) {
                 if (slotStart < busy.end && slotEnd > busy.start) {
                     bookedCount++;
                 }
             }
-            // Nếu số lượng khách đặt vượt quá hoặc bằng số ghế hiện có của chi nhánh -> Khóa slot
             if (bookedCount >= maxSeats) {
                 isBusy = true;
             }
         }
-        
+
         html += `<label class="group block ${isBusy ? 'opacity-30 pointer-events-none' : 'cursor-pointer'}"><input type="radio" name="time" class="hidden" onclick="window.selectTime('${timeLabel}')" ${isBusy ? 'disabled' : ''}><div class="border-2 border-slate-100 rounded-[1rem] py-3 text-center bg-white transition-all group-has-[:checked]:border-slate-900 group-has-[:checked]:bg-slate-900"><span class="font-bold text-xs text-slate-700 group-has-[:checked]:text-white">${timeLabel}</span></div></label>`;
     }
     grid.innerHTML = html || '<p class="col-span-4 text-center text-[10px] font-bold text-slate-400 py-4 bg-slate-50 rounded-xl uppercase tracking-widest border border-slate-100">Hết lịch trống</p>';
@@ -937,12 +944,6 @@ function updateStepUI() {
 // ĐIỀU KHIỂN PREMIUM MODAL ĐẶT LỊCH THÀNH CÔNG
 // ==========================================
 
-/**
- * Hàm hiển thị Custom Modal dựng sẵn thay thế cho alert() mặc định
- * @param {string} title - Tiêu đề thông báo
- * @param {string} message - Nội dung chi tiết
- * @param {string} type - Loại thông báo ('success', 'error', 'info') để đổi màu icon
- */
 function showCustomAlert(title, message, type = 'info') {
     const overlay = document.getElementById('custom-modal-overlay');
     const modalBox = document.getElementById('custom-modal-box');
@@ -954,11 +955,9 @@ function showCustomAlert(title, message, type = 'info') {
 
     if (!overlay || !modalBox) return;
 
-    // Thiết lập nội dung text
     titleEl.innerText = title;
     messageEl.innerText = message;
 
-    // Thiết lập màu sắc và icon premium tùy theo loại thông báo
     iconContainer.className = "w-14 h-14 rounded-full flex items-center justify-center mb-4 transition-all duration-300";
     if (type === 'success') {
         iconContainer.classList.add('bg-emerald-50', 'text-emerald-600');
@@ -971,7 +970,6 @@ function showCustomAlert(title, message, type = 'info') {
         icon.className = "fa-solid fa-bell text-xl";
     }
 
-    // Kích hoạt hiệu ứng mở modal mượt mà của Apple
     overlay.classList.remove('hidden');
     overlay.classList.add('flex');
     setTimeout(() => {
@@ -981,7 +979,6 @@ function showCustomAlert(title, message, type = 'info') {
         modalBox.classList.add('scale-100');
     }, 10);
 
-    // Gán sự kiện đóng đóng modal khi bấm nút "Đồng ý"
     btnConfirm.onclick = () => {
         overlay.classList.remove('opacity-100');
         overlay.classList.add('opacity-0');
@@ -1000,13 +997,11 @@ function showSuccessModal(code, data) {
 
     if (!modal || !card) return;
 
-    // 1. Đổ dữ liệu động vào cấu trúc giao diện Modal vé ảo
     document.getElementById('mdlBookingCode').innerText = code;
     document.getElementById('mdlService').innerText = data.serviceName;
     document.getElementById('mdlStaff').innerText = data.staffName;
     document.getElementById('mdlBranch').innerText = data.branchName;
 
-    // Xử lý định dạng thời gian & ngày hẹn hiển thị chuẩn sang trọng
     const dP = selection.date.split('-');
     const dateObj = new Date(selection.date);
     const dayOfWeek = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'][dateObj.getDay()];
@@ -1014,23 +1009,19 @@ function showSuccessModal(code, data) {
     document.getElementById('mdlTime').innerText = selection.time;
     document.getElementById('mdlDate').innerText = `${dayOfWeek}, ${dP[2]}/${dP[1]}/${dP[0]}`;
 
-    // 2. Gán sự kiện cho nút Copy mã tích hợp trong vé
     const copyBtnZone = document.getElementById('btnCopyBookingCode');
     copyBtnZone.onclick = () => {
         navigator.clipboard.writeText(code);
 
-        // Hiệu ứng phản hồi xúc giác nhẹ (Haptic feedback) bằng UI khi bấm copy thành công
         const originalHTML = copyBtnZone.innerHTML;
         copyBtnZone.innerHTML = `<span class="text-xs font-black tracking-widest text-emerald-600 uppercase w-full text-center"><i class="fa-solid fa-circle-check mr-1.5"></i>ĐÃ SAO CHÉP MÃ</span>`;
         setTimeout(() => { copyBtnZone.innerHTML = originalHTML; }, 2000);
     };
 
-    // 3. Kích hoạt hiệu ứng chuyển động mượt mà bật màng bọc Apple
     modal.classList.remove('opacity-0', 'pointer-events-none');
     card.classList.remove('scale-95', 'opacity-0');
     card.classList.add('scale-100', 'opacity-100');
 
-    // 4. Gán sự kiện đóng modal dọn dẹp dữ liệu cũ bước về Home
     document.getElementById('btnCloseSuccessModal').onclick = () => closeSuccessModal();
 }
 
@@ -1040,12 +1031,10 @@ function closeSuccessModal() {
 
     if (!modal || !card) return;
 
-    // Ẩn mượt mà các Layer
     card.classList.remove('scale-100', 'opacity-100');
     card.classList.add('scale-95', 'opacity-0');
     modal.classList.add('opacity-0', 'pointer-events-none');
 
-    // Reset lại toàn bộ Form và đưa luồng đặt lịch về Step 1
     selection = { branch: null, service: null, staff: null, date: null, time: null };
     document.getElementById('listService').innerHTML = '';
     document.getElementById('listStaff').innerHTML = '';
@@ -1053,12 +1042,10 @@ function closeSuccessModal() {
     currentStep = 1;
     updateStepUI();
 
-    // Cuộn mượt màn hình lên đầu trang luồng đặt lịch
     const flowCont = document.getElementById('booking-flow-container');
     if (flowCont) flowCont.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// BỔ SUNG BINDING VÀO WINDOW ĐỂ TRÁNH LỖI PHẠM VI MODULE
 window.closeSuccessModal = closeSuccessModal;
 
 // ==========================================
@@ -1095,11 +1082,9 @@ async function submitBooking() {
     try {
         const docRef = await addDoc(collection(firebaseDb, "MaiTayData/Core/Bookings"), bookingData);
 
-        // Kích hoạt Premium Modal thay vì alert lỗi thời
         if (document.getElementById('finalForm')) document.getElementById('finalForm').reset();
         showSuccessModal(bookingCode, bookingData);
 
-        // Chạy đồng bộ ngầm gửi lên hệ thống Google Sheets Automation
         fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: 'create_event', data: bookingData }) })
             .then(res => res.json())
             .then(async (result) => {
@@ -1199,7 +1184,6 @@ function setupVideoAutoplay() {
             if (entry.isIntersecting) {
                 if (blinkAutoScrollTimer) clearTimeout(blinkAutoScrollTimer);
 
-                // --- 1. KÍCH HOẠT LOAD MEDIA HIỆN TẠI NẾU CHƯA CÓ ---
                 if (video && video.hasAttribute('data-src')) {
                     video.src = video.getAttribute('data-src');
                     video.removeAttribute('data-src');
@@ -1210,7 +1194,6 @@ function setupVideoAutoplay() {
                     img.removeAttribute('data-src');
                 }
 
-                // --- 2. PRELOAD NGẦM 3 FEED TIẾP THEO ---
                 for (let i = 1; i <= 3; i++) {
                     if (index + i < feedItems.length) {
                         const nextItem = feedItems[index + i];
@@ -1221,7 +1204,7 @@ function setupVideoAutoplay() {
                             nextVid.src = nextVid.getAttribute('data-src');
                             nextVid.removeAttribute('data-src');
                             nextVid.setAttribute('preload', 'auto');
-                            nextVid.load(); // Kích hoạt trình duyệt đệm trước video
+                            nextVid.load();
                         } else if (nextImg && nextImg.hasAttribute('data-src')) {
                             nextImg.src = nextImg.getAttribute('data-src');
                             nextImg.removeAttribute('data-src');
@@ -1229,20 +1212,16 @@ function setupVideoAutoplay() {
                     }
                 }
 
-                // --- 3. XỬ LÝ AUTOPLAY & HIỆU ỨNG LOADING KHI MẠNG YẾU ---
                 if (video) {
                     const loader = entry.target.querySelector('.media-loader');
 
-                    // Bật spinner nếu video bị khựng lại để buffer
                     video.onwaiting = () => { if (loader) loader.style.display = 'flex'; };
-
-                    // Tắt spinner khi video đủ dữ liệu chạy tiếp
                     video.onplaying = () => { if (loader) loader.style.display = 'none'; };
                     video.oncanplay = () => { if (loader) loader.style.display = 'none'; };
                     video.onerror = () => { if (loader) loader.style.display = 'none'; console.log("Lỗi tải video"); };
                     const playPromise = video.play();
                     if (playPromise !== undefined) {
-                        playPromise.catch(e => { /* Bỏ qua lỗi Auto-play bị chặn bởi trình duyệt */ });
+                        playPromise.catch(e => { });
                     }
                     video.onended = scrollToNext;
                 } else {
@@ -1251,7 +1230,6 @@ function setupVideoAutoplay() {
                     }, 10000);
                 }
             } else {
-                // Tạm dừng video khi lướt qua để tiết kiệm tài nguyên
                 if (video) {
                     video.pause();
                     video.onended = null;
@@ -1271,20 +1249,14 @@ if (document.getElementById('lookupPhone')) {
     });
 }
 
-// Đăng ký các hàm kiểm soát với biến window cục bộ để tránh lỗi scope module
 window.rateStar = rateStar;
 window.toggleAnonymousMode = toggleAnonymousMode;
 window.submitFeedback = submitFeedback;
 
-/**
- * Điều khiển chấm sao cho từng tiêu chí riêng biệt
- * @param {string} type - Loại tiêu chí ('attitude', 'service', 'space')
- * @param {number} rating - Số sao (1 - 5)
- */
 function rateStar(type, rating) {
     document.getElementById(`fbRating-${type}`).value = rating;
     document.getElementById(`txt-rating-${type}`).innerText = rating.toFixed(1);
-    
+
     const stars = document.querySelectorAll(`#stars-${type} i`);
     stars.forEach(star => {
         const idx = parseInt(star.getAttribute('data-index'));
@@ -1298,9 +1270,6 @@ function rateStar(type, rating) {
     });
 }
 
-/**
- * Chuyển đổi trạng thái khi click chọn Gửi ẩn danh
- */
 function toggleAnonymousMode(checkbox) {
     const infoFieldsGroup = document.getElementById('infoFieldsGroup');
     const nameInput = document.getElementById('fbName');
@@ -1308,21 +1277,19 @@ function toggleAnonymousMode(checkbox) {
     const anonIcon = document.getElementById('anonymous-icon');
 
     if (checkbox.checked) {
-        // Trạng thái Ẩn danh: Làm mờ, xóa giá trị bắt buộc và vô hiệu hóa nhập liệu
         infoFieldsGroup.classList.add('opacity-40', 'pointer-events-none');
         nameInput.removeAttribute('required');
         phoneInput.removeAttribute('required');
         nameInput.value = "";
         phoneInput.value = "";
-        
+
         anonIcon.innerHTML = '<i class="fa-solid fa-user-secret text-slate-900"></i>';
         anonIcon.classList.add('bg-slate-100');
     } else {
-        // Trạng thái Công khai: Mở khóa trường nhập liệu
         infoFieldsGroup.classList.remove('opacity-40', 'pointer-events-none');
         nameInput.setAttribute('required', 'required');
         phoneInput.setAttribute('required', 'required');
-        
+
         anonIcon.innerHTML = '<i class="fa-solid fa-user"></i>';
         anonIcon.classList.remove('bg-slate-100');
     }
@@ -1330,69 +1297,61 @@ function toggleAnonymousMode(checkbox) {
 
 async function submitFeedback(event) {
     event.preventDefault();
-    
+
     const btnSubmit = document.getElementById('btnSubmitFeedback');
     const originalText = btnSubmit.innerHTML;
-    
+
     btnSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-[10px]"></i> ĐANG GỬI...';
     btnSubmit.disabled = true;
 
     const isAnonymous = document.getElementById('fbAnonymous').checked;
     const cleanPhone = String(document.getElementById('fbPhone').value).replace(/[^0-9]/g, '');
 
-    // Đóng gói cấu trúc thực thể dữ liệu mới
     const feedbackData = {
         isAnonymous: isAnonymous,
         customerName: isAnonymous ? "Khách hàng ẩn danh" : document.getElementById('fbName').value.trim(),
         phone: isAnonymous ? "Ẩn danh" : cleanPhone,
-        
-        // Lưu chi tiết điểm của từng tiêu chí
+
         ratings: {
             attitude: parseInt(document.getElementById('fbRating-attitude').value),
             service: parseInt(document.getElementById('fbRating-service').value),
             space: parseInt(document.getElementById('fbRating-space').value)
         },
-        
-        // Tính điểm trung bình cộng làm chỉ số tổng quan
+
         ratingAverage: parseFloat(((
             parseInt(document.getElementById('fbRating-attitude').value) +
             parseInt(document.getElementById('fbRating-service').value) +
             parseInt(document.getElementById('fbRating-space').value)
         ) / 3).toFixed(1)),
-        
+
         message: document.getElementById('fbMessage').value.trim(),
         createdAt: new Date().toISOString(),
         uid: (isAnonymous || !auth.currentUser) ? null : auth.currentUser.uid
     };
 
     try {
-        // Đồng bộ lên Firestore
         await addDoc(collection(firebaseDb, "MaiTayData/Core/Feedbacks"), feedbackData);
-        
-        // Gọi Custom Alert Modal xịn thay vì alert() truyền thống
+
         showCustomAlert(
-            "Gửi góp ý thành công", 
-            "Cảm ơn bạn đã đóng góp ý kiến chân thực để giúp Mai Tây ngày càng hoàn thiện hơn!", 
+            "Gửi góp ý thành công",
+            "Cảm ơn bạn đã đóng góp ý kiến chân thực để giúp Mai Tây ngày càng hoàn thiện hơn!",
             "success"
         );
-        
-        // Reset form về trạng thái ban đầu
+
         document.getElementById('nativeFeedbackForm').reset();
         document.getElementById('fbAnonymous').checked = false;
         window.toggleAnonymousMode(document.getElementById('fbAnonymous'));
-        
-        // Trả các thanh sao về 5 sao mặc định
+
         window.rateStar('attitude', 5);
         window.rateStar('service', 5);
         window.rateStar('space', 5);
-        
+
     } catch (error) {
         console.error("Lỗi gửi feedback:", error);
-        
-        // Gọi Custom Alert Modal báo lỗi thiết kế Apple
+
         showCustomAlert(
-            "Gửi thất bại", 
-            "Gặp sự cố mạng, hệ thống không thể ghi nhận đánh giá vào lúc này. Vui lòng thử lại!", 
+            "Gửi thất bại",
+            "Gặp sự cố mạng, hệ thống không thể ghi nhận đánh giá vào lúc này. Vui lòng thử lại!",
             "error"
         );
     } finally {

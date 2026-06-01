@@ -6,190 +6,340 @@
     <title>Console | Mai Tây</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
-                extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } }
+                extend: { 
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        slate: {
+                            950: '#0b0f19'
+                        }
+                    }
+                }
             }
         }
     </script>
     <style>
         :root { --safe-bottom: env(safe-area-inset-bottom, 0px); }
-        body { background-color: #F9FAFB; color: #111827; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #F8FAFC; color: #0F172A; -webkit-tap-highlight-color: transparent; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         
-        .min-input { width: 100%; background: transparent; border: 1px solid #E5E7EB; border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; transition: all 0.2s; outline: none; }
-        .min-input:focus { border-color: #111827; box-shadow: 0 0 0 1px #111827; }
-        .btn-primary { background: #111827; color: white; border-radius: 0.5rem; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; transition: opacity 0.2s; }
-        .btn-primary:active { opacity: 0.8; }
-        .btn-outline { background: white; color: #374151; border: 1px solid #E5E7EB; border-radius: 0.5rem; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 1rem; transition: all 0.2s; cursor: pointer; }
-        .btn-outline:hover { background: #F3F4F6; }
+        .min-input { width: 100%; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 0.75rem; padding: 0.625rem 0.875rem; font-size: 0.875rem; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); outline: none; }
+        .min-input:focus { border-color: #0F172A; box-shadow: 0 0 0 1px #0F172A; background: #FFFFFF; }
+        .min-input:disabled { background-color: #F1F5F9; color: #94A3B8; cursor: not-allowed; }
         
-        .nav-item { color: #6B7280; border-radius: 0.375rem; transition: all 0.2s; }
-        .nav-item:hover { background: #F3F4F6; color: #111827; }
-        .nav-active { background: #F3F4F6 !important; color: #111827 !important; font-weight: 600; }
+        .btn-primary { background: #0F172A; color: white; border-radius: 0.75rem; font-weight: 600; font-size: 0.875rem; padding: 0.625rem 1.25rem; transition: all 0.2s; border: 1px solid #0F172A; }
+        .btn-primary:active { opacity: 0.8; transform: scale(0.98); }
+        .btn-primary:disabled { background: #94A3B8; border-color: #94A3B8; cursor: not-allowed; }
         
-        .m-nav-item { color: #9CA3AF; transition: color 0.2s; }
-        .m-nav-active { color: #111827; }
+        .btn-outline { background: white; color: #334155; border: 1px solid #E2E8F0; border-radius: 0.75rem; font-weight: 600; font-size: 0.875rem; padding: 0.625rem 1.25rem; transition: all 0.2s; cursor: pointer; }
+        .btn-outline:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .btn-outline:active { transform: scale(0.98); }
         
-        .subtab { color: #6B7280; border-bottom: 2px solid transparent; padding-bottom: 0.5rem; transition: all 0.2s; }
-        .subtab-active { color: #111827; border-bottom-color: #111827; font-weight: 600; }
+        .nav-item { color: #64748B; border-radius: 0.5rem; transition: all 0.2s ease-in-out; font-weight: 500; }
+        .nav-item:hover { background: #F1F5F9; color: #0F172A; }
+        .nav-active { background: #0F172A !important; color: #FFFFFF !important; font-weight: 600; box-shadow: 0 4px 12px -2px rgba(15,23,42,0.15); }
+        
+        .m-nav-item { color: #94A3B8; transition: all 0.2s; }
+        .m-nav-active { color: #0F172A; transform: scale(1.1); }
+        
+        .subtab { color: #64748B; border-bottom: 2px solid transparent; padding-bottom: 0.75rem; transition: all 0.2s; font-weight: 500; }
+        .subtab-active { color: #0F172A; border-bottom-color: #0F172A; font-weight: 700; }
 
         .media-thumb:hover .media-overlay { opacity: 1; }
+        .dev-textarea { background-color: #0F172A; color: #E2E8F0; line-height: 1.6; }
+        .dev-textarea:focus { outline: none; border-color: #38BDF8; box-shadow: 0 0 0 1px #38BDF8; }
         
-        /* Dev Textarea styling */
-        .dev-textarea { background-color: #1e1e1e; color: #d4d4d4; }
-        .dev-textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 1px #3b82f6; }
+        /* Premium custom alert modal */
+        .toast-active { transform: translateY(0); opacity: 1; }
     </style>
 </head>
-<body class="overflow-x-hidden antialiased text-sm">
+<body class="overflow-x-hidden antialiased text-slate-900 bg-slate-50">
 
-    <div id="loader" class="fixed inset-0 bg-white z-[100] flex items-center justify-center">
-        <i class="fa-solid fa-circle-notch fa-spin text-2xl text-gray-900"></i>
+    <!-- Loading Screen -->
+    <div id="loader" class="fixed inset-0 bg-white z-[110] flex flex-col items-center justify-center transition-all duration-500">
+        <div class="relative w-16 h-16 mb-4">
+            <div class="absolute inset-0 rounded-full border-4 border-slate-100"></div>
+            <div class="absolute inset-0 rounded-full border-4 border-slate-900 border-t-transparent animate-spin"></div>
+        </div>
+        <p class="text-xs font-bold text-slate-400 tracking-widest uppercase">Mai Tây Console</p>
     </div>
 
-    <div id="loginScreen" class="fixed inset-0 bg-gray-50 z-[90] flex items-center justify-center p-6 hidden">
-        <div class="bg-white p-8 rounded-xl border border-gray-200 w-full max-w-sm shadow-sm">
-            <div class="mb-8"><h1 class="text-xl font-semibold tracking-tight text-gray-900">Mai Tây Console</h1><p class="text-xs text-gray-500 mt-1">Đăng nhập để quản trị</p></div>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="fixed inset-0 bg-slate-50 z-[90] flex items-center justify-center p-6 hidden">
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 w-full max-w-sm shadow-xl transition-all duration-300">
+            <div class="mb-8 text-center sm:text-left">
+                <h1 class="text-2xl font-black tracking-tight text-slate-950">Mai Tây Console</h1>
+                <p class="text-xs text-slate-400 font-semibold mt-1">Đăng nhập cổng quản trị viên hệ thống</p>
+            </div>
             <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" class="space-y-4">
-                <div><label class="block text-xs font-medium text-gray-700 mb-1">Email</label><input type="email" id="adminEmail" required class="min-input py-3"></div>
-                <div><label class="block text-xs font-medium text-gray-700 mb-1">Mật khẩu</label><input type="password" id="adminPassword" required class="min-input py-3"></div>
-                <button type="submit" id="signInBtn" class="btn-primary py-3 w-full mt-2">Đăng Nhập</button>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Tài khoản Email</label>
+                    <input type="email" id="adminEmail" required class="min-input py-3" placeholder="admin@maitaysalon.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Mật khẩu bảo mật</label>
+                    <input type="password" id="adminPassword" required class="min-input py-3" placeholder="••••••••">
+                </div>
+                <button type="submit" id="signInBtn" class="btn-primary py-3.5 w-full mt-2 flex items-center justify-center gap-2">
+                    <span>ĐĂNG NHẬP HỆ THỐNG</span>
+                    <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
+                </button>
             </form>
         </div>
     </div>
 
-    <div id="app" class="hidden min-h-screen flex bg-gray-50">
+    <!-- Premium Custom Alerts -->
+    <div id="custom-toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[200] max-w-md w-[90%] bg-slate-900 text-white rounded-2xl p-4 shadow-2xl border border-white/10 flex items-start gap-3.5 transform -translate-y-12 opacity-0 transition-all duration-300 pointer-events-none">
+        <div id="toast-icon" class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-white/10"></div>
+        <div class="flex-1 min-w-0">
+            <h4 id="toast-title" class="text-xs font-bold uppercase tracking-wider text-white">Thông báo</h4>
+            <p id="toast-message" class="text-xs text-slate-300 font-medium mt-1 leading-relaxed">Nội dung chi tiết của cảnh báo.</p>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation Modal (APPLE STYLE - REPLACES confirm()) -->
+    <div id="confirmModal" class="hidden fixed inset-0 z-[150] items-center justify-center p-4 bg-slate-950/45 backdrop-blur-sm transition-all">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-6 border border-slate-100 flex flex-col items-center text-center animate-in fade-in zoom-in duration-200">
+            <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-4 text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 id="confirmTitle" class="font-black text-slate-900 text-base">Xác nhận</h3>
+            <p id="confirmMessage" class="text-xs text-slate-500 font-medium mt-2 leading-relaxed mb-6">Bạn có thực sự chắc chắn muốn tiến hành thao tác này?</p>
+            <div class="flex w-full gap-3">
+                <button id="confirmBtnCancel" class="flex-1 py-2.5 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all active:scale-95">Hủy bỏ</button>
+                <button id="confirmBtnOk" class="flex-1 py-2.5 rounded-xl text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 transition-all active:scale-95 shadow-md">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Shell -->
+    <div id="app" class="hidden min-h-screen flex bg-slate-50">
         
-        <aside class="hidden md:flex flex-col w-60 bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-40">
-            <div class="p-6 border-b border-gray-100"><h1 class="font-semibold text-base text-gray-900">Console</h1><p class="text-[10px] text-gray-500 uppercase mt-0.5">Mai Tây Studio</p></div>
-            <nav id="desktopNav" class="flex-1 overflow-y-auto hide-scroll p-3 space-y-1"></nav>
-            <div class="p-4 border-t border-gray-100">
-                <div class="flex items-center gap-3 mb-3 px-2">
-                    <div class="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-700" id="userInitial">-</div>
-                    <div class="flex-1 min-w-0"><p class="text-xs font-medium text-gray-900 truncate" id="userEmailDisplay">...</p></div>
+        <!-- Sidebar Navigation Desktop -->
+        <aside class="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 fixed inset-y-0 left-0 z-40">
+            <div class="p-6 border-b border-slate-100 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white font-black text-lg">M</div>
+                <div>
+                    <h1 class="font-black text-sm tracking-tight text-slate-950">Mai Tây Salon</h1>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Console Manager</p>
                 </div>
-                <button onclick="handleAdminLogout()" class="w-full text-left px-2 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded transition-colors">Đăng xuất</button>
+            </div>
+            <nav id="desktopNav" class="flex-1 overflow-y-auto hide-scroll p-4 space-y-1.5"></nav>
+            <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+                <div class="flex items-center gap-3 mb-4 px-2">
+                    <div class="w-9 h-9 rounded-xl bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-700" id="userInitial">-</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold text-slate-900 truncate" id="userEmailDisplay">...</p>
+                        <p class="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Hệ thống Live</p>
+                    </div>
+                </div>
+                <button onclick="handleAdminLogout()" class="w-full text-center px-4 py-2.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-power-off text-xs"></i>
+                    <span>ĐĂNG XUẤT</span>
+                </button>
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col md:ml-60 w-full min-h-screen">
-            <header class="bg-white border-b border-gray-200 sticky top-0 z-30 px-4 md:px-8 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <h2 id="tabTitle" class="text-lg font-semibold tracking-tight text-gray-900">Dashboard</h2>
-                <div class="flex items-center gap-2" id="headerControlGroup">
+        <!-- Main Workspace Area -->
+        <main class="flex-1 flex flex-col md:ml-64 w-full min-h-screen pb-24 md:pb-0">
+            <header class="bg-white border-b border-slate-200 sticky top-0 z-30 px-6 md:px-8 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 id="tabTitle" class="text-xl font-black tracking-tight text-slate-950">Dashboard</h2>
+                    <p id="tabDesc" class="text-xs text-slate-400 mt-0.5 font-medium">Tổng quan số liệu vận hành hôm nay</p>
+                </div>
+                <div class="flex items-center gap-3 shrink-0" id="headerControlGroup">
                     <div class="relative w-full sm:w-64" id="searchContainer">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                        <input type="text" id="searchInput" placeholder="Tìm kiếm..." class="w-full bg-gray-50 border border-transparent focus:border-gray-300 rounded-md pl-8 pr-3 py-1.5 text-sm outline-none transition-all">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="searchInput" placeholder="Tìm kiếm nhanh..." class="w-full bg-slate-50 border border-slate-200 focus:border-slate-900 rounded-xl pl-9 pr-4 py-2 text-xs outline-none transition-all">
                     </div>
-                    <button onclick="loadCurrentTabRealtime()" class="w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"><i class="fa-solid fa-rotate-right text-xs"></i></button>
-                    <button id="addRecordBtn" onclick="openCreateModal()" class="h-8 px-3 flex items-center justify-center rounded-md bg-gray-900 text-white text-xs font-medium hover:bg-gray-800 transition-colors"><i class="fa-solid fa-plus mr-1.5"></i> Tạo mới</button>
+                    <button onclick="loadCurrentTabRealtime()" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors shadow-sm"><i class="fa-solid fa-rotate-right text-xs"></i></button>
+                    <button id="addRecordBtn" onclick="openCreateModal()" class="h-9 px-4 flex items-center justify-center rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/10"><i class="fa-solid fa-plus mr-1.5"></i> Tạo mới</button>
                 </div>
             </header>
 
-            <div id="cmsSubTabGroup" class="bg-white border-b border-gray-200 px-4 md:px-8 pt-3 flex gap-6 overflow-x-auto hide-scroll hidden text-sm">
+            <!-- sub-navigation CMS -->
+            <div id="cmsSubTabGroup" class="bg-white border-b border-slate-200 px-6 md:px-8 pt-4 flex gap-6 overflow-x-auto hide-scroll hidden text-sm">
                 <button onclick="switchCmsSubTab('heroBlock')" id="subtab-heroBlock" class="subtab whitespace-nowrap">Ảnh bìa & Hero</button>
                 <button onclick="switchCmsSubTab('homeFeatures')" id="subtab-homeFeatures" class="subtab whitespace-nowrap">Chữ chạy Marquee</button>
                 <button onclick="switchCmsSubTab('offers')" id="subtab-offers" class="subtab whitespace-nowrap">Ưu Đãi</button>
-                <button onclick="switchCmsSubTab('feed')" id="subtab-feed" class="subtab whitespace-nowrap">Reels</button>
+                <button onclick="switchCmsSubTab('feed')" id="subtab-feed" class="subtab whitespace-nowrap">Reels Video</button>
                 <button onclick="switchCmsSubTab('store')" id="subtab-store" class="subtab whitespace-nowrap">Sản phẩm</button>
             </div>
 
-            <div id="contentArea" class="p-4 md:p-8 pb-24 md:pb-8 flex-1"></div>
+            <!-- Content Area Viewports -->
+            <div id="contentArea" class="p-6 md:p-8 flex-1 animate-in fade-in duration-300"></div>
         </main>
         
-        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-between items-center z-40 pb-[var(--safe-bottom)]">
-            <button onclick="switchTab('Bookings')" id="m-nav-Bookings" class="m-nav-item flex-1 py-4 flex justify-center items-center"><i class="fa-solid fa-calendar text-lg"></i></button>
-            <button onclick="switchTab('Staff')" id="m-nav-Staff" class="m-nav-item flex-1 py-4 flex justify-center items-center"><i class="fa-solid fa-user-group text-lg"></i></button>
-            <button onclick="switchTab('Services')" id="m-nav-Services" class="m-nav-item flex-1 py-4 flex justify-center items-center"><i class="fa-solid fa-scissors text-lg"></i></button>
-            <button onclick="openMoreMenuMobile()" id="m-nav-More" class="m-nav-item flex-1 py-4 flex justify-center items-center"><i class="fa-solid fa-bars text-lg"></i></button>
+        <!-- Mobile Bottom Tab Bar -->
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-between items-center z-40 pb-[var(--safe-bottom)] shadow-xl">
+            <button onclick="switchTab('Dashboard')" id="m-nav-Dashboard" class="m-nav-item flex-1 py-3 flex flex-col items-center gap-1"><i class="fa-solid fa-chart-pie text-lg"></i><span class="text-[9px] font-bold">Thống kê</span></button>
+            <button onclick="switchTab('Bookings')" id="m-nav-Bookings" class="m-nav-item flex-1 py-3 flex flex-col items-center gap-1"><i class="fa-solid fa-calendar text-lg"></i><span class="text-[9px] font-bold">Lịch hẹn</span></button>
+            <button onclick="switchTab('Services')" id="m-nav-Services" class="m-nav-item flex-1 py-3 flex flex-col items-center gap-1"><i class="fa-solid fa-scissors text-lg"></i><span class="text-[9px] font-bold">Dịch vụ</span></button>
+                        <button onclick="switchTab('Staff')" id="m-nav-Staff" class="m-nav-item flex-1 py-3 flex flex-col items-center gap-1"><i class="fa-solid fa-user-tie text-lg"></i><span class="text-[9px] font-bold">Nhân sự</span></button>
+
+            <button onclick="openMoreMenuMobile()" id="m-nav-More" class="m-nav-item flex-1 py-3 flex flex-col items-center gap-1"><i class="fa-solid fa-bars text-lg"></i><span class="text-[9px] font-bold">Thêm</span></button>
         </nav>
     </div>
 
-    <div id="modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm transition-opacity">
-        <div class="bg-white w-full max-w-lg rounded-xl shadow-xl flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center"><h3 id="modalTitle" class="font-semibold text-gray-900 text-lg">Thêm bản ghi</h3><button onclick="closeModal()" class="text-gray-400 hover:text-gray-700 p-1"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+    <!-- Master CRUD Modal (Chuyên Nghiệp) -->
+    <div id="modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm transition-all">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[85vh] border border-slate-100 transform scale-100 transition-transform">
+            <div class="px-6 py-4.5 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+                <h3 id="modalTitle" class="font-black text-slate-900 text-base">Thêm bản ghi</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full bg-white flex items-center justify-center border shadow-sm"><i class="fa-solid fa-xmark text-sm"></i></button>
+            </div>
             <div id="modalContent" class="p-6 overflow-y-auto hide-scroll space-y-4"></div>
-            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-xl flex justify-end gap-2"><button onclick="closeModal()" class="btn-outline text-xs py-2 px-4">Huỷ</button><button id="saveBtn" class="btn-primary text-xs py-2 px-4">Lưu</button></div>
+            <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex justify-end gap-2.5">
+                <button onclick="closeModal()" class="btn-outline text-xs py-2.5 px-4.5">Huỷ bỏ</button>
+                <button id="saveBtn" class="btn-primary text-xs py-2.5 px-6">Lưu dữ liệu</button>
+            </div>
         </div>
     </div>
 
-    <div id="mediaModal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm transition-opacity">
-        <div class="bg-white w-full max-w-4xl rounded-xl shadow-xl flex flex-col h-[85vh]">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center shrink-0">
-                <h3 class="font-semibold text-gray-900 text-lg">Thư viện Media</h3>
-                <button onclick="closeMediaModal()" class="text-gray-400 hover:text-gray-700 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <!-- Media Library Picker Modal -->
+    <div id="mediaModal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm transition-all">
+        <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col h-[80vh] border border-slate-100">
+            <div class="px-6 py-4.5 border-b border-slate-100 flex justify-between items-center shrink-0">
+                <div>
+                    <h3 class="font-black text-slate-900 text-base">Thư viện Media Cloudinary</h3>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Chọn hoặc tải lên hình ảnh/video</p>
+                </div>
+                <button onclick="closeMediaModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center border"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
-            <div class="flex px-6 border-b border-gray-100 text-sm font-medium shrink-0">
-                <button onclick="switchMediaTab('library')" id="mTab-library" class="px-4 py-3 border-b-2 border-gray-900 text-gray-900">Media đã tải</button>
-                <button onclick="switchMediaTab('upload')" id="mTab-upload" class="px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-700">Tải lên file mới</button>
-                <button onclick="switchMediaTab('url')" id="mTab-url" class="px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-700">Nhập Link</button>
+            <div class="flex px-6 border-b border-slate-100 text-xs font-bold uppercase tracking-wider shrink-0 bg-slate-50/50">
+                <button onclick="switchMediaTab('library')" id="mTab-library" class="px-4 py-3 border-b-2 border-slate-900 text-slate-900">Ảnh/Video Đã Tải</button>
+                <button onclick="switchMediaTab('upload')" id="mTab-upload" class="px-4 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-900">Tải File Lên Máy</button>
+                <button onclick="switchMediaTab('url')" id="mTab-url" class="px-4 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-900">Nhập Link Ngoài</button>
             </div>
-            <div class="flex-1 overflow-y-auto bg-gray-50 p-6 relative">
+            <div class="flex-1 overflow-y-auto bg-slate-100 p-6 relative">
                 <div id="mView-library" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 content-start min-h-full"></div>
                 <div id="mView-upload" class="hidden flex-col items-center justify-center h-full max-w-md mx-auto space-y-6">
-                    <div class="w-full border-2 border-dashed border-gray-300 rounded-xl p-12 text-center bg-white cursor-pointer hover:bg-gray-50 transition-colors" onclick="document.getElementById('mediaFileInput').click()">
-                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-300 mb-4"></i>
-                        <p class="text-sm font-medium text-gray-900 mb-1">Kéo thả file hoặc bấm chọn</p>
-                        <p class="text-xs text-gray-500 mb-6">Hỗ trợ JPG, PNG, MP4 (Dưới 50MB)</p>
+                    <div class="w-full border-2 border-dashed border-slate-300 rounded-2xl p-12 text-center bg-white cursor-pointer hover:bg-slate-50 transition-colors" onclick="document.getElementById('mediaFileInput').click()">
+                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-300 mb-4"></i>
+                        <p class="text-sm font-bold text-slate-900 mb-1">Kéo thả file hoặc click để tìm kiếm</p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-6">Định dạng ảnh hoặc Video (Tối đa 50MB)</p>
                         <input type="file" id="mediaFileInput" accept="image/*,video/*" class="hidden" onchange="handleMediaFileSelect(event)">
-                        <button type="button" class="btn-outline text-xs pointer-events-none">Chọn File Từ Máy</button>
+                        <button type="button" class="btn-outline text-xs pointer-events-none">CHỌN FILE TẬP TIN</button>
                     </div>
-                    <div id="uploadPreview" class="hidden w-full bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-                        <div class="flex items-center gap-3 overflow-hidden"><i class="fa-solid fa-file-image text-gray-400 text-2xl"></i><div class="min-w-0"><p id="uploadFileName" class="text-xs font-semibold text-gray-900 truncate">...</p><p id="uploadFileSize" class="text-[10px] text-gray-500">...</p></div></div>
-                        <button id="btnStartUpload" onclick="startCloudinaryUpload()" class="btn-primary text-xs py-1.5 px-3">Tải Lên</button>
+                    <div id="uploadPreview" class="hidden w-full bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <i class="fa-solid fa-file-image text-slate-400 text-2xl"></i>
+                            <div class="min-w-0">
+                                <p id="uploadFileName" class="text-xs font-semibold text-slate-900 truncate">...</p>
+                                <p id="uploadFileSize" class="text-[10px] text-slate-500">...</p>
+                            </div>
+                        </div>
+                        <button id="btnStartUpload" onclick="startCloudinaryUpload()" class="btn-primary text-xs py-1.5 px-3">BẮT ĐẦU TẢI</button>
                     </div>
-                    <div id="uploadProgress" class="hidden w-full text-center"><i class="fa-solid fa-circle-notch fa-spin text-2xl text-gray-900 mb-2"></i><p class="text-xs font-medium text-gray-600">Đang tải lên Cloudinary...</p></div>
+                    <div id="uploadProgress" class="hidden w-full text-center">
+                        <i class="fa-solid fa-circle-notch fa-spin text-2xl text-slate-900 mb-2"></i>
+                        <p class="text-xs font-bold text-slate-600">Đang truyền tải dữ liệu đến Cloudinary...</p>
+                    </div>
                 </div>
                 <div id="mView-url" class="hidden flex-col items-center justify-center h-full max-w-md mx-auto space-y-4">
-                    <div class="w-full bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                        <p class="text-sm font-medium text-gray-900">Dán trực tiếp Link Ảnh/Video</p>
-                        <input type="text" id="manualMediaUrl" placeholder="https://..." class="min-input py-3">
-                        <button onclick="pickManualMediaUrl()" class="btn-primary w-full py-3">Áp dụng đường dẫn này</button>
+                    <div class="w-full bg-white p-6 rounded-2xl border border-slate-200 shadow-lg space-y-4">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Đường dẫn tài nguyên trực tiếp</p>
+                        <input type="text" id="manualMediaUrl" placeholder="https://res.cloudinary.com/..." class="min-input py-3">
+                        <button onclick="pickManualMediaUrl()" class="btn-primary w-full py-3.5">ÁP DỤNG ĐƯỜNG DẪN NÀY</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Core Admin Module Integration Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        // BỔ SUNG getDocs VÀO IMPORT:
-        import { getFirestore, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, collection, query, orderBy, onSnapshot 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { 
+            getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyCTnDNOzI-8JYFfrxtJclFxe7vY27PM6FU", authDomain: "salon-mt.firebaseapp.com", projectId: "salon-mt", storageBucket: "salon-mt.firebasestorage.app", messagingSenderId: "1086041756251", appId: "1:1086041756251:web:5f7c4cc7144cc59be8a57e" };
+        // Tích hợp Firebase cấu hình giống hệt main.js
+        const firebaseConfig = {
+            apiKey: "AIzaSyCTnDNOzI-8JYFfrxtJclFxe7vY27PM6FU",
+            authDomain: "salon-mt.firebaseapp.com",
+            projectId: "salon-mt",
+            storageBucket: "salon-mt.firebasestorage.app",
+            messagingSenderId: "1086041756251",
+            appId: "1:1086041756251:web:5f7c4cc7144cc59be8a57e"
+        };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwYOUR_NEW_DEPLOYMENT_ID/exec';
+        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbzASFl92p2uuHqB34T4Tbwv2Rk0ffwAvcmSA_g_w4Vzy5cWpStkPIkaM0OFo15SXTIr6Q/exec';
         
         const CLOUDINARY_CLOUD_NAME = 'dt8zhfng8'; 
         const CLOUDINARY_UPLOAD_PRESET = 'MT-File';
 
+        // Khai báo Schema và các nhãn hiển thị cho form điền
         const TAB_SCHEMAS = {
-            Bookings: { fields: ['bookingCode', 'customerName', 'phone', 'email', 'branchName', 'serviceName', 'staffName', 'startTime', 'endTime', 'status', 'eventId'], labels: ['Mã Lịch', 'Tên Khách', 'Số ĐT', 'Email', 'Chi Nhánh', 'Dịch Vụ', 'Thợ', 'Giờ Bắt Đầu (ISO)', 'Giờ Kết Thúc (ISO)', 'Trạng Thái', 'Event ID'] },
-            Staff: { fields: ['id', 'name', 'branchId', 'status', 'exp', 'position', 'desc', 'avatar'], labels: ['ID Thợ', 'Tên Thợ', 'ID Chi Nhánh', 'Trạng Thái', 'Năm KN', 'Vị Trí', 'Mô Tả', 'Ảnh Avatar (Link)'] },
-            Services: { fields: ['id', 'name', 'duration', 'price', 'branchId', 'status'], labels: ['ID Dịch Vụ', 'Tên Dịch Vụ', 'Thời Lượng (Phút)', 'Giá Tiền', 'Chi Nhánh (ID/ALL)', 'Trạng Thái'] },
-            Branches: { fields: ['id', 'name', 'address', 'openTime', 'closeTime', 'status'], labels: ['ID Chi Nhánh', 'Tên Chi Nhánh', 'Địa Chỉ', 'Giờ Mở (HH:MM)', 'Giờ Đóng (HH:MM)', 'Trạng Thái'] },
-            Users: { fields: ['name', 'phone', 'email', 'gender', 'facebook', 'tiktok', 'instagram'], labels: ['Họ Tên', 'Số ĐT', 'Email', 'Giới Tính', 'Facebook', 'Tiktok', 'Instagram'] },
-            Config: { fields: ['fallbackOpenTime', 'fallbackCloseTime', 'maintenanceMode', 'notificationEmail', 'bookingIntervalMinutes'], labels: ['Giờ mở mặc định', 'Giờ đóng mặc định', 'Bảo trì (true/false)', 'Email thông báo', 'Khoảng cách ca (Phút)'] },
-            CmsLayout: { label: 'CMS Giao Diện' }
+            Bookings: { 
+                fields: ['bookingCode', 'customerName', 'phone', 'email', 'branchName', 'serviceName', 'staffName', 'startTime', 'endTime', 'status', 'eventId'], 
+                labels: ['Mã đặt lịch', 'Tên khách hàng', 'Số điện thoại', 'Email', 'Chọn chi nhánh', 'Chọn dịch vụ', 'Chọn thợ thực hiện', 'Giờ bắt đầu', 'Giờ kết thúc', 'Trạng thái', 'Google Calendar ID'],
+                types: ['text', 'text', 'tel', 'email', 'select_branch', 'select_service', 'select_staff', 'datetime-local', 'datetime-local', 'status_booking', 'text']
+            },
+            Staff: { 
+                fields: ['id', 'name', 'branchId', 'status', 'exp', 'position', 'desc', 'avatar'], 
+                labels: ['ID Nhân sự', 'Họ và tên', 'Thuộc chi nhánh', 'Trạng thái hoạt động', 'Số năm kinh nghiệm', 'Chức vụ', 'Mô tả chi tiết', 'Ảnh đại diện'],
+                types: ['text', 'text', 'select_branch_id', 'select_staff_status', 'number', 'text', 'textarea', 'media_img']
+            },
+            Services: { 
+                fields: ['id', 'name', 'duration', 'price', 'branchId', 'status'], 
+                labels: ['ID Dịch vụ', 'Tên dịch vụ', 'Thời lượng (Phút)', 'Giá dịch vụ (VD: 200k)', 'Thuộc chi nhánh', 'Trạng thái'],
+                types: ['text', 'text', 'number', 'text', 'select_branch_id', 'select_service_status']
+            },
+            Branches: { 
+                fields: ['id', 'name', 'address', 'openTime', 'closeTime', 'seats', 'img', 'status'], 
+                labels: ['ID Chi nhánh', 'Tên chi nhánh', 'Địa chỉ chi tiết', 'Giờ mở cửa (HH:MM)', 'Giờ đóng cửa (HH:MM)', 'Số lượng ghế (Giới hạn chỗ đặt)', 'Hình ảnh chi nhánh', 'Trạng thái'],
+                types: ['text', 'text', 'text', 'text', 'text', 'number', 'media_img', 'select_branch_status']
+            },
+            Users: { 
+                fields: ['name', 'phone', 'email', 'gender', 'facebook', 'tiktok', 'instagram'], 
+                labels: ['Họ tên', 'Số điện thoại', 'Địa chỉ Email', 'Giới tính', 'Link Facebook', 'Link Tiktok', 'Link Instagram'],
+                types: ['text', 'text', 'email', 'select_gender', 'text', 'text', 'text']
+            },
+            Feedbacks: {
+                fields: ['customerName', 'phone', 'ratingAverage', 'message', 'createdAt', 'isAnonymous'],
+                labels: ['Khách hàng', 'Số điện thoại', 'Đánh giá chung (Sao)', 'Nội dung phản hồi', 'Ngày gửi', 'Gửi ẩn danh'],
+                types: ['text_readonly', 'text_readonly', 'text_readonly', 'textarea_readonly', 'text_readonly', 'text_readonly']
+            },
+            Reports: {
+                fields: ['targetFeedId', 'targetFeedTitle', 'reason', 'userNote', 'createdAt', 'status'],
+                labels: ['Tên file bài viết bị báo cáo', 'Tiêu đề Reels', 'Lý do phản ánh', 'Ghi chú thêm của khách', 'Thời gian phản ánh', 'Trạng thái xử lý'],
+                types: ['text_readonly', 'text_readonly', 'text_readonly', 'textarea_readonly', 'text_readonly', 'select_report_status']
+            },
+            Config: { 
+    fields: ['fallbackOpenTime', 'fallbackCloseTime', 'maintenanceMode', 'bookingIntervalMinutes', 'version'], 
+    labels: ['Giờ mở cửa mặc định', 'Giờ đóng cửa mặc định', 'Chế độ bảo trì hệ thống (Bật/Tắt)', 'Khoảng cách giữa các ca (Phút)', 'Phiên bản ứng dụng (Thay đổi để ép thiết bị khách cập nhật)'],
+    types: ['text', 'text', 'select_maintenance', 'number', 'text']
+}
+            
         };
 
-        let currentTab = 'Bookings';
+        // Biến trạng thái toàn cục
+        let currentTab = 'Dashboard';
         let currentCmsSubTab = 'heroBlock';
         let searchKeyword = '';
+        
         let tabCachedData = [];
         let cmsCachedDocData = {};
+        let activeBranches = [];
+        let activeServices = [];
+        let activeStaff = [];
+        
         let unsubscribeRealtime = null;
-
         let mediaStorageData = [];
         let currentTargetInput = null;
         let selectedFileToUpload = null;
 
-        // Window Expose
+        // Đẩy các hàm quản trị ra phạm vi Window
         window.switchTab = switchTab;
         window.switchCmsSubTab = switchCmsSubTab;
         window.handleAdminLogin = handleAdminLogin;
@@ -213,60 +363,164 @@
         window.deleteMediaFromLibrary = deleteMediaFromLibrary;
         window.pickManualMediaUrl = pickManualMediaUrl;
 
-        // Dev Mode Expose
         window.loadDevData = loadDevData;
         window.formatDevJson = formatDevJson;
         window.saveDevData = saveDevData;
+        window.saveConfigAction = saveConfigAction;
 
-        onAuthStateChanged(auth, (user) => {
+        // Trình lắng nghe Trạng thái Đăng nhập hệ thống
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Kiểm tra phân quyền thực tế bằng cách thử đọc 1 doc trong Config trước khi nạp giao diện chính
+                try {
+                    const testSnap = await getDoc(doc(db, "MaiTayData/Core/Config", "system"));
+                    // Nếu không bị Firebase Rules quăng lỗi (Permission Denied) -> Đăng nhập thành công!
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('app').classList.remove('hidden');
+                    document.getElementById('userEmailDisplay').innerText = user.email;
+                    document.getElementById('userInitial').innerText = user.email.charAt(0).toUpperCase();
+                    
+                    renderDesktopTabsNav();
+                    switchTab(currentTab);
+                    
+                    // Lấy danh sách nạp cho các Option Selection trong Form
+                    const bSnap = await getDocs(collection(db, "MaiTayData/Core/Branches"));
+                    activeBranches = bSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    
+                    const sSnap = await getDocs(collection(db, "MaiTayData/Core/Services"));
+                    activeServices = sSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                    const stSnap = await getDocs(collection(db, "MaiTayData/Core/Staff"));
+                    activeStaff = stSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                    onSnapshot(doc(db, "MaiTayData/Core/Config/mediaStorage"), snap => {
+                        if(snap.exists()) { mediaStorageData = snap.data().items || []; renderMediaLibrary(); }
+                    });
+                } catch (error) {
+                    // Firebase Security Rules đã từ chối phân quyền tài khoản (Không phải Admin thực thụ)
+                    console.error("Lỗi xác thực Security Rules: ", error);
+                    showToast("Xác thực thất bại", "Tài khoản của bạn không được phân quyền Quản trị viên (Admin) trên hệ thống!", "error");
+                    setTimeout(() => { signOut(auth); }, 3000);
+                }
+            } else {
+                document.getElementById('app').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('hidden');
+            }
             document.getElementById('loader').classList.add('hidden');
-            if (user && (user.email.includes('admin') || user.email === "admin@maitaysalon.com")) {
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('app').classList.remove('hidden');
-                document.getElementById('userEmailDisplay').innerText = user.email;
-                document.getElementById('userInitial').innerText = user.email.charAt(0).toUpperCase();
-                renderDesktopTabsNav();
-                switchTab(currentTab);
-                
-                onSnapshot(doc(db, "MaiTayData/Core/Config/mediaStorage"), snap => {
-                    if(snap.exists()) { mediaStorageData = snap.data().items || []; renderMediaLibrary(); }
-                });
-            } else if (user) { alert("Tài khoản không có quyền Admin."); signOut(auth); } 
-            else { document.getElementById('app').classList.add('hidden'); document.getElementById('loginScreen').classList.remove('hidden'); }
         });
 
+        // Hộp thoại popup xác nhận Apple Style thay cho confirm() mặc định của trình duyệt
+        function showConfirm(title, message, accent = 'slate') {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('confirmModal');
+                const titleEl = document.getElementById('confirmTitle');
+                const msgEl = document.getElementById('confirmMessage');
+                const btnOk = document.getElementById('confirmBtnOk');
+                const btnCancel = document.getElementById('confirmBtnCancel');
+                
+                titleEl.innerText = title;
+                msgEl.innerText = message;
+                
+                if (accent === 'rose') {
+                    btnOk.className = "flex-1 py-2.5 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 transition-all active:scale-95 shadow-md";
+                } else {
+                    btnOk.className = "flex-1 py-2.5 rounded-xl text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 transition-all active:scale-95 shadow-md";
+                }
+                
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                
+                const handleOk = () => {
+                    cleanup();
+                    resolve(true);
+                };
+                const handleCancel = () => {
+                    cleanup();
+                    resolve(false);
+                };
+                const cleanup = () => {
+                    btnOk.removeEventListener('click', handleOk);
+                    btnCancel.removeEventListener('click', handleCancel);
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                };
+                
+                btnOk.addEventListener('click', handleOk);
+                btnCancel.addEventListener('click', handleCancel);
+            });
+        }
+
+        // Đăng nhập tài khoản bằng Firebase Auth
         async function handleAdminLogin(e) {
             e.preventDefault();
-            const btn = document.getElementById('signInBtn'); btn.innerText = 'Đang xử lý...'; btn.disabled = true;
-            try { await signInWithEmailAndPassword(auth, document.getElementById('adminEmail').value, document.getElementById('adminPassword').value); } 
-            catch (err) { alert("Lỗi đăng nhập."); btn.innerText = 'Đăng Nhập'; btn.disabled = false; }
+            const btn = document.getElementById('signInBtn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-sm mr-2"></i>ĐANG XỬ LÝ...';
+            btn.disabled = true;
+            try {
+                await signInWithEmailAndPassword(auth, document.getElementById('adminEmail').value, document.getElementById('adminPassword').value);
+            } catch (err) {
+                showToast("Lỗi đăng nhập", "Tài khoản hoặc mật khẩu không chính xác!", "error");
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
         }
 
         async function handleAdminLogout() {
-            if(confirm("Xác nhận đăng xuất?")){ if(unsubscribeRealtime) unsubscribeRealtime(); await signOut(auth); location.reload(); }
+            const confirmed = await showConfirm("Đăng xuất", "Bạn có chắc chắn muốn đăng xuất khỏi cổng console quản trị này?", "slate");
+            if(confirmed){
+                if(unsubscribeRealtime) unsubscribeRealtime();
+                await signOut(auth);
+                location.reload();
+            }
         }
 
+        // Tạo Menu điều hướng Desktop gọn gàng
         function renderDesktopTabsNav() {
             const nav = document.getElementById('desktopNav');
             const tabs = [ 
-                { id: 'Bookings', icon: 'fa-calendar', label: 'Lịch Đặt Hẹn' }, 
-                { id: 'Staff', icon: 'fa-user-group', label: 'Đội Ngũ Thợ' }, 
+                { id: 'Dashboard', icon: 'fa-chart-pie', label: 'Bảng Thống Kê' },
+                { id: 'Bookings', icon: 'fa-calendar-check', label: 'Lịch Đặt Hẹn' }, 
+                { id: 'Staff', icon: 'fa-user-tie', label: 'Đội Ngũ Thợ' }, 
                 { id: 'Services', icon: 'fa-scissors', label: 'Dịch Vụ' }, 
                 { id: 'Branches', icon: 'fa-shop', label: 'Chi Nhánh' }, 
                 { id: 'Users', icon: 'fa-users', label: 'Khách Hàng' }, 
+                { id: 'Feedbacks', icon: 'fa-star', label: 'Ý Kiến Phản Hồi' },
+                { id: 'Reports', icon: 'fa-flag', label: 'Phản Ánh Reels' },
                 { id: 'Config', icon: 'fa-sliders', label: 'Cấu Hình Lõi' }, 
-                { id: 'CmsLayout', icon: 'fa-layer-group', label: 'CMS Web' },
-                { id: 'DEV', icon: 'fa-code', label: 'Dev Workspace' } // TAB DEV THÊM Ở ĐÂY
+                { id: 'CmsLayout', icon: 'fa-layer-group', label: 'CMS Giao Diện' },
+                { id: 'DEV', icon: 'fa-code', label: 'Developer JSON' }
             ];
-            nav.innerHTML = tabs.map(t => `<button onclick="switchTab('${t.id}')" id="d-nav-${t.id}" class="nav-item w-full flex items-center gap-3 px-3 py-2 text-sm text-left"><i class="fa-solid ${t.icon} w-5 text-center text-gray-400"></i> <span>${t.label}</span></button>`).join('');
+            nav.innerHTML = tabs.map(t => `<button onclick="switchTab('${t.id}')" id="d-nav-${t.id}" class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 text-xs text-left uppercase tracking-wider"><i class="fa-solid ${t.icon} w-5 text-center text-sm"></i> <span>${t.label}</span></button>`).join('');
         }
 
+        // Chuyển đổi Tab Menu chính
         function switchTab(name) {
             currentTab = name;
-            const titleMap = { Bookings: 'Lịch Đặt Hẹn', Staff: 'Đội Ngũ Thợ', Services: 'Dịch Vụ', Branches: 'Chi Nhánh', Users: 'Khách Hàng', Config: 'Cấu Hình Hệ Thống', CmsLayout: 'Quản Trị Giao Diện (CMS)', DEV: 'Developer Workspace' };
-            document.getElementById('tabTitle').innerText = titleMap[name] || name;
+            const titleMap = { 
+                Dashboard: 'Bảng Thống Kê', Bookings: 'Lịch Đặt Hẹn', Staff: 'Đội Ngũ Thợ', 
+                Services: 'Dịch Vụ', Branches: 'Chi Nhánh', Users: 'Khách Hàng', 
+                Feedbacks: 'Ý Kiến Đánh Giá', Reports: 'Phản Ánh Reels', Config: 'Cấu Hình Hệ Thống', 
+                CmsLayout: 'Quản Trị Giao Diện (CMS)', DEV: 'Developer Workspace' 
+            };
+            const descMap = {
+                Dashboard: 'Báo cáo tổng quan hoạt động kinh doanh hôm nay',
+                Bookings: 'Danh sách và kiểm soát lịch hẹn đặt chỗ của salon',
+                Staff: 'Thông tin và phân công thợ làm việc tại các chi nhánh',
+                Services: 'Danh mục dịch vụ cung cấp kèm bảng giá',
+                Branches: 'Quản lý thông tin chi nhánh và điều phối số ghế thực tế',
+                Users: 'Thông tin hồ sơ liên hệ của khách đặt hẹn',
+                Feedbacks: 'Khách hàng đánh giá thái độ phục vụ và chất lượng dịch vụ',
+                Reports: 'Quản lý các nội dung Reels bị khách hàng báo cáo vi phạm',
+                Config: 'Điều chỉnh thời gian mở cửa, khoảng cách ca đặt lịch',
+                CmsLayout: 'Chỉnh sửa hình ảnh, Flash Sale, thông điệp hiển thị trang chủ',
+                DEV: 'Quản lý dữ liệu trực tiếp bằng cấu trúc JSON cấp cao (Dành cho Dev)'
+            };
             
-            const isNoSearch = ['CmsLayout', 'Config', 'DEV'].includes(name);
+            document.getElementById('tabTitle').innerText = titleMap[name] || name;
+            document.getElementById('tabDesc').innerText = descMap[name] || '';
+            
+            const isNoSearch = ['Dashboard', 'CmsLayout', 'Config', 'DEV', 'Feedbacks', 'Reports'].includes(name);
             document.getElementById('searchContainer').style.display = isNoSearch ? 'none' : 'block';
             document.getElementById('addRecordBtn').style.display = isNoSearch ? 'none' : 'flex';
             document.getElementById('cmsSubTabGroup').style.display = name === 'CmsLayout' ? 'flex' : 'none';
@@ -286,79 +540,330 @@
             renderViewArea();
         }
 
+        // Lắng nghe thay đổi dữ liệu Realtime từ Firebase Firestore
         function loadCurrentTabRealtime() {
             if (unsubscribeRealtime) { unsubscribeRealtime(); unsubscribeRealtime = null; }
             
-            if (currentTab === 'DEV') { renderViewArea(); return; } // Dev view tự lo liệu data fetch
-            if (currentTab === 'Config') { unsubscribeRealtime = onSnapshot(doc(db, "MaiTayData/Core/Config/system"), snap => { tabCachedData = snap.exists() ? [snap.data()] : [{}]; renderViewArea(); }); return; }
-            if (currentTab === 'CmsLayout') { unsubscribeRealtime = onSnapshot(doc(db, "MaiTayData/Core/Config/cms"), snap => { cmsCachedDocData = snap.exists() ? snap.data() : {}; switchCmsSubTab(currentCmsSubTab); }); return; }
+            if (currentTab === 'Dashboard') { renderDashboard(); return; }
+            if (currentTab === 'DEV') { renderViewArea(); return; }
+            
+            if (currentTab === 'Config') { 
+                unsubscribeRealtime = onSnapshot(doc(db, "MaiTayData/Core/Config/system"), snap => { 
+                    tabCachedData = snap.exists() ? [snap.data()] : [{}]; 
+                    renderViewArea(); 
+                }, err => handleSecurityRulesError(err)); 
+                return; 
+            }
+            if (currentTab === 'CmsLayout') { 
+                unsubscribeRealtime = onSnapshot(doc(db, "MaiTayData/Core/Config/cms"), snap => { 
+                    cmsCachedDocData = snap.exists() ? snap.data() : {}; 
+                    switchCmsSubTab(currentCmsSubTab); 
+                }, err => handleSecurityRulesError(err)); 
+                return; 
+            }
             
             const colRef = collection(db, `MaiTayData/Core/${currentTab}`); 
-            const q = currentTab === 'Bookings' ? query(colRef, orderBy('startTime', 'desc')) : colRef;
-            unsubscribeRealtime = onSnapshot(q, snap => { tabCachedData = []; snap.forEach(d => tabCachedData.push({ docId: d.id, ...d.data() })); renderViewArea(); });
+            let q = colRef;
+            if (currentTab === 'Bookings') {
+                q = query(colRef, orderBy('startTime', 'desc'));
+            } else if (currentTab === 'Feedbacks' || currentTab === 'Reports') {
+                q = query(colRef, orderBy('createdAt', 'desc'));
+            }
+            
+            unsubscribeRealtime = onSnapshot(q, snap => { 
+                tabCachedData = []; 
+                snap.forEach(d => tabCachedData.push({ docId: d.id, ...d.data() })); 
+                renderViewArea(); 
+            }, err => handleSecurityRulesError(err));
         }
 
+        // Bắt lỗi khi người dùng cố tình can thiệp Firebase mà Security Rules không cấp quyền
+        function handleSecurityRulesError(error) {
+            console.error("Firebase Rules Blocker: ", error);
+            showToast("Bị từ chối truy cập", "Bạn không có đặc quyền quản trị viên tối cao để thao tác chức năng này!", "error");
+            signOut(auth);
+        }
+
+        // ----------------------------------------------------
+        // RENDER 1: TRANG THỐNG KÊ DASHBOARD QUAN TRỌNG
+        // ----------------------------------------------------
+        async function renderDashboard() {
+            const area = document.getElementById('contentArea');
+            area.innerHTML = `
+                <div class="flex items-center justify-center py-12">
+                    <i class="fa-solid fa-circle-notch fa-spin text-2xl text-slate-800"></i>
+                </div>`;
+            
+            try {
+                const bSnap = await getDocs(collection(db, "MaiTayData/Core/Bookings"));
+                const fSnap = await getDocs(collection(db, "MaiTayData/Core/Feedbacks"));
+                const rSnap = await getDocs(collection(db, "MaiTayData/Core/Reports"));
+
+                const bookings = bSnap.docs.map(d => d.data());
+                const feedbacks = fSnap.docs.map(d => d.data());
+                const reports = rSnap.docs.map(d => d.data());
+
+                const todayIso = new Date().toISOString().split('T')[0];
+                const bookingsToday = bookings.filter(b => b.startTime && b.startTime.startsWith(todayIso));
+                const totalIncomeToday = bookingsToday
+                    .filter(b => b.status === "Hoàn thành")
+                    .length; // Chỉ đếm số ca hoàn thành trong ngày
+                
+                const reportsPending = reports.filter(r => r.status === "Chờ xử lý").length;
+
+                // Tính điểm đánh giá trung bình
+                let avgFeedback = 5.0;
+                if(feedbacks.length > 0) {
+                    const sum = feedbacks.reduce((acc, f) => acc + (Number(f.ratingAverage) || 5.0), 0);
+                    avgFeedback = (sum / feedbacks.length).toFixed(1);
+                }
+
+                area.innerHTML = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hôm nay đặt chỗ</p>
+                                <h3 class="text-2xl font-black text-slate-900 mt-1">${bookingsToday.length} Ca</h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl"><i class="fa-solid fa-calendar-day"></i></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hoàn Thành Hôm Nay</p>
+                                <h3 class="text-2xl font-black text-emerald-600 mt-1">${totalIncomeToday} Ca</h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl"><i class="fa-solid fa-circle-check"></i></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Điểm Đánh Giá trung bình</p>
+                                <h3 class="text-2xl font-black text-amber-500 mt-1">${avgFeedback} / 5.0</h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center text-xl"><i class="fa-solid fa-star"></i></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Phản Ánh Chờ Xử Lý</p>
+                                <h3 class="text-2xl font-black text-rose-600 mt-1">${reportsPending} Đơn</h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6">
+                            <h4 class="font-black text-slate-900 text-sm uppercase tracking-wider mb-4">Lịch hẹn mới nhất hôm nay</h4>
+                            <div class="space-y-3.5">
+                                ${bookingsToday.length === 0 ? `<p class="text-xs text-slate-400 py-6 text-center">Chưa có lịch hẹn nào được đăng ký hôm nay.</p>` : 
+                                    bookingsToday.slice(0, 5).map(b => {
+                                        const dateObj = new Date(b.startTime);
+                                        const timeStr = `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
+                                        let bColor = b.status === 'Hoàn thành' ? 'bg-emerald-50 text-emerald-600' : b.status === 'Đã huỷ' ? 'bg-rose-50 text-rose-600' : 'bg-blue-50 text-blue-600';
+                                        return `
+                                            <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 rounded-lg bg-white border flex flex-col items-center justify-center shadow-sm">
+                                                        <span class="text-xs font-black text-slate-800">${timeStr}</span>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-xs font-bold text-slate-900">${b.customerName} - ${b.phone}</p>
+                                                        <p class="text-[10px] text-slate-400 font-semibold mt-0.5">${b.serviceName} • Thợ: ${b.staffName}</p>
+                                                    </div>
+                                                </div>
+                                                <span class="px-2.5 py-1 text-[9px] font-black uppercase tracking-wider rounded-lg ${bColor}">${b.status}</span>
+                                            </div>`;
+                                    }).join('')
+                                }
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-2xl border border-slate-200 p-6">
+                            <h4 class="font-black text-slate-900 text-sm uppercase tracking-wider mb-4">Ý Kiến Mới Nhận</h4>
+                            <div class="space-y-4">
+                                ${feedbacks.length === 0 ? `<p class="text-xs text-slate-400 py-6 text-center">Chưa có đánh giá nào.</p>` : 
+                                    feedbacks.slice(0, 3).map(f => {
+                                        return `
+                                            <div class="border-b border-slate-100 pb-3 last:border-none last:pb-0">
+                                                <div class="flex justify-between items-center mb-1">
+                                                    <p class="text-xs font-bold text-slate-900">${f.isAnonymous ? "Khách hàng ẩn danh" : f.customerName}</p>
+                                                    <span class="text-amber-500 font-bold text-xs"><i class="fa-solid fa-star mr-1"></i>${Number(f.ratingAverage).toFixed(1)}</span>
+                                                </div>
+                                                <p class="text-[11px] text-slate-500 italic leading-relaxed line-clamp-2">"${f.message || 'Không có ghi chú thêm.'}"</p>
+                                            </div>`;
+                                    }).join('')
+                                }
+                            </div>
+                        </div>
+                    </div>`;
+            } catch (err) {
+                console.error("Lỗi nạp thống kê:", err);
+                area.innerHTML = `<div class="p-6 bg-rose-50 border border-rose-100 text-rose-600 rounded-xl text-xs font-semibold">Gặp sự cố kết nối dữ liệu thống kê, vui lòng kiểm tra lại quyền!</div>`;
+            }
+        }
+
+        // ----------------------------------------------------
+        // RENDER 2: KHU VỰC DATA TABLE & QUẢN TRỊ TABLE VIEW
+        // ----------------------------------------------------
         function renderViewArea() {
             const area = document.getElementById('contentArea'); area.innerHTML = '';
             
+            if (currentTab === 'Dashboard') { renderDashboard(); return; }
             if (currentTab === 'DEV') { renderDevEditor(area); return; }
             if (currentTab === 'Config') { renderConfigEditor(tabCachedData[0] || {}, area); return; }
             if (currentTab === 'CmsLayout') { renderCmsEditor(area); return; }
             
-            let filtered = tabCachedData.filter(item => Object.values(item).some(val => String(val).toLowerCase().includes(searchKeyword.toLowerCase())));
-            if(filtered.length === 0) { area.innerHTML = `<div class="py-12 text-center text-gray-400 text-sm">Không có dữ liệu.</div>`; return; }
+            // Tìm kiếm dữ liệu cục bộ đã cache
+            let filtered = tabCachedData.filter(item => 
+                Object.values(item).some(val => 
+                    String(val).toLowerCase().includes(searchKeyword.toLowerCase())
+                )
+            );
+
+            if(filtered.length === 0) { 
+                area.innerHTML = `
+                    <div class="py-16 text-center bg-white rounded-2xl border border-slate-200 shadow-sm text-slate-400">
+                        <i class="fa-solid fa-folder-open text-3xl mb-3.5"></i>
+                        <p class="text-xs font-bold uppercase tracking-widest text-slate-400">Không tìm thấy bản ghi phù hợp</p>
+                    </div>`; 
+                return; 
+            }
             
             let container = document.createElement('div'); 
-            container.className = "space-y-3 bg-white border border-gray-200 rounded-lg overflow-hidden divide-y divide-gray-100";
+            container.className = "bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm divide-y divide-slate-100";
+            
             filtered.forEach(item => {
-                let badgeHtml = '';
+                let statusBadge = '';
+                let extraMeta = '';
+
                 if (currentTab === 'Bookings') {
-                    let stColor = item.status === 'Hoàn thành' ? 'text-green-600 bg-green-50' : item.status === 'Đã huỷ' ? 'text-red-600 bg-red-50' : 'text-gray-600 bg-gray-100';
-                    badgeHtml = `<span class="px-2.5 py-1 text-[10px] font-medium rounded-full ${stColor} mr-3">${item.status || 'Mới'}</span>`;
+                    let stColor = item.status === 'Hoàn thành' ? 'text-emerald-600 bg-emerald-50' : item.status === 'Đã huỷ' ? 'text-rose-600 bg-rose-50' : 'text-blue-600 bg-blue-50';
+                    statusBadge = `<span class="px-2.5 py-1 text-[9px] font-black uppercase tracking-wider rounded-lg ${stColor} mr-3">${item.status || 'Mới'}</span>`;
+                    
+                    const dateObj = new Date(item.startTime);
+                    extraMeta = `<span class="text-[10px] text-slate-400 font-bold bg-slate-100 border border-slate-200 px-2 py-0.5 rounded ml-2 uppercase tracking-wide"><i class="fa-regular fa-clock mr-1"></i>${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')} - ${dateObj.getDate()}/${dateObj.getMonth()+1}</span>`;
+                } else if (currentTab === 'Staff') {
+                    let stColor = item.status === 'Hoạt động' ? 'text-emerald-600 bg-emerald-50' : 'text-slate-400 bg-slate-100';
+                    statusBadge = `<span class="px-2.5 py-1 text-[9px] font-black uppercase tracking-wider rounded-lg ${stColor} mr-3">${item.status}</span>`;
+                } else if (currentTab === 'Services') {
+                    statusBadge = `<span class="text-xs font-black text-slate-700 bg-slate-50 border border-slate-100 px-3 py-1 rounded-xl mr-3">${item.price}</span>`;
+                } else if (currentTab === 'Feedbacks') {
+                    statusBadge = `<span class="px-2.5 py-1 text-[9px] font-black text-amber-600 bg-amber-50 rounded-lg mr-3"><i class="fa-solid fa-star mr-1"></i>${Number(item.ratingAverage).toFixed(1)} SAO</span>`;
+                } else if (currentTab === 'Reports') {
+                    let stColor = item.status === 'Chờ xử lý' ? 'text-rose-600 bg-rose-50 animate-pulse' : 'text-slate-500 bg-slate-100';
+                    statusBadge = `<span class="px-2.5 py-1 text-[9px] font-black uppercase tracking-wider rounded-lg ${stColor} mr-3">${item.status}</span>`;
                 }
-                container.innerHTML += `<div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-gray-50 transition-colors"><div class="flex-1 min-w-0 pr-4"><p class="font-semibold text-gray-900 truncate">${item.customerName || item.name || item.id || 'N/A'} <span class="text-xs text-gray-400 font-normal ml-2">${item.bookingCode || item.phone || ''}</span></p><p class="text-xs text-gray-500 truncate mt-0.5">${item.serviceName ? item.serviceName + ' - ' + item.staffName : (item.email || item.position || item.address || '')}</p></div><div class="flex items-center gap-1 shrink-0">${badgeHtml}<button onclick="openEditModal('${item.docId}')" class="w-8 h-8 rounded text-gray-400 hover:text-gray-900 hover:bg-gray-100"><i class="fa-solid fa-pen text-xs"></i></button><button onclick="deleteRecord('${item.docId}', '${item.eventId||''}')" class="w-8 h-8 rounded text-gray-400 hover:text-red-600 hover:bg-red-50"><i class="fa-solid fa-trash-can text-xs"></i></button></div></div>`;
+
+                // Tiêu đề chính và Mô tả hiển thị
+                const mainTitle = item.customerName || item.name || item.id || 'Không tên';
+                let subTitle = item.serviceName 
+                    ? `${item.serviceName} (Thợ: ${item.staffName || 'Không chỉ định'})` 
+                    : (item.email || item.position || item.address || item.message || item.targetFeedTitle || '');
+
+                if (currentTab === 'Feedbacks' && item.ratings) {
+                    subTitle = `Thái độ: ${item.ratings.attitude}★ | Dịch vụ: ${item.ratings.service}★ | Không gian: ${item.ratings.space}★ - Nội dung: "${item.message || 'Chỉ chấm điểm'}"`;
+                }
+
+                let actionsHtml = `
+                    <button onclick="openEditModal('${item.docId}')" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center justify-center border shadow-sm bg-white"><i class="fa-solid fa-pen text-[11px]"></i></button>
+                    <button onclick="deleteRecord('${item.docId}', '${item.eventId||''}')" class="w-8 h-8 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all flex items-center justify-center border shadow-sm bg-white"><i class="fa-solid fa-trash-can text-[11px]"></i></button>`;
+
+                // Thao tác hạn chế đối với Feedbacks (Chỉ xem và xóa)
+                if (currentTab === 'Feedbacks') {
+                    actionsHtml = `<button onclick="deleteRecord('${item.docId}')" class="w-8 h-8 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all flex items-center justify-center border shadow-sm bg-white"><i class="fa-solid fa-trash-can text-[11px]"></i></button>`;
+                }
+
+                container.innerHTML += `
+                    <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/50 transition-colors">
+                        <div class="flex-1 min-w-0 pr-4">
+                            <div class="flex items-center flex-wrap gap-1">
+                                <p class="font-black text-slate-900 text-sm truncate">${mainTitle}</p>
+                                ${extraMeta}
+                            </div>
+                            <p class="text-xs text-slate-400 font-medium truncate mt-0.5">${subTitle}</p>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                            ${statusBadge}
+                            <div class="flex items-center gap-1">
+                                ${actionsHtml}
+                            </div>
+                        </div>
+                    </div>`;
             });
             area.appendChild(container);
         }
 
+        // Cập nhật Cấu hình hệ thống chung
         function renderConfigEditor(data, container) {
-            container.className = "max-w-2xl bg-white border border-gray-200 rounded-lg p-6 space-y-4";
-            let html = `<h3 class="font-semibold text-gray-900 border-b border-gray-100 pb-4 mb-4">Cấu Hình Vận Hành</h3>`;
-            TAB_SCHEMAS.Config.fields.forEach((f, i) => { html += `<div><label class="block text-xs font-medium text-gray-700 mb-1">${TAB_SCHEMAS.Config.labels[i]}</label><input type="text" id="cfg-${f}" value="${data[f]!==undefined?data[f]:''}" class="min-input"></div>`; });
-            html += `<div class="pt-4 flex justify-end"><button onclick="saveConfigAction()" id="saveCfgBtn" class="btn-primary">Lưu Cập Nhật</button></div>`;
+            container.className = "max-w-xl bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-sm";
+            let html = `<h3 class="font-black text-slate-900 border-b border-slate-100 pb-4 mb-4 text-sm uppercase tracking-wider">Cấu Hình Vận Hành Toàn Cục</h3>`;
+            
+            TAB_SCHEMAS.Config.fields.forEach((f, i) => {
+                const val = data[f] !== undefined ? data[f] : '';
+                if (TAB_SCHEMAS.Config.types[i] === 'select_maintenance') {
+                    html += `
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${TAB_SCHEMAS.Config.labels[i]}</label>
+                            <select id="cfg-${f}" class="min-input py-2.5">
+                                <option value="false" ${val === false ? 'selected' : ''}>Tắt bảo trì (Hoạt động bình thường)</option>
+                                <option value="true" ${val === true ? 'selected' : ''}>Bật bảo trì (Khoá hệ thống)</option>
+                            </select>
+                        </div>`;
+                } else {
+                    html += `
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${TAB_SCHEMAS.Config.labels[i]}</label>
+                            <input type="text" id="cfg-${f}" value="${val}" class="min-input">
+                        </div>`;
+                }
+            });
+            html += `
+                <div class="pt-4 flex justify-end">
+                    <button onclick="saveConfigAction()" id="saveCfgBtn" class="btn-primary py-2.5 px-6">LƯU THAY ĐỔI</button>
+                </div>`;
             container.innerHTML = html;
         }
 
-        // ==========================================
-        // DEV WORKSPACE
-        // ==========================================
+        // ----------------------------------------------------
+        // RENDER 3: TRÌNH CHỈNH SỬA JSON CHO NHÀ PHÁT TRIỂN
+        // ----------------------------------------------------
         function renderDevEditor(container) {
-            container.className = "max-w-5xl mx-auto flex flex-col h-[calc(100vh-140px)]";
+            container.className = "max-w-5xl mx-auto flex flex-col h-[calc(100vh-180px)]";
             container.innerHTML = `
                 <div class="flex flex-col sm:flex-row justify-between gap-4 mb-4 shrink-0">
                     <div class="flex items-center gap-2">
-                        <select id="devTargetSelect" class="min-input py-2 bg-white font-medium w-48" onchange="loadDevData()">
-                            <optgroup label="Collections (Dạng Mảng)"><option value="col:Bookings">Bookings</option><option value="col:Staff">Staff</option><option value="col:Services">Services</option><option value="col:Branches">Branches</option><option value="col:Users">Users</option></optgroup>
-                            <optgroup label="Documents (Dạng Đối tượng)"><option value="doc:Config/system">Config: System</option><option value="doc:Config/cms">Config: CMS Layout</option><option value="doc:Config/mediaStorage">Config: Media Library</option></optgroup>
+                        <select id="devTargetSelect" class="min-input py-2.5 bg-white font-bold w-52" onchange="loadDevData()">
+                            <optgroup label="Collections (Dạng Mảng)">
+                                <option value="col:Bookings">Bookings (Lịch đặt)</option>
+                                <option value="col:Staff">Staff (Nhân sự)</option>
+                                <option value="col:Services">Services (Dịch vụ)</option>
+                                <option value="col:Branches">Branches (Chi nhánh)</option>
+                                <option value="col:Users">Users (Khách hàng)</option>
+                                <option value="col:Feedbacks">Feedbacks (Đánh giá)</option>
+                                <option value="col:Reports">Reports (Báo cáo Reels)</option>
+                            </optgroup>
+                            <optgroup label="Documents (Dạng Đối tượng)">
+                                <option value="doc:Config/system">Config: System</option>
+                                <option value="doc:Config/cms">Config: CMS Layout</option>
+                                <option value="doc:Config/mediaStorage">Config: Media Library</option>
+                            </optgroup>
                         </select>
-                        <button onclick="loadDevData()" class="btn-outline text-xs py-2 px-3"><i class="fa-solid fa-rotate-right"></i> Tải lại</button>
+                        <button onclick="loadDevData()" class="btn-outline text-xs py-2.5 px-3.5 flex items-center gap-1.5"><i class="fa-solid fa-rotate-right"></i> Nạp lại</button>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="formatDevJson()" class="btn-outline text-xs py-2 px-3"><i class="fa-solid fa-align-left mr-1"></i> Format JSON</button>
-                        <button onclick="saveDevData()" id="btnSaveDev" class="bg-red-600 text-white hover:bg-red-700 rounded-lg text-xs font-medium py-2 px-4 transition-colors shadow-sm"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Ghi đè DB</button>
+                        <button onclick="formatDevJson()" class="btn-outline text-xs py-2.5 px-4 flex items-center gap-1.5"><i class="fa-solid fa-align-left"></i> Định dạng JSON</button>
+                        <button onclick="saveDevData()" id="btnSaveDev" class="bg-rose-600 border border-rose-600 text-white hover:bg-rose-700 rounded-xl text-xs font-bold py-2.5 px-5 transition-all flex items-center gap-1.5 shadow-md shadow-rose-950/10"><i class="fa-solid fa-cloud-arrow-up"></i> GHI ĐÈ FIREBASE</button>
                     </div>
                 </div>
-                <div class="flex-1 relative rounded-lg overflow-hidden border border-gray-700 shadow-inner">
-                    <textarea id="devJsonTextarea" class="absolute inset-0 w-full h-full dev-textarea font-mono text-[13px] p-4 resize-none hide-scroll leading-relaxed" spellcheck="false" placeholder="Đang tải dữ liệu..."></textarea>
+                <div class="flex-1 relative rounded-2xl overflow-hidden border border-slate-300 shadow-inner">
+                    <textarea id="devJsonTextarea" class="absolute inset-0 w-full h-full dev-textarea font-mono text-[12.5px] p-5 resize-none hide-scroll tracking-wide" spellcheck="false" placeholder="Đang nạp dữ liệu..."></textarea>
                 </div>
-                <p class="text-[10px] text-gray-500 mt-2 shrink-0"><i class="fa-solid fa-triangle-exclamation text-red-500 mr-1"></i> CẢNH BÁO: Mọi chỉnh sửa ở đây (kể cả xoá text) sẽ ghi đè trực tiếp lên Firebase khi bạn bấm Lưu.</p>`;
+                <p class="text-[10px] font-semibold text-rose-500 mt-2.5 flex items-center gap-1 shrink-0"><i class="fa-solid fa-triangle-exclamation"></i> CẢNH BÁO: Mọi sửa đổi trực tiếp ở đây sẽ ghi đè ngay lên Database. Hãy chắc chắn đúng cấu trúc JSON!</p>`;
             loadDevData();
         }
 
         async function loadDevData() {
             const target = document.getElementById('devTargetSelect').value;
             const textarea = document.getElementById('devJsonTextarea');
-            textarea.value = 'Đang tải JSON...';
+            textarea.value = 'Đang biên dịch cấu trúc JSON từ Firebase...';
             try {
                 if (target.startsWith('col:')) {
                     const colName = target.replace('col:', '');
@@ -371,27 +876,28 @@
                     const snap = await getDoc(doc(db, `MaiTayData/Core/${docPath}`));
                     textarea.value = JSON.stringify(snap.exists() ? snap.data() : {}, null, 4);
                 }
-            } catch(e) { textarea.value = `Lỗi tải dữ liệu: ${e.message}`; }
+            } catch(e) { textarea.value = `Lỗi phân quyền hoặc kết nối: ${e.message}`; }
         }
 
         function formatDevJson() {
             const textarea = document.getElementById('devJsonTextarea');
             try { textarea.value = JSON.stringify(JSON.parse(textarea.value), null, 4); } 
-            catch(e) { alert("JSON không hợp lệ! Vui lòng kiểm tra lại cú pháp (dấu phẩy, ngoặc kép...)."); }
+            catch(e) { showToast("JSON lỗi", "Cấu trúc dữ liệu chưa đúng quy chuẩn JSON!", "error"); }
         }
 
         async function saveDevData() {
-            if (!confirm("CẢNH BÁO: Thao tác này sẽ ghi đè trực tiếp lên Firebase. Dữ liệu bị xoá trong JSON cũng sẽ bị xoá vĩnh viễn trên DB. Chắc chắn tiếp tục?")) return;
+            const confirmed = await showConfirm("Xác nhận ghi đè JSON", "Thao tác ghi đè này không thể hoàn tác và sẽ cập nhật trực tiếp DB hệ thống. Bạn chắc chắn tiếp tục?", "rose");
+            if (!confirmed) return;
             const btn = document.getElementById('btnSaveDev');
             const target = document.getElementById('devTargetSelect').value;
             const textarea = document.getElementById('devJsonTextarea');
             let parsedData;
-            try { parsedData = JSON.parse(textarea.value); } catch(e) { alert("JSON lỗi cú pháp! Không thể lưu."); return; }
+            try { parsedData = JSON.parse(textarea.value); } catch(e) { alert("Lỗi cú pháp JSON! Vui lòng format kiểm tra."); return; }
 
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Đang lưu...'; btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Đang cập nhật...'; btn.disabled = true;
             try {
                 if (target.startsWith('col:')) {
-                    if (!Array.isArray(parsedData)) throw new Error("Collection phải là một Mảng `[ {...} ]`.");
+                    if (!Array.isArray(parsedData)) throw new Error("Collection bắt buộc phải là một dạng Mảng [ {...} ]");
                     const colName = target.replace('col:', '');
                     const colRef = collection(db, `MaiTayData/Core/${colName}`);
                     
@@ -407,60 +913,249 @@
                         else await addDoc(colRef, dataToSave);
                     }
                 } else {
-                    if (Array.isArray(parsedData) || typeof parsedData !== 'object') throw new Error("Document phải là một Object `{ ... }`.");
+                    if (Array.isArray(parsedData) || typeof parsedData !== 'object') throw new Error("Document bắt buộc phải là một dạng Object { ... }");
                     const docPath = target.replace('doc:', '');
                     await setDoc(doc(db, `MaiTayData/Core/${docPath}`), parsedData);
                 }
-                alert("Đồng bộ JSON lên Firebase thành công!");
+                showToast("Đã ghi đè thành công", "Hệ thống cơ sở dữ liệu đã được cập nhật đồng bộ hoàn tất!", "success");
                 loadDevData(); 
-            } catch(e) { alert("Lỗi lưu DB: " + e.message); } 
-            finally { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> Ghi đè DB'; btn.disabled = false; }
+            } catch(e) { showToast("Lưu thất bại", e.message, "error"); } 
+            finally { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> GHI ĐÈ FIREBASE'; btn.disabled = false; }
         }
 
-        // ==========================================
-        // CMS BUILDER
-        // ==========================================
+        // ----------------------------------------------------
+        // RENDER 4: BỘ QUẢN TRỊ GIAO DIỆN KHÁCH HÀNG CMS
+        // ----------------------------------------------------
         function renderCmsEditor(container) {
             container.className = "max-w-4xl mx-auto space-y-6";
             let html = "";
-            const boxClass = "bg-white border border-gray-200 rounded-lg p-6";
+            const boxClass = "bg-white border border-slate-200 rounded-2xl p-6 shadow-sm";
 
             if (currentCmsSubTab === 'heroBlock') {
                 const d = cmsCachedDocData.heroBlock || { sliderImages:[], flashSale:{} };
                 let dtVal = d.flashSale?.endTime || ''; if(dtVal && !dtVal.includes('T')) dtVal = ''; 
                 
-                html = `<div class="${boxClass}"><div class="flex justify-between items-center mb-4"><h3 class="font-semibold text-gray-900">Ảnh Bìa Slider</h3> <button onclick="addCmsArrayRow('slider')" class="btn-outline text-xs py-1 px-3"><i class="fa-solid fa-plus mr-1"></i>Thêm ảnh</button></div><div id="cms-container-slider" class="grid grid-cols-2 sm:grid-cols-4 gap-4">${(d.sliderImages||[]).map(url => `<div class="border border-gray-200 rounded p-2 relative data-row bg-gray-50 flex flex-col gap-2"><button onclick="removeCmsArrayRow(this)" class="absolute top-1 right-1 bg-red-50 text-red-500 rounded p-1 text-[10px] hover:bg-red-100 z-10"><i class="fa-solid fa-xmark"></i></button><div class="aspect-video bg-gray-100 rounded overflow-hidden relative group"><img src="${url || 'https://placehold.co/600x400?text=No+Image'}" class="w-full h-full object-cover preview-img"><div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><button type="button" onclick="openMediaManager(this, 'next')" class="text-white text-xs bg-gray-900/80 px-2 py-1 rounded">Thay đổi</button><input type="hidden" value="${url}" class="field-url"></div></div></div>`).join('')}</div></div><div class="${boxClass} mt-6"><div class="flex justify-between items-center mb-4"><h3 class="font-semibold text-gray-900 text-red-600"><i class="fa-solid fa-bolt mr-1"></i> Sự kiện Flash Sale</h3></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="text-xs font-medium text-gray-700 block mb-1">Trạng thái (Bật/Tắt)</label><select id="cms-hero-isFlashSale" class="min-input"><option value="false" ${!d.isFlashSale?'selected':''}>Tắt Flash Sale</option><option value="true" ${d.isFlashSale?'selected':''}>Bật Kích Hoạt</option></select></div><div><label class="text-xs font-medium text-gray-700 block mb-1">Thời gian kết thúc</label><input type="datetime-local" id="cms-hero-flash-endTime" value="${dtVal}" class="min-input"></div><div><label class="text-xs font-medium text-gray-700 block mb-1">Tiêu đề Deal</label><input type="text" id="cms-hero-flash-title" value="${d.flashSale?.title||''}" placeholder="Sale Giữa Tháng" class="min-input"></div><div><label class="text-xs font-medium text-gray-700 block mb-1">Chữ trên nút bấm</label><input type="text" id="cms-hero-flash-btnText" value="${d.flashSale?.btnText||''}" placeholder="Săn Deal Ngay" class="min-input"></div><div class="col-span-1 md:col-span-2"><label class="text-xs font-medium text-gray-700 block mb-1">Mô tả ngắn</label><input type="text" id="cms-hero-flash-desc" value="${d.flashSale?.desc||''}" placeholder="Giảm giá 50% tất cả dịch vụ..." class="min-input"></div></div></div>`;
+                html = `
+                    <div class="${boxClass}">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                            <h3 class="font-black text-slate-900 text-sm uppercase tracking-wider">Ảnh Bìa Slider Trang Chủ</h3> 
+                            <button onclick="addCmsArrayRow('slider')" class="btn-outline text-xs py-1.5 px-3.5"><i class="fa-solid fa-plus mr-1"></i>Thêm ảnh</button>
+                        </div>
+                        <div id="cms-container-slider" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            ${(d.sliderImages||[]).map(url => `
+                                <div class="border border-slate-200 rounded-xl p-2.5 relative data-row bg-slate-50 flex flex-col gap-2.5">
+                                    <button onclick="removeCmsArrayRow(this)" class="absolute top-1 right-1 bg-rose-50 text-rose-500 rounded-lg p-1.5 text-xs hover:bg-rose-100 z-10 shadow-sm"><i class="fa-solid fa-xmark"></i></button>
+                                    <div class="aspect-video bg-slate-100 rounded-lg overflow-hidden relative group border border-slate-200 shadow-sm">
+                                        <img src="${url || 'https://placehold.co/600x400?text=No+Image'}" class="w-full h-full object-cover preview-img">
+                                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                            <button type="button" onclick="openMediaManager(this, 'next')" class="text-white text-[10px] font-black uppercase tracking-wider bg-slate-900/90 px-3 py-1.5 rounded-lg border border-white/20">Thay đổi</button>
+                                            <input type="hidden" value="${url}" class="field-url">
+                                        </div>
+                                    </div>
+                                </div>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="${boxClass} mt-6">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                            <h3 class="font-black text-rose-600 text-sm uppercase tracking-wider flex items-center gap-1"><i class="fa-solid fa-bolt"></i> Sự kiện Flash Sale Đặc Quyền</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 block mb-1.5 uppercase tracking-wider">Trạng thái (Bật/Tắt)</label>
+                                <select id="cms-hero-isFlashSale" class="min-input py-2.5">
+                                    <option value="false" ${!d.isFlashSale?'selected':''}>Ẩn sự kiện Flash Sale</option>
+                                    <option value="true" ${d.isFlashSale?'selected':''}>Kích hoạt hiển thị trang chủ</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 block mb-1.5 uppercase tracking-wider">Thời gian kết thúc sự kiện</label>
+                                <input type="datetime-local" id="cms-hero-flash-endTime" value="${dtVal}" class="min-input">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 block mb-1.5 uppercase tracking-wider">Tiêu đề Deal</label>
+                                <input type="text" id="cms-hero-flash-title" value="${d.flashSale?.title||''}" placeholder="Flash Sale Đặc Quyền VIP" class="min-input">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 block mb-1.5 uppercase tracking-wider">Chữ trên nút hành động</label>
+                                <input type="text" id="cms-hero-flash-btnText" value="${d.flashSale?.btnText||''}" placeholder="SĂN DEAL NGAY" class="min-input">
+                            </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="text-xs font-bold text-slate-500 block mb-1.5 uppercase tracking-wider">Mô tả chi tiết ưu đãi</label>
+                                <input type="text" id="cms-hero-flash-desc" value="${d.flashSale?.desc||''}" placeholder="Giảm ngay 50% cho khách đặt sớm nhất..." class="min-input">
+                            </div>
+                        </div>
+                    </div>`;
             } else if (currentCmsSubTab === 'homeFeatures') {
                 const d = cmsCachedDocData.homeFeatures || { marqueeTexts: [] };
-                html = `<div class="${boxClass}"><div class="flex justify-between items-center mb-4"><h3 class="font-semibold">Chữ chạy thông báo (Marquee)</h3> <button onclick="addCmsArrayRow('marquee')" class="btn-outline text-xs py-1 px-3"><i class="fa-solid fa-plus mr-1"></i>Thêm dòng</button></div><div id="cms-container-marquee" class="space-y-2">${(d.marqueeTexts||[]).map(m => `<div class="border border-gray-200 rounded flex items-center bg-gray-50 data-row overflow-hidden"><input type="text" value="${m.text||''}" placeholder="Nhập nội dung..." class="flex-1 bg-transparent border-none text-sm px-4 py-2.5 outline-none field-text"><label class="flex items-center gap-1.5 px-4 text-xs font-medium text-gray-600 border-l border-gray-200 bg-white h-full py-2.5 cursor-pointer hover:bg-gray-50"><input type="checkbox" class="field-highlight w-4 h-4" ${m.isHighlight?'checked':''}> Nổi bật</label><button onclick="removeCmsArrayRow(this)" class="px-4 text-gray-400 hover:text-red-500 hover:bg-red-50 h-full py-2.5 border-l border-gray-200 transition-colors"><i class="fa-solid fa-trash-can"></i></button></div>`).join('')}</div></div>`;
+                html = `
+                    <div class="${boxClass}">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                            <h3 class="font-black text-slate-900 text-sm uppercase tracking-wider">Chữ Chạy Thông Báo (Marquee)</h3> 
+                            <button onclick="addCmsArrayRow('marquee')" class="btn-outline text-xs py-1.5 px-3.5"><i class="fa-solid fa-plus mr-1"></i>Thêm dòng</button>
+                        </div>
+                        <div id="cms-container-marquee" class="space-y-3">
+                            ${(d.marqueeTexts||[]).map(m => `
+                                <div class="border border-slate-200 rounded-xl flex items-center bg-slate-50 data-row overflow-hidden relative shadow-sm">
+                                    <input type="text" value="${m.text||''}" placeholder="Nhập nội dung thông điệp chạy..." class="flex-1 bg-transparent border-none text-xs font-semibold px-4 py-3 outline-none field-text">
+                                    <label class="flex items-center gap-1.5 px-4 text-xs font-bold text-slate-500 border-l border-slate-200 bg-white h-full py-3 cursor-pointer hover:bg-slate-50">
+                                        <input type="checkbox" class="field-highlight w-4 h-4 accent-slate-900" ${m.isHighlight?'checked':''}> Nổi bật
+                                    </label>
+                                    <button onclick="removeCmsArrayRow(this)" class="px-4 text-slate-400 hover:text-rose-500 hover:bg-rose-50 h-full py-3 border-l border-slate-200 transition-colors"><i class="fa-solid fa-trash-can"></i></button>
+                                </div>`).join('')}
+                        </div>
+                    </div>`;
             } else if (currentCmsSubTab === 'offers') {
                 const d = cmsCachedDocData.offers || [];
-                html = `<div class="${boxClass}"><div class="flex justify-between items-center mb-4"><h3 class="font-semibold">Ưu Đãi</h3> <button onclick="addCmsArrayRow('offers')" class="btn-outline text-xs py-1 px-3"><i class="fa-solid fa-plus mr-1"></i>Thêm Ưu Đãi</button></div><div id="cms-container-offers" class="space-y-4">${d.map(o => `<div class="border border-gray-200 rounded p-4 relative data-row bg-gray-50 grid grid-cols-1 sm:grid-cols-2 gap-3"><button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button><div><label class="text-[10px] text-gray-500 font-medium">Loại thẻ (VD: Voucher)</label><input type="text" value="${o.type||''}" class="min-input field-type py-1.5"></div><div><label class="text-[10px] text-gray-500 font-medium">Mã Code (VD: MT50)</label><input type="text" value="${o.code||''}" class="min-input field-code py-1.5 font-mono"></div><div class="col-span-1 sm:col-span-2"><label class="text-[10px] text-gray-500 font-medium">Tiêu đề</label><input type="text" value="${o.title||''}" class="min-input field-title py-1.5"></div><div class="col-span-1 sm:col-span-2"><label class="text-[10px] text-gray-500 font-medium">Mô tả chi tiết</label><input type="text" value="${o.desc||''}" class="min-input field-desc py-1.5"></div><div><label class="text-[10px] text-gray-500 font-medium">Tên Icon (VD: fa-gift)</label><input type="text" value="${o.icon||''}" class="min-input field-icon py-1.5 font-mono"></div><div><label class="text-[10px] text-gray-500 font-medium">Màu dải Gradient</label><input type="text" value="${o.gradient||''}" class="min-input field-gradient py-1.5 font-mono"></div></div>`).join('')}</div></div>`;
+                html = `
+                    <div class="${boxClass}">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                            <h3 class="font-black text-slate-900 text-sm uppercase tracking-wider">Mã Ưu Đãi & Voucher</h3> 
+                            <button onclick="addCmsArrayRow('offers')" class="btn-outline text-xs py-1.5 px-3.5"><i class="fa-solid fa-plus mr-1"></i>Thêm Voucher</button>
+                        </div>
+                        <div id="cms-container-offers" class="space-y-4">
+                            ${d.map(o => `
+                                <div class="border border-slate-200 rounded-2xl p-4.5 relative data-row bg-slate-50 grid grid-cols-1 sm:grid-cols-2 gap-3 shadow-sm">
+                                    <button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-slate-400 hover:text-rose-500"><i class="fa-solid fa-xmark text-sm"></i></button>
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Loại thẻ (VD: Ưu đãi / Voucher)</label>
+                                        <input type="text" value="${o.type||''}" class="min-input field-type py-2 text-xs">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Mã Code (VD: MAITAY20)</label>
+                                        <input type="text" value="${o.code||''}" class="min-input field-code py-2 font-mono text-xs">
+                                    </div>
+                                    <div class="col-span-1 sm:col-span-2">
+                                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tiêu đề Voucher</label>
+                                        <input type="text" value="${o.title||''}" class="min-input field-title py-2 text-xs">
+                                    </div>
+                                    <div class="col-span-1 sm:col-span-2">
+                                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Mô tả ngắn</label>
+                                        <input type="text" value="${o.desc||''}" class="min-input field-desc py-2 text-xs">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">FontAwesome Icon (VD: fa-gift)</label>
+                                        <input type="text" value="${o.icon||''}" class="min-input field-icon py-2 font-mono text-xs">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Dải màu Gradient (VD: from-rose-500 to-rose-800)</label>
+                                        <input type="text" value="${o.gradient||''}" class="min-input field-gradient py-2 font-mono text-xs">
+                                    </div>
+                                </div>`).join('')}
+                        </div>
+                    </div>`;
             } else if (currentCmsSubTab === 'feed') {
                 const d = cmsCachedDocData.feed || [];
-                html = `<div class="${boxClass}"><div class="flex justify-between items-center mb-4"><h3 class="font-semibold">Video Reels</h3> <button onclick="addCmsArrayRow('feed')" class="btn-outline text-xs py-1 px-3"><i class="fa-solid fa-plus mr-1"></i>Thêm Video</button></div><div id="cms-container-feed" class="space-y-4">${d.map(f => `<div class="border border-gray-200 rounded p-4 relative data-row bg-gray-50 grid grid-cols-1 md:grid-cols-2 gap-3"><button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button><div class="col-span-1 md:col-span-2 pr-6"><input type="text" value="${f.title||''}" placeholder="Tiêu đề Video Reel" class="min-input font-medium field-title py-2"></div><div class="col-span-1 md:col-span-2 flex gap-2 items-center"><div class="flex-1 relative"><i class="fa-solid fa-video absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i><input type="text" value="${f.url||''}" placeholder="Link Video MP4" class="min-input pl-8 text-xs font-mono field-url py-2"></div><button type="button" onclick="openMediaManager(this, 'prev')" class="btn-outline px-3 py-2 shrink-0 text-xs"><i class="fa-regular fa-folder-open"></i> Thư viện Media</button></div><div><input type="text" value="${f.fomoText||''}" placeholder="Text FOMO (VD: Đang hot)" class="min-input text-xs field-fomoText py-2"></div><div><input type="text" value="${f.fomoIcon||''}" placeholder="Icon FOMO (fa-fire)" class="min-input text-xs font-mono field-fomoIcon py-2"></div></div>`).join('')}</div></div>`;
+                html = `
+                    <div class="${boxClass}">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                            <h3 class="font-black text-slate-900 text-sm uppercase tracking-wider">Danh Sách Reels Video</h3> 
+                            <button onclick="addCmsArrayRow('feed')" class="btn-outline text-xs py-1.5 px-3.5"><i class="fa-solid fa-plus mr-1"></i>Thêm Reels</button>
+                        </div>
+                        <div id="cms-container-feed" class="space-y-4">
+                            ${d.map(f => `
+                                <div class="border border-slate-200 rounded-2xl p-4 relative data-row bg-slate-50 grid grid-cols-1 md:grid-cols-2 gap-3 shadow-sm">
+                                    <button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-slate-400 hover:text-rose-500"><i class="fa-solid fa-xmark text-sm"></i></button>
+                                    <div class="col-span-1 md:col-span-2 pr-6">
+                                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tiêu đề Reels tác phẩm</label>
+                                        <input type="text" value="${f.title||''}" placeholder="Kiểu tóc bồng bềnh..." class="min-input font-bold field-title py-2 text-xs">
+                                    </div>
+                                    <div class="col-span-1 md:col-span-2 flex gap-2 items-center">
+                                        <div class="flex-1 relative">
+                                            <i class="fa-solid fa-video absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                            <input type="text" value="${f.url||''}" placeholder="Đường dẫn file video MP4" class="min-input pl-8 text-xs font-mono field-url py-2">
+                                        </div>
+                                        <button type="button" onclick="openMediaManager(this, 'prev')" class="btn-outline px-3 py-2 shrink-0 text-xs flex items-center gap-1.5"><i class="fa-regular fa-folder-open"></i> Thư viện</button>
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Thẻ FOMO (VD: Đang hot)</label>
+                                        <input type="text" value="${f.fomoText||''}" placeholder="Sắp hết chỗ" class="min-input text-xs field-fomoText py-2">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Icon FOMO (VD: fa-bolt)</label>
+                                        <input type="text" value="${f.fomoIcon||''}" placeholder="fa-bolt" class="min-input text-xs font-mono field-fomoIcon py-2">
+                                    </div>
+                                </div>`).join('')}
+                        </div>
+                    </div>`;
             } else if (currentCmsSubTab === 'store') {
                 const d = cmsCachedDocData.store || [];
-                html = `<div class="${boxClass}"><div class="flex justify-between items-center mb-4"><h3 class="font-semibold">Cửa Hàng Sản Phẩm</h3> <button onclick="addCmsArrayRow('store')" class="btn-outline text-xs py-1 px-3"><i class="fa-solid fa-plus mr-1"></i>Thêm Sản Phẩm</button></div><div id="cms-container-store" class="space-y-4">${d.map(s => `<div class="border border-gray-200 rounded p-4 relative data-row bg-gray-50 flex flex-col sm:flex-row gap-4"><button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 z-10"><i class="fa-solid fa-xmark"></i></button><div class="w-full sm:w-28 shrink-0 flex flex-col gap-2"><div class="aspect-square bg-gray-100 rounded relative group overflow-hidden border border-gray-200"><img src="${s.img||'https://placehold.co/400?text=Sản+Phẩm'}" class="w-full h-full object-cover preview-img"><div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><button type="button" onclick="openMediaManager(this, 'next')" class="text-white text-[10px] bg-gray-900/80 px-2 py-1 rounded">Đổi ảnh</button><input type="hidden" value="${s.img||''}" class="field-img"></div></div><input type="color" value="${s.themeColor||'#111827'}" class="w-full h-8 p-0 border-0 rounded cursor-pointer field-themeColor shadow-sm" title="Màu Nhãn"></div><div class="flex-1 grid grid-cols-2 gap-3 pr-4"><div><input type="text" value="${s.id||''}" placeholder="Mã SP (VD: SP01)" class="min-input py-1.5 px-2 text-xs font-mono field-id"></div><div><input type="text" value="${s.price||''}" placeholder="Giá tiền" class="min-input py-1.5 px-2 text-xs field-price"></div><div class="col-span-2"><input type="text" value="${s.name||''}" placeholder="Tên sản phẩm" class="min-input py-1.5 px-2 text-sm font-semibold field-name"></div><div><input type="text" value="${s.brand||''}" placeholder="Thương hiệu" class="min-input py-1.5 px-2 text-xs field-brand"></div><div><input type="text" value="${s.sub||''}" placeholder="Dòng phụ (VD: Dung tích)" class="min-input py-1.5 px-2 text-xs field-sub"></div><div class="col-span-2"><input type="text" value="${s.desc||''}" placeholder="Mô tả tóm tắt..." class="min-input py-1.5 px-2 text-xs field-desc"></div></div></div>`).join('')}</div></div>`;
+                html = `
+                    <div class="${boxClass}">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                            <h3 class="font-black text-slate-900 text-sm uppercase tracking-wider">Cửa Hàng Sản Phẩm</h3> 
+                            <button onclick="addCmsArrayRow('store')" class="btn-outline text-xs py-1.5 px-3.5"><i class="fa-solid fa-plus mr-1"></i>Thêm Sản Phẩm</button>
+                        </div>
+                        <div id="cms-container-store" class="space-y-4">
+                            ${d.map(s => `
+                                <div class="border border-slate-200 rounded-2xl p-4.5 relative data-row bg-slate-50 flex flex-col sm:flex-row gap-4 shadow-sm">
+                                    <button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-slate-400 hover:text-rose-500 z-10"><i class="fa-solid fa-xmark text-sm"></i></button>
+                                    <div class="w-full sm:w-28 shrink-0 flex flex-col gap-2">
+                                        <div class="aspect-square bg-slate-100 rounded-xl relative group overflow-hidden border border-slate-200 shadow-sm">
+                                            <img src="${s.img||'https://placehold.co/400?text=Sản+Phẩm'}" class="w-full h-full object-cover preview-img">
+                                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                                <button type="button" onclick="openMediaManager(this, 'next')" class="text-white text-[9px] font-black uppercase tracking-wider bg-slate-900/95 px-2 py-1 rounded-lg">Đổi ảnh</button>
+                                                <input type="hidden" value="${s.img||''}" class="field-img">
+                                            </div>
+                                        </div>
+                                        <input type="color" value="${s.themeColor||'#111827'}" class="w-full h-8 p-0.5 border border-slate-200 rounded-xl cursor-pointer field-themeColor shadow-sm" title="Màu sắc chủ đề nhãn sản phẩm">
+                                    </div>
+                                    <div class="flex-1 grid grid-cols-2 gap-3 pr-4">
+                                        <div>
+                                            <label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">ID Sản phẩm</label>
+                                            <input type="text" value="${s.id||''}" class="min-input py-1.5 px-2.5 text-xs font-mono field-id">
+                                        </div>
+                                        <div>
+                                            <label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Giá bán (k)</label>
+                                            <input type="text" value="${s.price||''}" class="min-input py-1.5 px-2.5 text-xs field-price">
+                                        </div>
+                                        <div class="col-span-2">
+                                            <label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Tên sản phẩm thương mại</label>
+                                            <input type="text" value="${s.name||''}" class="min-input py-1.5 px-2.5 text-xs font-bold field-name">
+                                        </div>
+                                        <div>
+                                            <label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Thương hiệu</label>
+                                            <input type="text" value="${s.brand||''}" class="min-input py-1.5 px-2.5 text-xs field-brand">
+                                        </div>
+                                        <div>
+                                            <label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Dung tích / Phân khúc</label>
+                                            <input type="text" value="${s.sub||''}" class="min-input py-1.5 px-2.5 text-xs field-sub">
+                                        </div>
+                                        <div class="col-span-2">
+                                            <label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Mô tả tóm tắt</label>
+                                            <input type="text" value="${s.desc||''}" class="min-input py-1.5 px-2.5 text-xs field-desc">
+                                        </div>
+                                    </div>
+                                </div>`).join('')}
+                        </div>
+                    </div>`;
             }
-            html += `<div class="pt-2 flex justify-end"><button onclick="saveCmsBlockAction()" id="saveCmsBtn" class="btn-primary py-2.5 px-6">Xuất bản lên Web</button></div>`;
+            html += `
+                <div class="pt-2 flex justify-end">
+                    <button onclick="saveCmsBlockAction()" id="saveCmsBtn" class="btn-primary py-3 px-8 shadow-lg shadow-slate-900/10">XUẤT BẢN THAY ĐỔI</button>
+                </div>`;
             container.innerHTML = html;
         }
 
+        // Tạo phần tử rỗng mới cho các mảng cấu hình
         function addCmsArrayRow(type) {
             let tpl = "";
-            if(type==='slider') tpl = `<div class="border border-gray-200 rounded p-2 relative data-row bg-gray-50 flex flex-col gap-2"><button onclick="removeCmsArrayRow(this)" class="absolute top-1 right-1 bg-red-50 text-red-500 rounded p-1 text-[10px] hover:bg-red-100 z-10"><i class="fa-solid fa-xmark"></i></button><div class="aspect-video bg-gray-100 rounded overflow-hidden relative group"><img src="https://placehold.co/600x400?text=No+Image" class="w-full h-full object-cover preview-img"><div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><button type="button" onclick="openMediaManager(this, 'next')" class="text-white text-xs bg-gray-900/80 px-2 py-1 rounded">Thay đổi</button><input type="hidden" value="" class="field-url"></div></div></div>`;
-            if(type==='marquee') tpl = `<div class="border border-gray-200 rounded flex items-center bg-gray-50 data-row overflow-hidden"><input type="text" placeholder="Nhập nội dung..." class="flex-1 bg-transparent border-none text-sm px-4 py-2.5 outline-none field-text"><label class="flex items-center gap-1.5 px-4 text-xs font-medium text-gray-600 border-l border-gray-200 bg-white h-full py-2.5 cursor-pointer hover:bg-gray-50"><input type="checkbox" class="field-highlight w-4 h-4"> Nổi bật</label><button onclick="removeCmsArrayRow(this)" class="px-4 text-gray-400 hover:text-red-500 hover:bg-red-50 h-full py-2.5 border-l border-gray-200 transition-colors"><i class="fa-solid fa-trash-can"></i></button></div>`;
-            if(type==='offers') tpl = `<div class="border border-gray-200 rounded p-4 relative data-row bg-gray-50 grid grid-cols-1 sm:grid-cols-2 gap-3"><button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button><div><label class="text-[10px] text-gray-500 font-medium">Loại thẻ (VD: Voucher)</label><input type="text" class="min-input field-type py-1.5"></div><div><label class="text-[10px] text-gray-500 font-medium">Mã Code (VD: MT50)</label><input type="text" class="min-input field-code py-1.5 font-mono"></div><div class="col-span-1 sm:col-span-2"><label class="text-[10px] text-gray-500 font-medium">Tiêu đề</label><input type="text" class="min-input field-title py-1.5"></div><div class="col-span-1 sm:col-span-2"><label class="text-[10px] text-gray-500 font-medium">Mô tả chi tiết</label><input type="text" class="min-input field-desc py-1.5"></div><div><label class="text-[10px] text-gray-500 font-medium">Tên Icon (VD: fa-gift)</label><input type="text" class="min-input field-icon py-1.5 font-mono"></div><div><label class="text-[10px] text-gray-500 font-medium">Màu dải Gradient</label><input type="text" class="min-input field-gradient py-1.5 font-mono"></div></div>`;
-            if(type==='feed') tpl = `<div class="border border-gray-200 rounded p-4 relative data-row bg-gray-50 grid grid-cols-1 md:grid-cols-2 gap-3"><button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button><div class="col-span-1 md:col-span-2 pr-6"><input type="text" placeholder="Tiêu đề Video Reel" class="min-input font-medium field-title py-2"></div><div class="col-span-1 md:col-span-2 flex gap-2 items-center"><div class="flex-1 relative"><i class="fa-solid fa-video absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i><input type="text" placeholder="Link Video MP4" class="min-input pl-8 text-xs font-mono field-url py-2"></div><button type="button" onclick="openMediaManager(this, 'prev')" class="btn-outline px-3 py-2 shrink-0 text-xs"><i class="fa-regular fa-folder-open"></i> Thư viện Media</button></div><div><input type="text" placeholder="Text FOMO (VD: Đang hot)" class="min-input text-xs field-fomoText py-2"></div><div><input type="text" placeholder="Icon FOMO (fa-fire)" class="min-input text-xs font-mono field-fomoIcon py-2"></div></div>`;
-            if(type==='store') tpl = `<div class="border border-gray-200 rounded p-4 relative data-row bg-gray-50 flex flex-col sm:flex-row gap-4"><button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 z-10"><i class="fa-solid fa-xmark"></i></button><div class="w-full sm:w-28 shrink-0 flex flex-col gap-2"><div class="aspect-square bg-gray-100 rounded relative group overflow-hidden border border-gray-200"><img src="https://placehold.co/400?text=Sản+Phẩm" class="w-full h-full object-cover preview-img"><div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><button type="button" onclick="openMediaManager(this, 'next')" class="text-white text-[10px] bg-gray-900/80 px-2 py-1 rounded">Đổi ảnh</button><input type="hidden" value="" class="field-img"></div></div><input type="color" value="#111827" class="w-full h-8 p-0 border-0 rounded cursor-pointer field-themeColor shadow-sm" title="Màu Nhãn"></div><div class="flex-1 grid grid-cols-2 gap-3 pr-4"><div><input type="text" placeholder="Mã SP (VD: SP01)" class="min-input py-1.5 px-2 text-xs font-mono field-id"></div><div><input type="text" placeholder="Giá tiền" class="min-input py-1.5 px-2 text-xs field-price"></div><div class="col-span-2"><input type="text" placeholder="Tên sản phẩm" class="min-input py-1.5 px-2 text-sm font-semibold field-name"></div><div><input type="text" placeholder="Thương hiệu" class="min-input py-1.5 px-2 text-xs field-brand"></div><div><input type="text" placeholder="Dòng phụ (VD: Dung tích)" class="min-input py-1.5 px-2 text-xs field-sub"></div><div class="col-span-2"><input type="text" placeholder="Mô tả tóm tắt..." class="min-input py-1.5 px-2 text-xs field-desc"></div></div></div>`;
+            if(type==='slider') tpl = `<div class="border border-slate-200 rounded-xl p-2.5 relative data-row bg-slate-50 flex flex-col gap-2.5"><button onclick="removeCmsArrayRow(this)" class="absolute top-1 right-1 bg-rose-50 text-rose-500 rounded-lg p-1.5 text-xs hover:bg-rose-100 z-10 shadow-sm"><i class="fa-solid fa-xmark"></i></button><div class="aspect-video bg-slate-100 rounded-lg overflow-hidden relative group border border-slate-200 shadow-sm"><img src="https://placehold.co/600x400?text=No+Image" class="w-full h-full object-cover preview-img"><div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><button type="button" onclick="openMediaManager(this, 'next')" class="text-white text-[10px] font-black uppercase tracking-wider bg-slate-900/90 px-3 py-1.5 rounded-lg border border-white/20">Thay đổi</button><input type="hidden" value="" class="field-url"></div></div></div>`;
+            if(type==='marquee') tpl = `<div class="border border-slate-200 rounded-xl flex items-center bg-slate-50 data-row overflow-hidden relative shadow-sm"><input type="text" placeholder="Nhập nội dung thông điệp chạy..." class="flex-1 bg-transparent border-none text-xs font-semibold px-4 py-3 outline-none field-text"><label class="flex items-center gap-1.5 px-4 text-xs font-bold text-slate-500 border-l border-slate-200 bg-white h-full py-3 cursor-pointer hover:bg-slate-50"><input type="checkbox" class="field-highlight w-4 h-4 accent-slate-900"> Nổi bật</label><button onclick="removeCmsArrayRow(this)" class="px-4 text-slate-400 hover:text-rose-500 hover:bg-rose-50 h-full py-3 border-l border-slate-200 transition-colors"><i class="fa-solid fa-trash-can"></i></button></div>`;
+            if(type==='offers') tpl = `<div class="border border-slate-200 rounded-2xl p-4.5 relative data-row bg-slate-50 grid grid-cols-1 sm:grid-cols-2 gap-3 shadow-sm"><button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-slate-400 hover:text-rose-500"><i class="fa-solid fa-xmark text-sm"></i></button><div><label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Loại thẻ (VD: Ưu đãi / Voucher)</label><input type="text" class="min-input field-type py-2 text-xs"></div><div><label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Mã Code (VD: MAITAY20)</label><input type="text" class="min-input field-code py-2 font-mono text-xs"></div><div class="col-span-1 sm:col-span-2"><label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tiêu đề Voucher</label><input type="text" class="min-input field-title py-2 text-xs"></div><div class="col-span-1 sm:col-span-2"><label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Mô tả ngắn</label><input type="text" class="min-input field-desc py-2 text-xs"></div><div><label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">FontAwesome Icon (VD: fa-gift)</label><input type="text" class="min-input field-icon py-2 font-mono text-xs"></div><div><label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Dải màu Gradient (VD: from-rose-500 to-rose-800)</label><input type="text" class="min-input field-gradient py-2 font-mono text-xs"></div></div>`;
+            if(type==='feed') tpl = `<div class="border border-slate-200 rounded-2xl p-4 relative data-row bg-slate-50 grid grid-cols-1 md:grid-cols-2 gap-3 shadow-sm"><button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-slate-400 hover:text-rose-500"><i class="fa-solid fa-xmark text-sm"></i></button><div class="col-span-1 md:col-span-2 pr-6"><label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tiêu đề Reels tác phẩm</label><input type="text" placeholder="Kiểu tóc bồng bềnh..." class="min-input font-bold field-title py-2 text-xs"></div><div class="col-span-1 md:col-span-2 flex gap-2 items-center"><div class="flex-1 relative"><i class="fa-solid fa-video absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i><input type="text" placeholder="Đường dẫn file video MP4" class="min-input pl-8 text-xs font-mono field-url py-2"></div><button type="button" onclick="openMediaManager(this, 'prev')" class="btn-outline px-3 py-2 shrink-0 text-xs flex items-center gap-1.5"><i class="fa-regular fa-folder-open"></i> Thư viện</button></div><div><label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Thẻ FOMO (VD: Đang hot)</label><input type="text" placeholder="Sắp hết chỗ" class="min-input text-xs field-fomoText py-2"></div><div><label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Icon FOMO (VD: fa-bolt)</label><input type="text" placeholder="fa-bolt" class="min-input text-xs font-mono field-fomoIcon py-2"></div></div>`;
+            if(type==='store') tpl = `<div class="border border-slate-200 rounded-2xl p-4.5 relative data-row bg-slate-50 flex flex-col sm:flex-row gap-4 shadow-sm"><button onclick="removeCmsArrayRow(this)" class="absolute top-2 right-2 text-slate-400 hover:text-rose-500 z-10"><i class="fa-solid fa-xmark text-sm"></i></button><div class="w-full sm:w-28 shrink-0 flex flex-col gap-2"><div class="aspect-square bg-slate-100 rounded-xl relative group overflow-hidden border border-slate-200 shadow-sm"><img src="https://placehold.co/400?text=Sản+Phẩm" class="w-full h-full object-cover preview-img"><div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><button type="button" onclick="openMediaManager(this, 'next')" class="text-white text-[9px] font-black uppercase tracking-wider bg-slate-900/95 px-2 py-1 rounded-lg">Đổi ảnh</button><input type="hidden" value="" class="field-img"></div></div><input type="color" value="#111827" class="w-full h-8 p-0.5 border border-slate-200 rounded-xl cursor-pointer field-themeColor shadow-sm" title="Màu sắc chủ đề nhãn sản phẩm"></div><div class="flex-1 grid grid-cols-2 gap-3 pr-4"><div><label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">ID Sản phẩm</label><input type="text" class="min-input py-1.5 px-2.5 text-xs font-mono field-id"></div><div><label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Giá bán (k)</label><input type="text" class="min-input py-1.5 px-2.5 text-xs field-price"></div><div class="col-span-2">
+            <label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Tên sản phẩm thương mại</label><input type="text" class="min-input py-1.5 px-2.5 text-xs font-bold field-name"></div><div><label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Thương hiệu</label><input type="text" class="min-input py-1.5 px-2.5 text-xs field-brand"></div><div><label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Dung tích / Phân khúc</label><input type="text" class="min-input py-1.5 px-2.5 text-xs field-sub"></div><div class="col-span-2"><label class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Mô tả tóm tắt</label><input type="text" class="min-input py-1.5 px-2.5 text-xs field-desc"></div></div></div>`;
             document.getElementById(`cms-container-${type}`).insertAdjacentHTML('beforeend', tpl);
         }
 
         function removeCmsArrayRow(btn) { btn.closest('.data-row').remove(); }
 
+        // Đẩy khối cập nhật giao diện nạp lên Firebase CMS Document
         async function saveCmsBlockAction() {
-            const btn = document.getElementById('saveCmsBtn'); btn.innerText = 'Đang lưu...'; btn.disabled = true;
+            const btn = document.getElementById('saveCmsBtn');
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-sm mr-2"></i>ĐANG XUẤT BẢN...';
+            btn.disabled = true;
             const p = { ...cmsCachedDocData };
             try {
                 if (currentCmsSubTab === 'heroBlock') {
@@ -468,7 +1163,12 @@
                         sliderImages: Array.from(document.querySelectorAll('#cms-container-slider .field-url')).map(el => el.value.trim()).filter(v => v), 
                         isFlashSale: document.getElementById('cms-hero-isFlashSale').value === 'true', 
                         normalBooking: {}, 
-                        flashSale: { title: document.getElementById('cms-hero-flash-title').value, desc: document.getElementById('cms-hero-flash-desc').value, btnText: document.getElementById('cms-hero-flash-btnText').value, endTime: document.getElementById('cms-hero-flash-endTime').value } 
+                        flashSale: { 
+                            title: document.getElementById('cms-hero-flash-title').value, 
+                            desc: document.getElementById('cms-hero-flash-desc').value, 
+                            btnText: document.getElementById('cms-hero-flash-btnText').value, 
+                            endTime: document.getElementById('cms-hero-flash-endTime').value 
+                        } 
                     };
                 } else if (currentCmsSubTab === 'homeFeatures') {
                     p.homeFeatures = { marqueeTexts: Array.from(document.querySelectorAll('#cms-container-marquee .data-row')).map(r=>({text:r.querySelector('.field-text').value, isHighlight:r.querySelector('.field-highlight').checked})) };
@@ -479,13 +1179,15 @@
                 } else if (currentCmsSubTab === 'store') {
                     p.store = Array.from(document.querySelectorAll('#cms-container-store .data-row')).map(r=>({id:r.querySelector('.field-id').value, price:r.querySelector('.field-price').value, name:r.querySelector('.field-name').value, sub:r.querySelector('.field-sub').value, brand:r.querySelector('.field-brand').value, themeColor:r.querySelector('.field-themeColor').value, img:r.querySelector('.field-img').value, desc:r.querySelector('.field-desc').value}));
                 }
-                await setDoc(doc(db, "MaiTayData/Core/Config/cms"), p); alert("Đã cập nhật giao diện!");
-            } catch(e) { alert("Lỗi: "+e.message); } finally { btn.innerText = 'Xuất bản lên Web'; btn.disabled = false; }
+                await setDoc(doc(db, "MaiTayData/Core/Config/cms"), p); 
+                showToast("Cập nhật thành công", "Các thay đổi giao diện đã được đồng bộ trực tuyến lên Web App!", "success");
+            } catch(e) { showToast("Xuất bản lỗi", e.message, "error"); } 
+            finally { btn.innerText = 'XUẤT BẢN THAY ĐỔI'; btn.disabled = false; }
         }
 
-        // ==========================================
-        // MEDIA MANAGER
-        // ==========================================
+        // ----------------------------------------------------
+        // BỘ QUẢN LÝ THƯ VIỆN MEDIA CHUYÊN NGHIỆP
+        // ----------------------------------------------------
         function openMediaManager(btn, direction = 'next') {
             if (direction === 'next') currentTargetInput = btn.nextElementSibling;
             else if (direction === 'prev') {
@@ -499,9 +1201,9 @@
         function closeMediaModal() { document.getElementById('mediaModal').classList.add('hidden'); currentTargetInput = null; }
 
         function switchMediaTab(tab) {
-            document.getElementById('mTab-library').className = tab === 'library' ? 'px-4 py-3 border-b-2 border-gray-900 text-gray-900' : 'px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-700';
-            document.getElementById('mTab-upload').className = tab === 'upload' ? 'px-4 py-3 border-b-2 border-gray-900 text-gray-900' : 'px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-700';
-            document.getElementById('mTab-url').className = tab === 'url' ? 'px-4 py-3 border-b-2 border-gray-900 text-gray-900' : 'px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-700';
+            document.getElementById('mTab-library').className = tab === 'library' ? 'px-4 py-3 border-b-2 border-slate-900 text-slate-900' : 'px-4 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-900';
+            document.getElementById('mTab-upload').className = tab === 'upload' ? 'px-4 py-3 border-b-2 border-slate-900 text-slate-900' : 'px-4 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-900';
+            document.getElementById('mTab-url').className = tab === 'url' ? 'px-4 py-3 border-b-2 border-slate-900 text-slate-900' : 'px-4 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-900';
             
             document.getElementById('mView-library').classList.toggle('hidden', tab !== 'library');
             document.getElementById('mView-upload').classList.toggle('hidden', tab !== 'upload');
@@ -513,30 +1215,35 @@
         function renderMediaLibrary() {
             const container = document.getElementById('mView-library');
             if (mediaStorageData.length === 0) {
-                container.innerHTML = `<div class="col-span-full py-20 text-center text-gray-400"><i class="fa-solid fa-box-open text-4xl mb-3"></i><p class="text-sm">Thư viện trống.</p></div>`; return;
+                container.innerHTML = `
+                    <div class="col-span-full py-20 text-center text-slate-400">
+                        <i class="fa-solid fa-box-open text-4xl mb-3.5 text-slate-300"></i>
+                        <p class="text-xs font-bold uppercase tracking-wider">Thư viện trống</p>
+                    </div>`; 
+                return;
             }
             container.innerHTML = mediaStorageData.map(item => `
-                <div class="media-thumb bg-white rounded-lg border border-gray-200 overflow-hidden relative group aspect-square shadow-sm flex flex-col justify-between">
-                    <div class="h-3/4 w-full bg-gray-100 relative flex items-center justify-center">
-                        ${item.type === 'video' ? `<i class="fa-solid fa-play text-gray-300 text-3xl"></i>` : `<img src="${item.url}" class="w-full h-full object-cover">`}
-                        <div class="media-overlay absolute inset-0 bg-gray-900/60 opacity-0 transition-opacity flex items-center justify-center gap-2">
-                            <button onclick="pickMediaToInput('${item.url}')" class="bg-white text-gray-900 text-xs font-semibold py-1.5 px-3 rounded shadow-sm hover:bg-gray-100">Chọn</button>
-                            <button onclick="deleteMediaFromLibrary('${item.url}')" class="bg-red-500 text-white text-xs font-semibold py-1.5 px-2 rounded shadow-sm hover:bg-red-600"><i class="fa-solid fa-trash-can"></i></button>
+                <div class="media-thumb bg-white rounded-xl border border-slate-200 overflow-hidden relative group aspect-square shadow-sm flex flex-col justify-between">
+                    <div class="h-3/4 w-full bg-slate-50 relative flex items-center justify-center border-b">
+                        ${item.type === 'video' ? `<i class="fa-solid fa-play text-slate-300 text-3xl"></i>` : `<img src="${item.url}" class="w-full h-full object-cover">`}
+                        <div class="media-overlay absolute inset-0 bg-slate-900/60 opacity-0 transition-all flex items-center justify-center gap-2">
+                            <button onclick="pickMediaToInput('${item.url}')" class="bg-white text-slate-900 text-[10px] font-black uppercase tracking-wider py-2 px-3.5 rounded-lg shadow-md hover:bg-slate-100 transition-all">Chọn</button>
+                            <button onclick="deleteMediaFromLibrary('${item.url}')" class="bg-rose-600 text-white text-[10px] font-black uppercase tracking-wider py-2 px-2.5 rounded-lg shadow-md hover:bg-rose-700 transition-all"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>
-                    <div class="h-1/4 p-2 flex items-center justify-between bg-white border-t border-gray-100">
-                        <span class="text-[10px] font-mono text-gray-500 truncate mr-2">${item.url.split('/').pop()}</span><span class="text-[9px] uppercase font-bold text-gray-400 bg-gray-100 px-1.5 rounded">${item.type}</span>
+                    <div class="h-1/4 p-2 flex items-center justify-between bg-white">
+                        <span class="text-[9px] font-mono font-bold text-slate-500 truncate mr-2">${item.url.split('/').pop()}</span>
+                        <span class="text-[8px] uppercase font-bold text-slate-400 bg-slate-100 border px-1.5 rounded">${item.type}</span>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
 
         function pickMediaToInput(url) {
             if (currentTargetInput) {
                 currentTargetInput.value = url;
-                const parentRow = currentTargetInput.closest('.data-row');
+                const parentRow = currentTargetInput.closest('.data-row') || currentTargetInput.closest('div');
                 if(parentRow) {
-                    const imgNode = parentRow.querySelector('.preview-img');
+                    const imgNode = parentRow.querySelector('.preview-img') || parentRow.parentElement.querySelector('.preview-img');
                     if(imgNode) imgNode.src = url;
                 }
             }
@@ -545,7 +1252,7 @@
 
         function pickManualMediaUrl() {
             const val = document.getElementById('manualMediaUrl').value.trim();
-            if(!val) { alert("Vui lòng dán Link Media!"); return; }
+            if(!val) { showToast("Nhập link", "Vui lòng dán liên kết ảnh hoặc video hợp lệ!", "error"); return; }
             pickMediaToInput(val);
             document.getElementById('manualMediaUrl').value = '';
         }
@@ -553,7 +1260,7 @@
         function handleMediaFileSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
-            if (file.size > 50 * 1024 * 1024) { alert("File quá lớn (Tối đa 50MB)."); return; }
+            if (file.size > 50 * 1024 * 1024) { showToast("Lỗi kích thước", "Tập tin tải lên vượt quá giới hạn 50MB!", "error"); return; }
             selectedFileToUpload = file;
             document.getElementById('uploadFileName').innerText = file.name;
             document.getElementById('uploadFileSize').innerText = (file.size / (1024*1024)).toFixed(2) + ' MB';
@@ -576,10 +1283,12 @@
                 const data = await res.json();
                 if (data.secure_url) {
                     await saveMediaToFirebase(data.secure_url, resourceType);
-                    switchMediaTab('library'); selectedFileToUpload = null;
-                    document.getElementById('mediaFileInput').value = ''; document.getElementById('uploadPreview').classList.add('hidden');
-                } else { throw new Error(data.error?.message || "Lỗi Cloudinary"); }
-            } catch (error) { alert("Upload thất bại: " + error.message); } 
+                    switchMediaTab('library'); 
+                    selectedFileToUpload = null;
+                    document.getElementById('mediaFileInput').value = ''; 
+                    document.getElementById('uploadPreview').classList.add('hidden');
+                } else { throw new Error(data.error?.message || "Lỗi dịch vụ Cloudinary"); }
+            } catch (error) { showToast("Upload thất bại", error.message, "error"); } 
             finally { document.getElementById('btnStartUpload').classList.remove('hidden'); document.getElementById('uploadProgress').classList.add('hidden'); }
         }
 
@@ -590,82 +1299,323 @@
         }
 
         async function deleteMediaFromLibrary(urlToDelete) {
-            if (!confirm("Xoá tài nguyên này khỏi hệ thống Firebase?")) return;
+            const confirmed = await showConfirm("Xác nhận gỡ tập tin", "Hành động này sẽ gỡ tập tin ra khỏi thư viện Firebase Cloud (Không xoá thực tế trên Cloudinary)?", "rose");
+            if (!confirmed) return;
             const updatedItems = mediaStorageData.filter(item => item.url !== urlToDelete);
             await setDoc(doc(db, "MaiTayData/Core/Config/mediaStorage"), { items: updatedItems });
         }
 
-        // ==========================================
-        // CRUD LOGIC CƠ BẢN
-        // ==========================================
+        // ----------------------------------------------------
+        // CHỨC NĂNG TƯƠNG TÁC THÊM/SỬA/XOÁ (CRUD) CHUYÊN NGHIỆP
+        // ----------------------------------------------------
         function openCreateModal() {
             const sc = TAB_SCHEMAS[currentTab];
-            document.getElementById('modalTitle').innerText = `Thêm mới ${currentTab}`;
-            document.getElementById('modalContent').innerHTML = sc.fields.map((f, i) => `<div><label class="block text-xs font-medium text-gray-700 mb-1">${sc.labels[i]}</label><input type="text" id="inp-${f}" class="min-input"></div>`).join('');
+            document.getElementById('modalTitle').innerText = `Thêm ${currentTab} Mới`;
+            renderFormFields(sc, {});
             document.getElementById('saveBtn').onclick = () => saveCrudAction('create'); 
             document.getElementById('modal').classList.remove('hidden');
         }
 
         function openEditModal(docId) {
-            const sc = TAB_SCHEMAS[currentTab]; const item = tabCachedData.find(r => r.docId === docId); if(!item) return;
-            document.getElementById('modalTitle').innerText = `Chỉnh sửa bản ghi`;
-            document.getElementById('modalContent').innerHTML = sc.fields.map((f, i) => `<div><label class="block text-xs font-medium text-gray-700 mb-1">${sc.labels[i]}</label><input type="text" id="inp-${f}" value="${item[f]!==undefined?item[f]:''}" class="min-input"></div>`).join('');
+            const sc = TAB_SCHEMAS[currentTab]; 
+            const item = tabCachedData.find(r => r.docId === docId); 
+            if(!item) return;
+            document.getElementById('modalTitle').innerText = `Chỉnh Sửa Thông Tin`;
+            renderFormFields(sc, item);
             document.getElementById('saveBtn').onclick = () => saveCrudAction('update', docId); 
             document.getElementById('modal').classList.remove('hidden');
         }
 
+        // Tạo cấu trúc Form chi tiết tương thích động
+        function renderFormFields(schema, data) {
+            const container = document.getElementById('modalContent');
+            container.innerHTML = schema.fields.map((f, i) => {
+                const label = schema.labels[i];
+                const type = schema.types[i];
+                const val = data[f] !== undefined ? data[f] : '';
+
+                // Form đọc duy nhất (Readonly)
+                if (type.endsWith('_readonly')) {
+                    return `
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                            <input type="text" id="inp-${f}" value="${val}" disabled class="min-input">
+                        </div>`;
+                }
+
+                switch (type) {
+                    case 'text':
+                    case 'tel':
+                    case 'email':
+                    case 'number':
+                        return `
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                                <input type="${type === 'tel' ? 'text' : type}" id="inp-${f}" value="${val}" class="min-input">
+                            </div>`;
+                    case 'datetime-local':
+                        let dtFormatted = '';
+                        if (val) {
+                            // Chuyển đổi định dạng ISO sang format datetime-local hiển thị chuẩn
+                            const date = new Date(val);
+                            const tzoffset = date.getTimezoneOffset() * 60000; 
+                            dtFormatted = (new Date(date - tzoffset)).toISOString().slice(0, 16);
+                        }
+                        return `
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                                <input type="datetime-local" id="inp-${f}" value="${dtFormatted}" class="min-input">
+                            </div>`;
+                    case 'textarea':
+                        return `
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                                <textarea id="inp-${f}" rows="3" class="min-input">${val}</textarea>
+                            </div>`;
+                    case 'select_branch':
+                    case 'select_branch_id':
+                        return `
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                                <select id="inp-${f}" class="min-input py-2.5">
+                                    <option value="ALL">Áp dụng toàn chi nhánh (ALL)</option>
+                                    ${activeBranches.map(b => `<option value="${type === 'select_branch' ? b.name : b.id}" ${val === (type === 'select_branch' ? b.name : b.id) ? 'selected' : ''}>${b.name}</option>`).join('')}
+                                </select>
+                            </div>`;
+                    case 'select_service':
+                        return `
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                                <select id="inp-${f}" class="min-input py-2.5">
+                                    ${activeServices.map(s => `<option value="${s.name}" ${val === s.name ? 'selected' : ''}>${s.name}</option>`).join('')}
+                                </select>
+                            </div>`;
+                    case 'select_staff':
+                        return `
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                                <select id="inp-${f}" class="min-input py-2.5">
+                                    ${activeStaff.map(st => `<option value="${st.name}" ${val === st.name ? 'selected' : ''}>${st.name}</option>`).join('')}
+                                </select>
+                            </div>`;
+                    case 'status_booking':
+                        return `
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                                <select id="inp-${f}" class="min-input py-2.5">
+                                    <option value="Đã nhận" ${val === 'Đã nhận' ? 'selected' : ''}>Đã nhận (Đặt lịch mới)</option>
+                                    <option value="Hoàn thành" ${val === 'Hoàn thành' ? 'selected' : ''}>Hoàn thành phục vụ</option>
+                                    <option value="Đã huỷ" ${val === 'Đã huỷ' ? 'selected' : ''}>Huỷ bỏ lịch đặt</option>
+                                </select>
+                            </div>`;
+                    case 'select_staff_status':
+                    case 'select_service_status':
+                    case 'select_branch_status':
+                        return `
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                                <select id="inp-${f}" class="min-input py-2.5">
+                                    <option value="Hoạt động" ${val === 'Hoạt động' ? 'selected' : ''}>Hoạt động</option>
+                                    <option value="Tạm ngưng" ${val === 'Tạm ngưng' ? 'selected' : ''}>Tạm ngưng</option>
+                                </select>
+                            </div>`;
+                    case 'select_gender':
+                        return `
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                                <select id="inp-${f}" class="min-input py-2.5">
+                                    <option value="Nam" ${val === 'Nam' ? 'selected' : ''}>Nam giới</option>
+                                    <option value="Nữ" ${val === 'Nữ' ? 'selected' : ''}>Nữ giới</option>
+                                    <option value="Khác" ${val === 'Khác' ? 'selected' : ''}>Ẩn/Khác</option>
+                                </select>
+                            </div>`;
+                    case 'select_report_status':
+                        return `
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                                <select id="inp-${f}" class="min-input py-2.5">
+                                    <option value="Chờ xử lý" ${val === 'Chờ xử lý' ? 'selected' : ''}>Chờ xác minh</option>
+                                    <option value="Đã gỡ video" ${val === 'Đã gỡ video' ? 'selected' : ''}>Đồng ý & Đã gỡ video</option>
+                                    <option value="Đã bác bỏ" ${val === 'Đã bác bỏ' ? 'selected' : ''}>Bác bỏ phản ánh</option>
+                                </select>
+                            </div>`;
+                    case 'media_img':
+                        return `
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">${label}</label>
+                                <div class="flex gap-2 items-center">
+                                    <div class="w-12 h-12 rounded-xl border border-slate-200 overflow-hidden shrink-0 bg-slate-50 shadow-sm">
+                                        <img src="${val || 'https://placehold.co/100?text=Avatar'}" class="w-full h-full object-cover preview-img">
+                                    </div>
+                                    <input type="text" id="inp-${f}" value="${val}" class="min-input text-xs font-mono py-2.5">
+                                    <button type="button" onclick="openMediaManager(this, 'prev')" class="btn-outline px-3 py-2.5 text-xs shrink-0 flex items-center gap-1.5 shadow-sm"><i class="fa-regular fa-folder-open"></i> Thư viện</button>
+                                </div>
+                            </div>`;
+                    default:
+                        return '';
+                }
+            }).join('');
+        }
+
+        // Lưu bản ghi (Thêm mới hoặc Cập nhật)
         async function saveCrudAction(op, docId = null) {
-            const sc = TAB_SCHEMAS[currentTab]; const btn = document.getElementById('saveBtn'); btn.innerText = 'Đang lưu...'; btn.disabled = true;
-            const data = {}; sc.fields.forEach(f => data[f] = document.getElementById(`inp-${f}`).value.trim());
+            const sc = TAB_SCHEMAS[currentTab]; 
+            const btn = document.getElementById('saveBtn'); 
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-sm mr-2"></i>ĐANG LƯU...'; 
+            btn.disabled = true;
+            
+            const data = {}; 
+            sc.fields.forEach((f, i) => {
+                const el = document.getElementById(`inp-${f}`);
+                if (el) {
+                    let val = el.value.trim();
+                    const type = sc.types[i];
+                    // Chuyển đổi định dạng phù hợp kiểu dữ liệu gốc
+                    if (type === 'number') val = Number(val) || 0;
+                    else if (type === 'datetime-local') val = val ? new Date(val).toISOString() : '';
+                    data[f] = val;
+                }
+            });
+
             if (data.phone) data.phone = String(data.phone).replace(/[^0-9]/g, '');
 
             try {
                 if (op === 'create') {
-                    if (data.id) await setDoc(doc(db, `MaiTayData/Core/${currentTab}`, data.id), data);
-                    else if (currentTab === 'Users' && data.phone) await setDoc(doc(db, `MaiTayData/Core/Users`, data.phone), data);
-                    else {
-                        if (currentTab === 'Bookings' && !data.bookingCode) data.bookingCode = Math.random().toString(36).substring(2,8).toUpperCase();
+                    if (data.id) {
+                        await setDoc(doc(db, `MaiTayData/Core/${currentTab}`, data.id), data);
+                    } else if (currentTab === 'Users' && data.phone) {
+                        await setDoc(doc(db, `MaiTayData/Core/Users`, data.phone), data);
+                    } else {
+                        // Tự động tạo mã đặt lịch ngẫu nhiên nếu bị trống
+                        if (currentTab === 'Bookings' && !data.bookingCode) {
+                            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+                            let bookingCode = "";
+                            for (let i = 0; i < 5; i++) bookingCode += chars.charAt(Math.floor(Math.random() * chars.length));
+                            data.bookingCode = bookingCode;
+                        }
+                        
+                        // Đóng gói thời gian đăng ký cho bản ghi mới
+                        data.createdAt = new Date().toISOString();
                         const newDoc = await addDoc(collection(db, `MaiTayData/Core/${currentTab}`), data);
+                        
+                        // Đồng bộ Google Calendar Automation ngầm qua GAS
                         if (currentTab === 'Bookings') {
-                            fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: 'create_event', data }) }).then(r=>r.json()).then(res=>{ if(res.eventId) updateDoc(doc(db, "MaiTayData/Core/Bookings", newDoc.id), { eventId: res.eventId }); }).catch(()=>{});
+                            fetch(GAS_API_URL, { 
+                                method: 'POST', 
+                                body: JSON.stringify({ action: 'create_event', data }) 
+                            }).then(r => r.json()).then(res => { 
+                                if(res.eventId) updateDoc(doc(db, "MaiTayData/Core/Bookings", newDoc.id), { eventId: res.eventId }); 
+                            }).catch(() => {});
                         }
                     }
+                    showToast("Đã thêm mới", "Bản ghi thông tin mới đã được cập nhật thành công lên đám mây!", "success");
                 } else if (op === 'update' && docId) {
                     await updateDoc(doc(db, `MaiTayData/Core/${currentTab}`, docId), data);
-                    if (currentTab === 'Bookings' && data.status === 'Đã huỷ' && data.eventId) fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: 'cancel_event', eventId: data.eventId }) }).catch(()=>{});
+                    
+                    // Đồng bộ ngắt lịch hẹn trên Google Calendar qua GAS nếu huỷ lịch
+                    if (currentTab === 'Bookings' && data.status === 'Đã huỷ' && data.eventId) {
+                        fetch(GAS_API_URL, { 
+                            method: 'POST', 
+                            body: JSON.stringify({ action: 'cancel_event', eventId: data.eventId }) 
+                        }).catch(() => {});
+                    }
+                    showToast("Đã lưu chỉnh sửa", "Thông tin bản ghi đã được cập nhật đồng bộ hoàn tất!", "success");
                 }
                 closeModal();
-            } catch(e) { alert("Lỗi: "+e.message); } finally { btn.innerText = 'Lưu'; btn.disabled = false; }
+            } catch(e) { showToast("Lỗi lưu dữ liệu", e.message, "error"); } 
+            finally { btn.innerText = 'LƯU DỮ LIỆU'; btn.disabled = false; }
         }
 
+        // Xoá bản ghi khỏi Cơ sở dữ liệu
         async function deleteRecord(docId, eventId = '') {
-            if(!confirm("Xóa bản ghi vĩnh viễn?")) return;
-            try { await deleteDoc(doc(db, `MaiTayData/Core/${currentTab}`, docId)); if (currentTab === 'Bookings' && eventId) fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: 'cancel_event', eventId }) }).catch(()=>{}); } 
-            catch(e) { alert("Lỗi: "+e.message); }
+            const confirmed = await showConfirm("Hành động không thể hoàn tác!", "Bạn có chắc chắn muốn xoá vĩnh viễn bản ghi này khỏi cơ sở dữ liệu?", "rose");
+            if(!confirmed) return;
+            try { 
+                await deleteDoc(doc(db, `MaiTayData/Core/${currentTab}`, docId)); 
+                
+                // Đồng thời gỡ Calendar Event tương ứng nếu có
+                if (currentTab === 'Bookings' && eventId) {
+                    fetch(GAS_API_URL, { 
+                        method: 'POST', 
+                        body: JSON.stringify({ action: 'cancel_event', eventId }) 
+                    }).catch(() => {});
+                }
+                showToast("Đã xoá thành công", "Thông tin đã được xoá vĩnh viễn khỏi Firebase!", "success");
+            } catch(e) { showToast("Xoá thất bại", e.message, "error"); }
         }
 
+        // Lưu cấu hình vận hành lõi
         async function saveConfigAction() {
-            const data = {}; TAB_SCHEMAS.Config.fields.forEach(f => { let v = document.getElementById(`cfg-${f}`).value.trim(); data[f] = v==='true'?true:v==='false'?false:(!isNaN(v)&&v!=='')?Number(v):v; });
-            await setDoc(doc(db, "MaiTayData/Core/Config/system"), data); alert("Đã lưu cấu hình.");
-        }
+    const btn = document.getElementById('saveCfgBtn');
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i>ĐANG LƯU...';
+    btn.disabled = true;
+    try {
+        const data = {}; 
+        TAB_SCHEMAS.Config.fields.forEach(f => { 
+            let v = document.getElementById(`cfg-${f}`).value.trim(); 
+            // Nếu là 'version' (ví dụ v1.0.6) thì giữ nguyên định dạng chuỗi chữ (String)
+            data[f] = v === 'true' ? true : v === 'false' ? false : (f !== 'version' && !isNaN(v) && v !== '') ? Number(v) : v; 
+        });
+        await setDoc(doc(db, "MaiTayData/Core/Config/system"), data); 
+        showToast("Lưu cấu hình", "Thiết lập vận hành lõi mới đã được đồng bộ toàn hệ thống!", "success");
+    } catch (err) {
+        showToast("Lỗi cấu hình", err.message, "error");
+    } finally {
+        btn.innerHTML = 'LƯU THAY ĐỔI';
+        btn.disabled = false;
+    }
+}
 
         function closeModal() { document.getElementById('modal').classList.add('hidden'); }
-        document.getElementById('searchInput').addEventListener('input', () => { searchKeyword = document.getElementById('searchInput').value; renderViewArea(); });
+        
+        // Trình tìm kiếm lọc nhanh
+        document.getElementById('searchInput').addEventListener('input', () => { 
+            searchKeyword = document.getElementById('searchInput').value; 
+            renderViewArea(); 
+        });
 
+        // Hộp thoại popup Toast thông báo Premium thay thế alert() thô ráp
+        function showToast(title, message, type = 'info') {
+            const toast = document.getElementById('custom-toast');
+            const iconContainer = document.getElementById('toast-icon');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-message').innerText = message;
+
+            if (type === 'success') {
+                iconContainer.className = "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-emerald-500/20 text-emerald-400";
+                iconContainer.innerHTML = '<i class="fa-solid fa-circle-check text-lg"></i>';
+            } else if (type === 'error') {
+                iconContainer.className = "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-rose-500/20 text-rose-400";
+                iconContainer.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-lg"></i>';
+            } else {
+                iconContainer.className = "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-slate-500/20 text-slate-300";
+                iconContainer.innerHTML = '<i class="fa-solid fa-bell text-lg"></i>';
+            }
+
+            toast.classList.add('toast-active');
+            setTimeout(() => { toast.classList.remove('toast-active'); }, 4000);
+        }
+
+        // Hiển thị Menu mở rộng cho màn hình thiết bị di động
         function openMoreMenuMobile() {
-            document.getElementById('tabTitle').innerText = 'Mở rộng';
-            document.getElementById('searchContainer').style.display = 'none'; document.getElementById('addRecordBtn').style.display = 'none'; document.getElementById('cmsSubTabGroup').style.display = 'none';
+            document.getElementById('tabTitle').innerText = 'Danh mục mở rộng';
+            document.getElementById('tabDesc').innerText = 'Lựa chọn các phân hệ quản trị nâng cao khác';
+            document.getElementById('searchContainer').style.display = 'none'; 
+            document.getElementById('addRecordBtn').style.display = 'none'; 
+            document.getElementById('cmsSubTabGroup').style.display = 'none';
             document.querySelectorAll('.m-nav-item').forEach(el => el.classList.remove('m-nav-active'));
             document.getElementById('m-nav-More').classList.add('m-nav-active');
             
             document.getElementById('contentArea').innerHTML = `
-                <div class="space-y-2">
-                    <button onclick="switchTab('Branches')" class="w-full text-left p-4 bg-white border border-gray-200 rounded-lg text-sm font-medium"><i class="fa-solid fa-shop w-6 text-gray-400"></i> Chi Nhánh</button>
-                    <button onclick="switchTab('Users')" class="w-full text-left p-4 bg-white border border-gray-200 rounded-lg text-sm font-medium"><i class="fa-solid fa-users w-6 text-gray-400"></i> Khách Hàng</button>
-                    <button onclick="switchTab('Config')" class="w-full text-left p-4 bg-white border border-gray-200 rounded-lg text-sm font-medium"><i class="fa-solid fa-sliders w-6 text-gray-400"></i> Cấu Hình Hệ Thống</button>
-                    <button onclick="switchTab('CmsLayout')" class="w-full text-left p-4 bg-white border border-gray-200 rounded-lg text-sm font-medium"><i class="fa-solid fa-layer-group w-6 text-gray-400"></i> Quản Trị Giao Diện CMS</button>
-                    <button onclick="switchTab('DEV')" class="w-full text-left p-4 bg-white border border-gray-200 rounded-lg text-sm font-medium text-blue-600"><i class="fa-solid fa-code w-6"></i> Dev Workspace (JSON)</button>
-                    <button onclick="handleAdminLogout()" class="w-full text-left p-4 bg-red-50 text-red-600 rounded-lg text-sm font-medium mt-4"><i class="fa-solid fa-power-off w-6"></i> Đăng xuất</button>
+                <div class="space-y-3">
+                    <button onclick="switchTab('Branches')" class="w-full text-left p-4.5 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-between shadow-sm"><span class="flex items-center gap-2.5 text-slate-800"><i class="fa-solid fa-shop text-slate-400 text-sm"></i> Chi Nhánh Salon</span><i class="fa-solid fa-angle-right text-slate-400"></i></button>
+                    <button onclick="switchTab('Users')" class="w-full text-left p-4.5 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-between shadow-sm"><span class="flex items-center gap-2.5 text-slate-800"><i class="fa-solid fa-users text-slate-400 text-sm"></i> Khách Hàng</span><i class="fa-solid fa-angle-right text-slate-400"></i></button>
+                    <button onclick="switchTab('Feedbacks')" class="w-full text-left p-4.5 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-between shadow-sm"><span class="flex items-center gap-2.5 text-slate-800"><i class="fa-solid fa-star text-slate-400 text-sm"></i> Đánh Giá Ý Kiến</span><i class="fa-solid fa-angle-right text-slate-400"></i></button>
+                    <button onclick="switchTab('Reports')" class="w-full text-left p-4.5 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-between shadow-sm"><span class="flex items-center gap-2.5 text-slate-800"><i class="fa-solid fa-flag text-slate-400 text-sm"></i> Báo Cáo Vi Phạm Reels</span><i class="fa-solid fa-angle-right text-slate-400"></i></button>
+                    <button onclick="switchTab('Config')" class="w-full text-left p-4.5 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-between shadow-sm"><span class="flex items-center gap-2.5 text-slate-800"><i class="fa-solid fa-sliders text-slate-400 text-sm"></i> Cấu Hình Lõi</span><i class="fa-solid fa-angle-right text-slate-400"></i></button>
+                    <button onclick="switchTab('CmsLayout')" class="w-full text-left p-4.5 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-between shadow-sm"><span class="flex items-center gap-2.5 text-slate-800"><i class="fa-solid fa-layer-group text-slate-400 text-sm"></i> Quản Trị CMS</span><i class="fa-solid fa-angle-right text-slate-400"></i></button>
+                    <button onclick="switchTab('DEV')" class="w-full text-left p-4.5 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-between shadow-sm"><span class="flex items-center gap-2.5 text-blue-600"><i class="fa-solid fa-code text-blue-500 text-sm"></i> Developer (JSON)</span><i class="fa-solid fa-angle-right text-slate-400"></i></button>
+                    <button onclick="handleAdminLogout()" class="w-full text-center p-4.5 bg-rose-50 text-rose-600 rounded-2xl text-xs font-black uppercase tracking-wider mt-6 shadow-sm"><i class="fa-solid fa-power-off mr-2"></i> Đăng xuất cổng quản trị</button>
                 </div>`;
         }
     </script>

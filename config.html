@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quản Trị | Mai Tây Salon</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        zinc: { 50: '#fafafa', 100: '#f4f4f5', 200: '#e4e4e7', 300: '#d4d4d8', 400: '#a1a1aa', 500: '#71717a', 600: '#52525b', 700: '#3f3f46', 800: '#27272a', 900: '#18181b' },
+                        primary: '#18181b', // Đen tối giản
+                        danger: '#ef4444'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #f4f4f5; -webkit-tap-highlight-color: transparent; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Hiệu ứng Tab */
+        .tab-content { display: none; opacity: 0; }
+        .tab-content.active { display: block; opacity: 1; animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Custom Toggle iOS Style */
+        .toggle-checkbox:checked { right: 0; border-color: #18181b; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #18181b; }
+
+        /* Input Minimal */
+        .input-minimal {
+            width: 100%; padding: 0.875rem 1rem; border-radius: 1rem;
+            border: 1px solid #e4e4e7; background-color: #fafafa;
+            font-size: 0.875rem; color: #27272a; transition: all 0.2s ease;
+        }
+        .input-minimal:focus {
+            outline: none; border-color: #27272a; background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .form-label { display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a; margin-bottom: 0.375rem; margin-top: 1rem;}
+        
+        /* Cấu trúc Card */
+        .card { background: #ffffff; border-radius: 1.5rem; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.02); border: 1px solid #e4e4e7; }
+        
+        /* Modal Bottom Sheet trên Mobile */
+        @media (max-width: 640px) {
+            .modal-content { border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-top: auto; }
+        }
+    </style>
+</head>
+<body class="font-sans text-zinc-800 antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- Input ẩn cho Cloudinary -->
+    <input type="file" id="cloudinary-upload-input" class="hidden" accept="image/*,video/*" onchange="handleFileUpload(event)">
+
+    <!-- Header & Nav Tối giản -->
+    <header class="bg-white z-40 shrink-0 border-b border-zinc-200">
+        <div class="px-4 py-4 flex justify-between items-center max-w-5xl mx-auto w-full">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-zinc-900 text-white rounded-xl flex items-center justify-center font-bold text-lg">
+                    MT
+                </div>
+                <div>
+                    <h1 class="font-bold text-zinc-900 text-lg leading-none">Quản Trị</h1>
+                    <p class="text-[10px] text-zinc-500 font-medium mt-0.5" id="admin-uid">Đang tải...</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="logoutAdmin()" id="btn-logout" class="hidden w-10 h-10 rounded-full bg-zinc-100 text-zinc-600 hover:bg-red-50 hover:text-red-500 transition-colors flex items-center justify-center">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+                <button id="btn-save-cloud" onclick="saveToCloud()" class="bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-sm transition-all active:scale-95 flex items-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> <span class="hidden sm:inline">Lưu dữ liệu</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Scrollable Pills Navigation -->
+        <div class="w-full overflow-x-auto hide-scrollbar pb-3 pt-1 border-t border-zinc-100">
+            <div class="flex px-4 gap-2 max-w-5xl mx-auto" id="tab-buttons">
+                <button onclick="switchTab('general')" class="tab-btn active px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-white whitespace-nowrap transition-all" data-target="general">Cửa hàng</button>
+                <button onclick="switchTab('hero')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 whitespace-nowrap transition-all" data-target="hero">Banners & Flash Sale</button>
+                <button onclick="switchTab('features')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 whitespace-nowrap transition-all" data-target="features">Danh mục</button>
+                <button onclick="switchTab('offers')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 whitespace-nowrap transition-all" data-target="offers">Voucher</button>
+                <button onclick="switchTab('feed')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 whitespace-nowrap transition-all" data-target="feed">Video/Feed</button>
+                <button onclick="switchTab('store')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 whitespace-nowrap transition-all" data-target="store">Dịch vụ</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto p-4 md:p-6 pb-32">
+        <div class="max-w-2xl mx-auto w-full">
+
+            <!-- TAB: GENERAL -->
+            <div id="tab-general" class="tab-content active">
+                <div class="card">
+                    <h2 class="text-lg font-bold text-zinc-900 mb-1">Thông tin cơ bản</h2>
+                    <p class="text-xs text-zinc-500 mb-4">Hiển thị ở trang chủ ứng dụng.</p>
+                    
+                    <label class="form-label mt-0">Tên Salon</label>
+                    <input type="text" id="g_name" onchange="updateVal('general.name', this.value)" class="input-minimal">
+                    
+                    <label class="form-label">Slogan</label>
+                    <input type="text" id="g_slogan" onchange="updateVal('general.slogan', this.value)" class="input-minimal">
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Đánh giá (Sao)</label>
+                            <input type="text" id="g_rating" onchange="updateVal('general.rating', this.value)" class="input-minimal text-center">
+                        </div>
+                        <div>
+                            <label class="form-label">Phiên bản Cache</label>
+                            <input type="text" id="g_version" onchange="updateVal('general.version', this.value)" class="input-minimal text-center font-mono">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="text-lg font-bold text-zinc-900 mb-4">Trạng thái hoạt động</h2>
+                    <select id="g_oh_status" onchange="updateVal('general.openHours.status', parseInt(this.value))" class="input-minimal cursor-pointer font-medium mb-3">
+                        <option value="1">🟢 Đang mở cửa</option>
+                        <option value="2">🟡 Đang bảo trì</option>
+                        <option value="3">🔴 Đã đóng cửa</option>
+                    </select>
+                    <input type="text" id="g_oh_text" onchange="updateVal('general.openHours.text', this.value)" class="input-minimal" placeholder="Thông điệp hiển thị (VD: Mở cửa đến 20h)">
+                </div>
+
+                <div class="card">
+                    <h2 class="text-lg font-bold text-zinc-900 mb-1">Liên hệ</h2>
+                    <p class="text-xs text-zinc-500 mb-4">Số điện thoại & Zalo</p>
+
+                    <label class="form-label mt-0">SĐT Hiển thị</label>
+                    <input type="text" id="c_phoneDisp" onchange="updateVal('contact.phoneDisplay', this.value)" class="input-minimal" placeholder="0909 123 456">
+                    
+                    <label class="form-label">SĐT Gọi (Viết liền)</label>
+                    <input type="text" id="c_phoneLink" onchange="updateVal('contact.phoneLink', this.value)" class="input-minimal font-mono" placeholder="0909123456">
+                    
+                    <label class="form-label">Link Zalo OA</label>
+                    <input type="text" id="c_zaloLink" onchange="updateVal('contact.zaloLink', this.value)" class="input-minimal text-blue-600" placeholder="https://zalo.me/...">
+                </div>
+            </div>
+
+            <!-- TAB: HERO -->
+            <div id="tab-hero" class="tab-content">
+                <div class="flex justify-between items-end mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-zinc-900">Slider Ảnh Bìa</h2>
+                        <p class="text-sm text-zinc-500">Ảnh ngang chất lượng cao.</p>
+                    </div>
+                    <button onclick="addArrayItem('hero_img')" class="w-10 h-10 rounded-full bg-zinc-900 text-white shadow-md active:scale-95 transition-transform flex items-center justify-center"><i class="fa-solid fa-plus"></i></button>
+                </div>
+                
+                <div id="h_sliderImages_container" class="space-y-4 mb-8">
+                    <!-- JS Injected -->
+                </div>
+
+                <div class="card border-zinc-900 bg-zinc-900 text-white">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-bolt text-yellow-400"></i> Flash Sale</h3>
+                            <p class="text-xs text-zinc-400 mt-1">Bật để hiện đếm ngược</p>
+                        </div>
+                        <div class="relative inline-block w-12 mr-2 align-middle select-none">
+                            <input type="checkbox" id="h_isFlashSale" onchange="updateVal('heroBlock.isFlashSale', this.checked); toggleFlashSaleUI();" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-zinc-500 z-10 top-0 left-0 transition-transform duration-200 checked:translate-x-6 checked:border-white"/>
+                            <label for="h_isFlashSale" class="toggle-label block overflow-hidden h-6 rounded-full bg-zinc-700 cursor-pointer transition-colors duration-200"></label>
+                        </div>
+                    </div>
+
+                    <!-- Flash Sale UI -->
+                    <div id="h_flash_ui" class="space-y-3 pt-3 border-t border-zinc-800">
+                        <input type="text" id="h_f_title" onchange="updateVal('heroBlock.flashSale.title', this.value)" class="input-minimal bg-zinc-800 border-zinc-700 text-white focus:bg-zinc-800 focus:border-zinc-500" placeholder="Tiêu đề chiến dịch">
+                        <input type="datetime-local" id="h_f_time" onchange="updateFlashSaleTime(this.value)" class="input-minimal bg-zinc-800 border-zinc-700 text-white focus:bg-zinc-800 focus:border-zinc-500">
+                        <textarea id="h_f_desc" onchange="updateVal('heroBlock.flashSale.desc', this.value)" class="input-minimal bg-zinc-800 border-zinc-700 text-white h-20 focus:bg-zinc-800 focus:border-zinc-500" placeholder="Mô tả"></textarea>
+                        <input type="text" id="h_f_btn" onchange="updateVal('heroBlock.flashSale.btnText', this.value)" class="input-minimal bg-zinc-800 border-zinc-700 text-white font-bold text-center focus:bg-zinc-800 focus:border-zinc-500" placeholder="Chữ trên nút">
+                    </div>
+                </div>
+
+                <!-- Normal UI -->
+                <div id="h_normal_ui" class="card mt-4 opacity-50 transition-opacity">
+                    <h3 class="font-bold text-zinc-900 mb-3 text-sm uppercase tracking-wide">Giao diện thường</h3>
+                    <input type="text" id="h_n_title" onchange="updateVal('heroBlock.normalBooking.title', this.value)" class="input-minimal mb-3" placeholder="Tiêu đề chính">
+                    <input type="text" id="h_n_desc" onchange="updateVal('heroBlock.normalBooking.desc', this.value)" class="input-minimal mb-3" placeholder="Mô tả phụ">
+                    <div class="flex gap-2">
+                        <input type="text" id="h_n_btn" onchange="updateVal('heroBlock.normalBooking.btnText', this.value)" class="input-minimal flex-1" placeholder="Chữ trên nút">
+                        <button onclick="openIconPicker('static', 'h_n_icon')" class="px-4 bg-zinc-100 rounded-xl text-zinc-600 hover:bg-zinc-200 font-mono text-sm flex items-center justify-center min-w-[3rem]" id="h_n_icon_preview"><i class="fa-solid fa-icons"></i></button>
+                        <!-- Ẩn input icon đi, chỉ hiện nút -->
+                        <input type="hidden" id="h_n_icon" onchange="updateVal('heroBlock.normalBooking.icon', this.value); document.getElementById('h_n_icon_preview').innerHTML = `<i class='fa-solid ${this.value}'></i>`;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: FEATURES -->
+            <div id="tab-features" class="tab-content">
+                <div class="mb-8">
+                    <div class="flex justify-between items-end mb-4">
+                        <h2 class="text-xl font-bold text-zinc-900">Nút Danh mục</h2>
+                        <button onclick="addArrayItem('categories')" class="text-sm bg-zinc-100 text-zinc-800 px-4 py-2 rounded-full font-semibold"><i class="fa-solid fa-plus"></i> Thêm</button>
+                    </div>
+                    <div id="feat_categories_list" class="grid grid-cols-2 gap-3">
+                        <!-- JS Injected -->
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-end mb-4">
+                        <h2 class="text-xl font-bold text-zinc-900">Chữ chạy (Marquee)</h2>
+                        <button onclick="addArrayItem('marqueeTexts')" class="text-sm bg-zinc-100 text-zinc-800 px-4 py-2 rounded-full font-semibold"><i class="fa-solid fa-plus"></i> Thêm</button>
+                    </div>
+                    <div id="feat_marquee_list" class="space-y-2">
+                        <!-- JS Injected -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: OFFERS -->
+            <div id="tab-offers" class="tab-content">
+                <div class="flex justify-between items-end mb-4">
+                    <h2 class="text-xl font-bold text-zinc-900">Mã giảm giá</h2>
+                    <button onclick="addArrayItem('offers')" class="text-sm bg-zinc-900 text-white px-5 py-2.5 rounded-full font-semibold shadow-md active:scale-95"><i class="fa-solid fa-plus"></i> Tạo thẻ</button>
+                </div>
+                <div id="offers_list" class="space-y-4">
+                    <!-- JS Injected -->
+                </div>
+            </div>
+
+            <!-- TAB: FEED -->
+            <div id="tab-feed" class="tab-content">
+                <div class="flex justify-between items-end mb-4">
+                    <h2 class="text-xl font-bold text-zinc-900">Video / Reels</h2>
+                    <button onclick="addArrayItem('feed')" class="text-sm bg-zinc-900 text-white px-5 py-2.5 rounded-full font-semibold shadow-md active:scale-95"><i class="fa-solid fa-plus"></i> Bài mới</button>
+                </div>
+                <div id="feed_list" class="space-y-6">
+                    <!-- JS Injected -->
+                </div>
+            </div>
+
+            <!-- TAB: STORE -->
+            <div id="tab-store" class="tab-content">
+                <div class="flex justify-between items-end mb-4">
+                    <h2 class="text-xl font-bold text-zinc-900">Bảng giá Dịch vụ</h2>
+                    <button onclick="addArrayItem('store')" class="text-sm bg-zinc-900 text-white px-5 py-2.5 rounded-full font-semibold shadow-md active:scale-95"><i class="fa-solid fa-plus"></i> Thêm D.Vụ</button>
+                </div>
+                <div id="store_list" class="space-y-6">
+                    <!-- JS Injected -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Icon Picker Modal -->
+    <div id="icon-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] hidden items-end sm:items-center justify-center transition-opacity opacity-0 p-0 sm:p-4">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md flex flex-col shadow-2xl h-[80vh] sm:h-[70vh] modal-content transform translate-y-full sm:translate-y-4 transition-transform duration-300" id="icon-modal-content">
+            <div class="p-5 border-b border-zinc-100 flex justify-between items-center bg-white rounded-t-3xl shrink-0">
+                <h3 class="font-bold text-zinc-900 text-lg">Chọn Biểu tượng</h3>
+                <button onclick="closeIconPicker()" class="w-8 h-8 rounded-full bg-zinc-100 text-zinc-500 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-3 border-b border-zinc-100 bg-zinc-50 shrink-0">
+                <div class="relative">
+                    <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+                    <input type="text" id="icon-search" oninput="renderIconGrid(this.value)" class="w-full bg-white border border-zinc-200 rounded-2xl pl-11 pr-4 py-3 text-sm focus:border-zinc-900 outline-none shadow-sm" placeholder="Tìm bằng tiếng Anh (star, heart, fire...)">
+                </div>
+            </div>
+            <div class="p-4 flex-1 overflow-y-auto hide-scrollbar bg-white">
+                <div id="icon-grid" class="grid grid-cols-5 gap-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="export-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[80] hidden items-center justify-center p-4 transition-opacity opacity-0">
+        <div class="bg-white rounded-3xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl modal-content transform scale-95 transition-transform duration-300" id="modal-content">
+            <div class="p-5 border-b border-zinc-100 flex justify-between items-center shrink-0">
+                <h3 class="font-bold text-zinc-900 text-lg flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-500"></i> Đồng bộ thành công!</h3>
+                <button onclick="closeExportModal()" class="w-8 h-8 rounded-full bg-zinc-100 text-zinc-500"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-0 flex-1 overflow-y-auto bg-zinc-900 text-zinc-300 relative">
+                <div class="sticky top-0 w-full flex justify-end p-4 pointer-events-none">
+                    <button onclick="copyGeneratedCode()" class="pointer-events-auto bg-white/10 backdrop-blur border border-white/20 text-white px-4 py-2 rounded-full font-semibold text-sm transition-colors flex items-center gap-2 hover:bg-white/20">
+                        <i class="fa-regular fa-copy"></i> Sao chép mã
+                    </button>
+                </div>
+                <pre class="p-6 pt-0"><code id="export-code" class="text-xs font-mono whitespace-pre-wrap break-words"></code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-[-60px] left-1/2 transform -translate-x-1/2 bg-zinc-900 text-white px-6 py-3.5 rounded-full shadow-2xl z-[90] text-sm font-semibold flex items-center gap-3 transition-all duration-400 opacity-0 min-w-[200px] justify-center">
+        <i class="fa-solid fa-circle-check text-green-400"></i>
+        <span id="toast-message">Thành công!</span>
+    </div>
+
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="fixed inset-0 bg-white z-[200] flex flex-col items-center justify-center p-4 transition-opacity duration-300">
+        <div class="w-full max-w-sm">
+            <div class="w-20 h-20 bg-zinc-900 text-white rounded-3xl flex items-center justify-center font-bold text-4xl mx-auto mb-6 shadow-xl">
+                MT
+            </div>
+            <h2 class="text-2xl font-bold text-zinc-900 text-center mb-1">Mai Tây Admin</h2>
+            <p class="text-sm text-zinc-500 text-center mb-8">Vui lòng đăng nhập để tiếp tục</p>
+            
+            <form onsubmit="event.preventDefault(); loginAdmin();" class="space-y-4">
+                <input type="email" id="login-email" class="input-minimal py-3.5 text-base" placeholder="Email quản trị" required>
+                <input type="password" id="login-password" class="input-minimal py-3.5 text-base" placeholder="Mật khẩu" required>
+                
+                <div id="login-error" class="text-red-500 text-sm hidden font-medium text-center bg-red-50 py-2 rounded-xl">Sai tài khoản!</div>
+                
+                <button type="submit" id="btn-login" class="w-full bg-zinc-900 active:bg-black text-white font-bold py-4 rounded-2xl shadow-md transition-all flex items-center justify-center mt-2">
+                    Đăng Nhập
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="cloud-overlay" class="fixed inset-0 bg-white/90 backdrop-blur-md z-[100] flex flex-col items-center justify-center text-zinc-900 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4 text-zinc-900"></i>
+        <h2 class="text-lg font-bold">Đang đồng bộ...</h2>
+    </div>
+
+    <script>
+        // --- DATA & HELPER FUNCTIONS ---
+        var config = {
+            general: { name: "Mai Tây Hair Salon", slogan: "Premium Hair Studio", rating: "5.0", openHours: { status: 1, text: "Mở cửa từ 8h đến 20h", reason: "" }, version: "v1.0.2" },
+            contact: { phoneDisplay: "0909 123 456", phoneLink: "0909123456", zaloLink: "https://zalo.me/0909123456" },
+            heroBlock: { sliderImages: ["./BGMT.jpg", "./BG.jpg"], isFlashSale: true, normalBooking: { title: "Trải Nghiệm Đẳng Cấp", desc: "Đặt lịch để giữ chỗ ngay hôm nay.", btnText: "ĐẶT LỊCH NGAY", icon: "fa-calendar-check" }, flashSale: { title: "Flash Sale Đặc Quyền Vip", desc: "Giảm ngay 50% cho 5 khách hàng đặt lịch sớm nhất trong ngày.", btnText: "SĂN DEAL NGAY", endTime: "2026-05-12T23:59:59" } },
+            homeFeatures: { categories: [ { icon: "fa-scissors", name: "Cắt" }, { icon: "fa-fill-drip", name: "Nhuộm" }, { icon: "fa-wind", name: "Uốn" }, { icon: "fa-spa", name: "Phục hồi" } ], marqueeTexts: [ { text: "🎉 Chào mừng bạn đến với hệ thống Mai Tây Hair Salon", isHighlight: true }, { text: "✨ Trải nghiệm làm đẹp đẳng cấp", isHighlight: false } ] },
+            offers: [ { type: "Ưu đãi", title: "Giảm 20% Hóa Chất", desc: "Hóa đơn từ 500k", code: "MAITAY20", gradient: "from-zinc-800 to-black", icon: "fa-gift" } ],
+            feed: [ { isVideo: true, url: "https://res.cloudinary.com/dt8zhfng8/video/upload/v1778504963/cobek2edjzufp98eknbp.mp4", img: "https://res.cloudinary.com/dt8zhfng8/video/upload/v1778504963/cobek2edjzufp98eknbp.mp4", fomoText: "Sắp hết chỗ", fomoIcon: "fa-bolt", title: "Uốn layer bồng bềnh" } ],
+            store: [ { id: 'P1', name: 'Gói Cắt Sấy', sub: 'Cơ bản', brand: 'Dịch vụ', price: 'Liên hệ', desc: 'Cắt sấy tạo kiểu chuyên nghiệp.', themeColor: '#18181b', img: '/Asset/logo/logo.png' } ]
+        };
+
+        function updateVal(path, value) {
+            const keys = path.split('.'); let current = config;
+            for (let i = 0; i < keys.length - 1; i++) current = current[keys[i]];
+            current[keys[keys.length - 1]] = value;
+        }
+
+        // --- CLOUDINARY UPLOAD ---
+        const CLOUDINARY_CLOUD_NAME = "dt8zhfng8"; 
+        const CLOUDINARY_UPLOAD_PRESET = "MT-File";
+        let uploadTargetType = null; let uploadTargetIndex = null; let uploadTargetKey = null;
+
+        function triggerUpload(type, index, key) {
+            uploadTargetType = type; uploadTargetIndex = index; uploadTargetKey = key;
+            const fileInput = document.getElementById('cloudinary-upload-input');
+            fileInput.value = ''; fileInput.click();
+        }
+
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            showToast("Đang tải ảnh lên... ⏳");
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+            try {
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, { method: 'POST', body: formData });
+                const data = await response.json();
+                if (data.secure_url) {
+                    updateArrayItemVal(uploadTargetType, uploadTargetIndex, uploadTargetKey, data.secure_url);
+                    showToast("Cập nhật ảnh thành công! ✅");
+                } else showToast("Lỗi Cloudinary!");
+            } catch (error) { showToast("Lỗi mạng!"); }
+        }
+
+        // --- RENDER & INIT ---
+        function initForms() {
+            document.getElementById('g_name').value = config.general.name;
+            document.getElementById('g_slogan').value = config.general.slogan;
+            document.getElementById('g_rating').value = config.general.rating;
+            document.getElementById('g_version').value = config.general.version;
+            document.getElementById('g_oh_status').value = config.general.openHours.status;
+            document.getElementById('g_oh_text').value = config.general.openHours.text;
+            document.getElementById('c_phoneDisp').value = config.contact.phoneDisplay;
+            document.getElementById('c_phoneLink').value = config.contact.phoneLink;
+            document.getElementById('c_zaloLink').value = config.contact.zaloLink;
+
+            document.getElementById('h_isFlashSale').checked = config.heroBlock.isFlashSale; toggleFlashSaleUI();
+            document.getElementById('h_n_title').value = config.heroBlock.normalBooking.title;
+            document.getElementById('h_n_desc').value = config.heroBlock.normalBooking.desc;
+            document.getElementById('h_n_btn').value = config.heroBlock.normalBooking.btnText;
+            
+            document.getElementById('h_n_icon').value = config.heroBlock.normalBooking.icon;
+            document.getElementById('h_n_icon_preview').innerHTML = `<i class='fa-solid ${config.heroBlock.normalBooking.icon}'></i>`;
+
+            document.getElementById('h_f_title').value = config.heroBlock.flashSale.title;
+            document.getElementById('h_f_desc').value = config.heroBlock.flashSale.desc;
+            document.getElementById('h_f_btn').value = config.heroBlock.flashSale.btnText;
+            if(config.heroBlock.flashSale.endTime) document.getElementById('h_f_time').value = config.heroBlock.flashSale.endTime.substring(0, 16);
+
+            renderSliderImages(); renderCategories(); renderMarquees(); renderOffers(); renderFeed(); renderStore();
+        }
+
+        function updateFlashSaleTime(val) { updateVal('heroBlock.flashSale.endTime', val + ":00"); }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (btn.dataset.target === tabId) {
+                    btn.className = "tab-btn active px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-white whitespace-nowrap transition-all shadow-sm";
+                } else {
+                    btn.className = "tab-btn px-4 py-2 rounded-full text-sm font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 whitespace-nowrap transition-all";
+                }
+            });
+            // Cuộn tab button ra giữa màn hình
+            const activeBtn = document.querySelector(`.tab-btn[data-target="${tabId}"]`);
+            activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+
+        function toggleFlashSaleUI() {
+            const isFlash = document.getElementById('h_isFlashSale').checked;
+            document.getElementById('h_flash_ui').style.display = isFlash ? 'block' : 'none';
+            document.getElementById('h_normal_ui').classList.toggle('opacity-50', isFlash);
+            document.getElementById('h_normal_ui').classList.toggle('pointer-events-none', isFlash);
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            t.style.bottom = '40px'; t.style.opacity = '1';
+            setTimeout(() => { t.style.bottom = '-60px'; t.style.opacity = '0'; }, 3000);
+        }
+
+        // Render: Ảnh Slider (Tối giản thẻ Card)
+        function renderSliderImages() {
+            const cont = document.getElementById('h_sliderImages_container');
+            cont.innerHTML = config.heroBlock.sliderImages.map((img, i) => `
+                <div class="card p-3 mb-0 relative group">
+                    <button onclick="removeArrayItem('hero_img', ${i})" class="absolute top-5 right-5 z-10 w-8 h-8 bg-white/90 backdrop-blur rounded-full text-red-500 shadow-sm flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"><i class="fa-solid fa-trash text-xs"></i></button>
+                    <div class="aspect-video rounded-xl bg-zinc-100 overflow-hidden relative mb-3">
+                        <img src="${img}" onerror="this.src='https://placehold.co/800x400?text=No+Image'" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" value="${img}" onchange="updateArrayItemVal('hero_img', ${i}, '', this.value)" class="input-minimal flex-1 text-xs" placeholder="URL Ảnh">
+                        <button onclick="triggerUpload('hero_img', ${i}, '')" class="bg-zinc-100 text-zinc-800 px-4 rounded-xl font-medium text-sm flex items-center gap-2 hover:bg-zinc-200 whitespace-nowrap"><i class="fa-solid fa-camera"></i> Đổi</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render: Danh mục (Grid layout)
+        function renderCategories() {
+            const cont = document.getElementById('feat_categories_list');
+            cont.innerHTML = config.homeFeatures.categories.map((c, i) => `
+                <div class="card p-4 relative">
+                    <button onclick="removeArrayItem('cat', ${i})" class="absolute top-2 right-2 w-6 h-6 text-zinc-300 hover:text-red-500 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="flex flex-col items-center text-center">
+                        <button onclick="openIconPicker('array', null, 'cat', ${i}, 'icon')" class="w-12 h-12 bg-zinc-50 rounded-full border border-zinc-200 flex items-center justify-center text-xl text-zinc-700 mb-2 hover:bg-zinc-100 transition-colors"><i class="fa-solid ${c.icon}"></i></button>
+                        <input type="text" value="${c.name}" onchange="updateArrayItemVal('cat', ${i}, 'name', this.value)" class="w-full text-center bg-transparent border-b border-zinc-200 focus:border-zinc-900 outline-none font-semibold text-sm pb-1">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render: Marquee (Dạng list đơn giản)
+        function renderMarquees() {
+            const cont = document.getElementById('feat_marquee_list');
+            cont.innerHTML = config.homeFeatures.marqueeTexts.map((m, i) => `
+                <div class="flex items-center gap-2 bg-white rounded-xl border border-zinc-200 p-2 pl-3 shadow-sm">
+                    <input type="checkbox" ${m.isHighlight ? 'checked' : ''} onchange="updateArrayItemVal('marquee', ${i}, 'isHighlight', this.checked)" class="w-5 h-5 rounded border-zinc-300 text-zinc-900 accent-zinc-900 focus:ring-zinc-900" title="Đánh dấu nổi bật">
+                    <input type="text" value="${m.text}" onchange="updateArrayItemVal('marquee', ${i}, 'text', this.value)" class="input-minimal border-none shadow-none bg-transparent flex-1 !p-2" placeholder="Nội dung chạy...">
+                    <button onclick="removeArrayItem('marquee', ${i})" class="w-10 h-10 text-zinc-400 hover:text-red-500 flex items-center justify-center"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        // Render: Offers
+        function renderOffers() {
+            const cont = document.getElementById('offers_list');
+            cont.innerHTML = config.offers.map((o, i) => `
+                <div class="card relative p-0 overflow-hidden border border-zinc-200">
+                    <button onclick="removeArrayItem('offers', ${i})" class="absolute top-3 right-3 w-8 h-8 bg-white/80 rounded-full text-red-500 shadow-sm flex items-center justify-center z-10"><i class="fa-solid fa-trash text-xs"></i></button>
+                    <div class="h-10 bg-gradient-to-r ${o.gradient}"></div>
+                    <div class="p-4 space-y-3">
+                        <div class="flex gap-3">
+                            <div class="flex-1"><label class="form-label mt-0">Tiêu đề</label><input type="text" value="${o.title}" onchange="updateArrayItemVal('offers', ${i}, 'title', this.value)" class="input-minimal font-bold"></div>
+                            <div class="w-24"><label class="form-label mt-0">Mã</label><input type="text" value="${o.code}" onchange="updateArrayItemVal('offers', ${i}, 'code', this.value)" class="input-minimal text-center font-mono font-bold text-zinc-900 px-1"></div>
+                        </div>
+                        <input type="text" value="${o.desc}" onchange="updateArrayItemVal('offers', ${i}, 'desc', this.value)" class="input-minimal text-xs" placeholder="Mô tả điều kiện">
+                        
+                        <div class="flex gap-2 items-end">
+                            <div class="w-16">
+                                <label class="form-label mb-1">Icon</label>
+                                <button onclick="openIconPicker('array', null, 'offers', ${i}, 'icon')" class="w-full h-11 bg-zinc-50 border border-zinc-200 rounded-xl flex items-center justify-center text-zinc-600"><i class="fa-solid ${o.icon}"></i></button>
+                            </div>
+                            <div class="flex-1">
+                                <label class="form-label mb-1">Màu Tailwind</label>
+                                <input type="text" value="${o.gradient}" onchange="updateArrayItemVal('offers', ${i}, 'gradient', this.value)" class="input-minimal text-xs font-mono bg-zinc-50 py-[11px]">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render: Feed
+        function renderFeed() {
+            const cont = document.getElementById('feed_list');
+            cont.innerHTML = config.feed.map((f, i) => `
+                <div class="card p-3">
+                    <div class="flex justify-between items-center px-1 mb-3">
+                        <label class="flex items-center gap-2 text-sm font-semibold text-zinc-800">
+                            <input type="checkbox" ${f.isVideo ? 'checked' : ''} onchange="updateArrayItemVal('feed', ${i}, 'isVideo', this.checked)" class="w-4 h-4 accent-zinc-900 rounded">
+                            Định dạng Video
+                        </label>
+                        <button onclick="removeArrayItem('feed', ${i})" class="text-xs text-red-500 font-semibold px-2 py-1 bg-red-50 rounded-lg">Xóa bài</button>
+                    </div>
+
+                    <div class="flex gap-3 mb-3">
+                        <!-- Thumbnail -->
+                        <div class="w-24 h-32 bg-zinc-100 rounded-xl overflow-hidden shrink-0 relative group">
+                            <img src="${f.img}" onerror="this.src='https://placehold.co/200x300?text=Lỗi'" class="w-full h-full object-cover">
+                            <button onclick="triggerUpload('feed', ${i}, 'img')" class="absolute inset-0 bg-black/40 text-white flex flex-col items-center justify-center text-xs font-medium"><i class="fa-solid fa-camera mb-1 text-lg"></i>Đổi bìa</button>
+                        </div>
+                        
+                        <!-- Details -->
+                        <div class="flex-1 space-y-2 flex flex-col justify-center">
+                            <textarea onchange="updateArrayItemVal('feed', ${i}, 'title', this.value)" class="input-minimal h-20 resize-none font-medium" placeholder="Viết mô tả ngắn gọn...">${f.title}</textarea>
+                            
+                            <!-- Bổ sung nút tải File gốc -->
+                            <div class="flex items-center gap-2 mt-1">
+                                <input type="text" value="${f.url}" onchange="updateArrayItemVal('feed', ${i}, 'url', this.value)" class="input-minimal text-xs bg-zinc-50 py-2 px-3 flex-1" placeholder="Link Media">
+                                <button onclick="triggerUpload('feed', ${i}, 'url')" class="bg-zinc-100 text-zinc-700 px-3 py-2 rounded-xl" title="Tải file gốc lên"><i class="fa-solid fa-upload"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render: Store
+        function renderStore() {
+            const cont = document.getElementById('store_list');
+            cont.innerHTML = config.store.map((s, i) => `
+                <div class="card p-4 space-y-4">
+                    <div class="flex justify-between items-start">
+                        <input type="text" value="${s.id}" onchange="updateArrayItemVal('store', ${i}, 'id', this.value)" class="bg-zinc-100 text-zinc-500 text-xs font-bold px-3 py-1 rounded-full font-mono w-24 text-center outline-none">
+                        <button onclick="removeArrayItem('store', ${i})" class="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div class="w-20 shrink-0 space-y-2">
+                            <div class="aspect-square bg-zinc-100 rounded-2xl overflow-hidden relative border border-zinc-200">
+                                <img src="${s.img}" class="w-full h-full object-cover">
+                                <button onclick="triggerUpload('store', ${i}, 'img')" class="absolute inset-0 bg-black/40 text-white flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity"><i class="fa-solid fa-camera"></i></button>
+                            </div>
+                            <input type="color" value="${s.themeColor}" onchange="updateArrayItemVal('store', ${i}, 'themeColor', this.value)" class="w-full h-8 rounded-xl cursor-pointer p-0 border-0 bg-transparent">
+                        </div>
+                        
+                        <div class="flex-1 space-y-3">
+                            <input type="text" value="${s.name}" onchange="updateArrayItemVal('store', ${i}, 'name', this.value)" class="input-minimal font-bold text-lg p-2" placeholder="Tên dịch vụ">
+                            <div class="flex gap-2">
+                                <input type="text" value="${s.price}" onchange="updateArrayItemVal('store', ${i}, 'price', this.value)" class="input-minimal font-bold text-zinc-900 p-2 w-1/2" placeholder="Giá (VD: 50k)">
+                                <input type="text" value="${s.sub}" onchange="updateArrayItemVal('store', ${i}, 'sub', this.value)" class="input-minimal text-xs p-2 w-1/2" placeholder="Nhãn (VD: Hot)">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <textarea onchange="updateArrayItemVal('store', ${i}, 'desc', this.value)" class="input-minimal h-16 resize-none" placeholder="Mô tả chi tiết">${s.desc}</textarea>
+                </div>
+            `).join('');
+        }
+
+        // --- ARRAY HELPERS ---
+        function updateArrayItemVal(type, index, key, value) {
+            if (type === 'hero_img') { config.heroBlock.sliderImages[index] = value; renderSliderImages(); }
+            if (type === 'cat') { config.homeFeatures.categories[index][key] = value; if(key==='icon') renderCategories(); }
+            if (type === 'marquee') config.homeFeatures.marqueeTexts[index][key] = value;
+            if (type === 'offers') { config.offers[index][key] = value; if(key==='icon' || key==='gradient') renderOffers(); }
+            if (type === 'feed') { config.feed[index][key] = value; if(key==='img' || key==='url') renderFeed(); }
+            if (type === 'store') { config.store[index][key] = value; if(key==='img' || key==='themeColor') renderStore(); }
+        }
+
+        function removeArrayItem(type, index) {
+            if (!confirm("Xóa mục này?")) return;
+            if (type === 'hero_img') config.heroBlock.sliderImages.splice(index, 1);
+            if (type === 'cat') config.homeFeatures.categories.splice(index, 1);
+            if (type === 'marquee') config.homeFeatures.marqueeTexts.splice(index, 1);
+            if (type === 'offers') config.offers.splice(index, 1);
+            if (type === 'feed') config.feed.splice(index, 1);
+            if (type === 'store') config.store.splice(index, 1);
+            initForms(); // Re-render all to be safe
+            showToast("Đã xóa! 🗑️");
+        }
+
+        function addArrayItem(type) {
+            if (type === 'hero_img') config.heroBlock.sliderImages.unshift("https://placehold.co/800x400/e4e4e7/52525b?text=Upload+Anh");
+            if (type === 'categories') config.homeFeatures.categories.push({ icon: "fa-star", name: "Mới" });
+            if (type === 'marqueeTexts') config.homeFeatures.marqueeTexts.push({ text: "Tin mới...", isHighlight: false });
+            if (type === 'offers') config.offers.push({ type: "New", title: "Khuyến mãi mới", desc: "Mô tả", code: "CODE", gradient: "from-zinc-400 to-zinc-600", icon: "fa-gift" });
+            if (type === 'feed') config.feed.unshift({ isVideo: false, url: "", img: "https://placehold.co/400x600/e4e4e7/52525b", fomoText: "Hot", fomoIcon: "fa-fire", title: "Mô tả..." });
+            if (type === 'store') config.store.unshift({ id: `DV${Math.floor(Math.random()*100)}`, name: 'Dịch vụ mới', sub: '', brand: 'Chung', price: '0đ', desc: '', themeColor: '#18181b', img: 'https://placehold.co/200x200' });
+            initForms();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast("Đã tạo mới! ✨");
+        }
+
+        // --- ICON PICKER (BOTTOM SHEET ON MOBILE) ---
+        const faIconsList = ["fa-scissors", "fa-fill-drip", "fa-wind", "fa-spa", "fa-spray-can", "fa-hot-tub-person", "fa-pump-soap", "fa-star", "fa-heart", "fa-check", "fa-fire", "fa-bolt", "fa-ticket", "fa-gift", "fa-calendar-check", "fa-clock", "fa-phone", "fa-comment-dots", "fa-bell", "fa-tag", "fa-gem", "fa-crown", "fa-camera", "fa-video", "fa-image", "fa-music", "fa-store", "fa-bag-shopping", "fa-user", "fa-location-dot", "fa-chevron-right", "fa-circle-check", "fa-leaf", "fa-droplet", "fa-magic", "fa-brush", "fa-cut", "fa-thumbs-up", "fa-award", "fa-certificate", "fa-percent", "fa-coins"];
+        let currentIconTarget = null;
+
+        function openIconPicker(type, id, arrayType, index, key) {
+            currentIconTarget = { type, id, arrayType, index, key };
+            document.getElementById('icon-search').value = ''; renderIconGrid('');
+            const modal = document.getElementById('icon-modal'); const content = document.getElementById('icon-modal-content');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => { 
+                modal.classList.remove('opacity-0'); 
+                content.classList.remove('translate-y-full', 'sm:translate-y-4'); 
+                content.classList.add('translate-y-0');
+            }, 10);
+        }
+
+        function closeIconPicker() {
+            const modal = document.getElementById('icon-modal'); const content = document.getElementById('icon-modal-content');
+            modal.classList.add('opacity-0'); 
+            content.classList.add('translate-y-full', 'sm:translate-y-4'); content.classList.remove('translate-y-0');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+        }
+
+        function renderIconGrid(filterText) {
+            const grid = document.getElementById('icon-grid');
+            const term = filterText.toLowerCase();
+            const filtered = faIconsList.filter(i => i.includes(term));
+            grid.innerHTML = filtered.map(icon => `
+                <button onclick="selectIcon('${icon}')" class="aspect-square flex items-center justify-center text-zinc-600 bg-zinc-50 hover:bg-zinc-900 hover:text-white rounded-2xl transition-colors border border-zinc-100 text-xl"><i class="fa-solid ${icon}"></i></button>
+            `).join('');
+        }
+
+        function selectIcon(iconClass) {
+            if (currentIconTarget.type === 'static') {
+                const input = document.getElementById(currentIconTarget.id); input.value = iconClass; input.dispatchEvent(new Event('change'));
+            } else updateArrayItemVal(currentIconTarget.arrayType, currentIconTarget.index, currentIconTarget.key, iconClass);
+            closeIconPicker(); showToast("Đã chọn Icon!");
+        }
+
+        // --- EXPORT ---
+        function openExportModal() {
+            const modal = document.getElementById('export-modal');
+            document.getElementById('export-code').textContent = `const APP_CONFIG = ${JSON.stringify(config, null, 2)};`;
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => { modal.classList.remove('opacity-0'); document.getElementById('modal-content').classList.replace('scale-95', 'scale-100'); }, 10);
+        }
+
+        function closeExportModal() {
+            const modal = document.getElementById('export-modal');
+            modal.classList.add('opacity-0'); document.getElementById('modal-content').classList.replace('scale-100', 'scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+        }
+
+        function copyGeneratedCode() {
+            const text = document.getElementById('export-code').textContent;
+            navigator.clipboard.writeText(text).then(() => { showToast("Đã chép mã! 📋"); closeExportModal(); });
+        }
+
+        window.initForms = initForms; window.showToast = showToast; window.openExportModal = openExportModal;
+    </script>
+
+    <!-- FIREBASE MODULE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'maitay-app';
+        const firebaseConfig = { apiKey: "AIzaSyCTnDNOzI-8JYFfrxtJclFxe7vY27PM6FU", authDomain: "salon-mt.firebaseapp.com", projectId: "salon-mt", storageBucket: "salon-mt.firebasestorage.app", messagingSenderId: "1086041756251", appId: "1:1086041756251:web:5f7c4cc7144cc59be8a57e", measurementId: "G-3BV9HNVP29" };
+
+        let app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app), currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            const overlay = document.getElementById('login-overlay'); const logoutBtn = document.getElementById('btn-logout');
+            if (user) {
+                currentUser = user; document.getElementById('admin-uid').innerText = "UID: " + user.uid.substring(0,6) + "...";
+                logoutBtn.classList.remove('hidden'); overlay.classList.add('opacity-0', 'pointer-events-none');
+                await fetchCloudData();
+            } else {
+                currentUser = null; document.getElementById('admin-uid').innerText = 'Chưa đăng nhập';
+                logoutBtn.classList.add('hidden'); overlay.classList.remove('opacity-0', 'pointer-events-none');
+                window.initForms(); 
+            }
+        });
+
+        async function fetchCloudData() {
+            const overlay = document.getElementById('cloud-overlay'); overlay.classList.remove('opacity-0', 'pointer-events-none');
+            try {
+                const docSnap = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'main'));
+                if (docSnap.exists()) window.config = docSnap.data();
+                window.initForms(); 
+                setTimeout(() => overlay.classList.add('opacity-0', 'pointer-events-none'), 500);
+            } catch (error) { overlay.classList.add('opacity-0', 'pointer-events-none'); showToast("Lỗi kết nối Server!"); }
+        }
+
+        window.loginAdmin = async function() {
+            const btn = document.getElementById('btn-login'); const err = document.getElementById('login-error');
+            btn.innerText = 'Đang xử lý...'; btn.disabled = true; err.classList.add('hidden');
+            try {
+                await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value);
+            } catch (error) {
+                err.classList.remove('hidden'); btn.innerText = 'Đăng Nhập'; btn.disabled = false;
+            }
+        };
+
+        window.logoutAdmin = async function() { await signOut(auth); showToast("Đã thoát!"); };
+
+        window.saveToCloud = async function() {
+            if (!currentUser) return showToast("Vui lòng đăng nhập!");
+            const btn = document.getElementById('btn-save-cloud'); const html = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; btn.disabled = true;
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'main'), window.config);
+                showToast("Lưu Cloud thành công! ☁️"); window.openExportModal();
+            } catch (error) { alert("Lỗi phân quyền Database."); } finally { btn.innerHTML = html; btn.disabled = false; }
+        };
+    </script>
+</body>
+</html>

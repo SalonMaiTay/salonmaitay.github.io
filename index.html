@@ -3,544 +3,1979 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Salon - Mai Tây & Hiền Trần</title>
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
+    <title>Mai Tây</title>
+    <meta name="description"
+        content="Ứng dụng đặt lịch - chăm sóc khách hàng của hệ thống Mai Tây Hair Salon &amp; Hiền Trần Hair Studio">
+    <meta name="author" content="Hunq">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" href="/asset/icon/icon-512x512.png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mai Tây">
+    <meta property="og:description"
+        content="Ứng dụng đặt lịch - chăm sóc khách hàng của hệ thống Mai Tây Hair Salon &amp; Hiền Trần Hair Studio">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mai Tây">
+    <meta name="twitter:description"
+        content="Ứng dụng đặt lịch - chăm sóc khách hàng của hệ thống Mai Tây Hair Salon &amp; Hiền Trần Hair Studio">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="./Asset/css/style.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@600;700&display=swap"
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mai Tây">
+    <link rel="apple-touch-icon" href="/asset/icon/icon-512x512.png">
+<link rel="stylesheet" href="./asset/styleLoading.css">
+    <link rel="stylesheet" href="./asset/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="./Asset/css/fjGallery.css" />
+    <style>
+        /* CORE APP STYLES */
+        html,
+        body {
+            overscroll-behavior-y: none;
+            /* Ngăn chặn cuộn đàn hồi trên trục y */
+        }
 
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            background-color: #f8fafc;
+        }
+
+        .app-container {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            position: relative;
+        }
+
+        @media (min-width: 640px) {
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                background-image: radial-gradient(#e2e8f0 1px, transparent 0);
+                background-size: 20px 20px;
+            }
+
+            .app-container {
+                width: 100%;
+                max-width: 420px;
+                height: 850px;
+                border-radius: 40px;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                border: 8px solid #0f172a;
+                overflow: hidden;
+            }
+        }
+
+        .view-pane {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            background: #ffffff;
+            padding-bottom: 100px;
+        }
+
+        .view-pane.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .bottom-nav {
+            -webkit-overflow-scrolling: touch;
+            scroll-padding: 0 12px;
+            /* Tạo khoảng lùi khi icon hút vào giữa */
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #cbd5e1;
+            transition: 0.3s;
+            width: 20%;
+        }
+
+        /* Chỉnh width 20% cho 5 tabs */
+        .nav-item.active {
+            color: #0f172a;
+        }
+
+        .nav-item.active i {
+            transform: translateY(-2px);
+        }
+
+        .sticky-action {
+            position: sticky;
+            bottom: 0;
+            padding: 16px;
+            background: linear-gradient(to top, rgba(255, 255, 255, 1) 60%, rgba(255, 255, 255, 0));
+            z-index: 50;
+        }
+
+        .step-pane {
+            display: none;
+            flex-direction: column;
+            animation: slideUp 0.3s ease-out;
+            padding-bottom: 20px;
+        }
+
+        .step-pane.active {
+            display: flex;
+        }
+
+        .booking-sub-view {
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .booking-sub-view.active {
+            display: flex;
+        }
+
+        .sub-nav-btn.active {
+            color: #0f172a;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-fast {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(100vw);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .animate-marquee {
+            animation: marquee 20s linear infinite;
+            display: inline-block;
+        }
+
+        .card-radio input:checked+div {
+            border-color: #0f172a;
+            background-color: #f8fafc;
+        }
+
+        .check-icon {
+            opacity: 0;
+            transform: scale(0.5);
+            transition: 0.2s;
+        }
+
+        .card-radio input:checked+div .check-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .date-active {
+            background-color: #0f172a !important;
+            border-color: #0f172a !important;
+            color: white !important;
+        }
+
+        .date-active span {
+            color: white !important;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Custom Star Rating */
+        .star-rating i {
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .star-rating i.active {
+            color: #f59e0b;
+        }
+
+        /* Style cho Ticket Voucher */
+        .ticket-cutout-left {
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background-color: #f8fafc;
+            border-radius: 50%;
+        }
+
+        .ticket-cutout-right {
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background-color: #f8fafc;
+            border-radius: 50%;
+        }
+
+        /* Hiệu ứng trượt động - Chỉ chạy khi được JS gọi */
+        @keyframes marquee-dynamic {
+
+            0%,
+            15% {
+                transform: translateX(0);
+                /* Dừng ở đầu một chút */
+            }
+
+            85%,
+            100% {
+                transform: translateX(var(--scroll-dist));
+                /* Trượt đến cuối và dừng một chút */
+            }
+        }
+
+        .marquee-ready {
+            display: inline-block;
+            white-space: nowrap;
+            will-change: transform;
+            /* Thêm khoảng lùi một chút cho chữ cuối cùng */
+            padding-right: 12px;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="relative min-h-screen md:flex">
 
-        <nav id="desktop-nav" class="hidden md:flex md:flex-col md:w-64 md:fixed md:inset-y-0 z-20">
-            <div class="flex items-center justify-center p-4 h-16 border-b"
-                style="border-color: var(--color-glass-border);">
-                <h1 class="text-2xl font-serif" style="color: var(--color-accent);">Mai Tây</h1>
+    <div class="app-container relative">
+
+        <!-- TOP PROMO BANNER (Thay thế Dynamic Island để không che khuất content) -->
+        <div id="dynamic-island"
+            class="w-full bg-slate-900 transition-all duration-400 ease-in-out overflow-hidden max-h-0 opacity-0 pointer-events-none shrink-0 cursor-pointer"
+            onclick="switchTab('booking')">
+            <div class="flex items-center justify-between px-5 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top,0px))]">
+
+                <!-- Hiệu ứng chớp Flash Sale -->
+                <div class="flex items-center gap-2.5">
+                    <span class="relative flex h-2 w-2">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                    </span>
+                    <span class="text-[9px] font-black uppercase tracking-[0.15em] text-rose-400 mt-0.5">Flash
+                        Sale</span>
+                </div>
+
+                <!-- Bộ đếm giờ -->
+                <div class="font-mono text-sm font-bold tracking-widest flex items-center text-white">
+                    <span id="di-hour">00</span><span class="text-white/30 mx-0.5 pb-0.5">:</span><span
+                        id="di-min">00</span><span class="text-white/30 mx-0.5 pb-0.5">:</span><span
+                        id="di-sec">00</span>
+                </div>
+
+                <!-- Nút Call-to-action tối giản -->
+                <div
+                    class="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 transition-colors px-2.5 py-1 rounded-full">
+                    <span class="text-[8px] font-bold uppercase text-white tracking-wider mt-0.5">Giữ chỗ</span>
+                    <i class="fa-solid fa-angle-right text-[8px] text-white"></i>
+                </div>
+
             </div>
-            <div class="flex-1 overflow-y-auto p-4 space-y-2">
-                <button data-page="page-home" data-title="Giới thiệu"
-                    class="desktop-nav-button active w-full text-left flex items-center p-3">
-                    <i class="fas fa-home w-6 text-center mr-3"></i>
-                    <span class="text-sm font-medium">Giới thiệu</span>
-                </button>
-                <button data-page="page-booking" data-title="Đặt lịch hẹn"
-                    class="desktop-nav-button w-full text-left flex items-center p-3">
-                    <i class="fas fa-calendar-alt w-6 text-center mr-3"></i>
-                    <span class="text-sm font-medium">Đặt lịch</span>
-                </button>
-                <button data-page="page-gallery" data-title="Bộ sưu tập"
-                    class="desktop-nav-button w-full text-left flex items-center p-3">
-                    <i class="fas fa-images w-6 text-center mr-3"></i>
-                    <span class="text-sm font-medium">Bộ sưu tập</span>
-                </button>
-                <button data-page="page-news" data-title="Tin tức & Ưu đãi"
-                    class="desktop-nav-button w-full text-left flex items-center p-3">
-                    <i class="fas fa-newspaper w-6 text-center mr-3"></i>
-                    <span class="text-sm font-medium">Tin tức</span>
-                </button>
-                <button data-page="page-review" data-title="Đánh giá"
-                    class="desktop-nav-button w-full text-left flex items-center p-3">
-                    <i class="fas fa-star w-6 text-center mr-3"></i>
-                    <span class="text-sm font-medium">Đánh giá</span>
-                </button>
+        </div>
+
+        <!-- PREMIUM LOADING COMPONENT -->
+        <div id="loading">
+            <div class="cut-panel panel-top"></div>
+            <div class="cut-panel panel-bottom">
+                <h2 class="minimal-text uppercase text-base">Mai Tây Hair Salon</h2>
+                <p id="loading-version-display"
+                    class="text-[8px] font-black text-slate-400/40 uppercase tracking-[0.3em] mt-2 opacity-0 transition-opacity duration-500">
+                </p>
             </div>
-        </nav>
+            <div class="slash-line" id="slashLine"></div>
 
-        <div id="app-wrapper" class="flex-1 flex flex-col max-h-screen">
+            <div class="scissors-wrapper is-normal-cutting" id="scissorsContainer">
+                <div class="scissor-half scissor-half-1">
+                    <div class="blade"></div>
+                    <div class="pivot-circle"></div>
+                    <div class="handle-stem"></div>
+                    <div class="handle-ring"></div>
+                    <div class="finger-tang"></div>
+                </div>
+                <div class="scissor-half scissor-half-2">
+                    <div class="blade"></div>
+                    <div class="pivot-circle"></div>
+                    <div class="handle-stem"></div>
+                    <div class="handle-ring"></div>
+                    <div class="bumper"></div>
+                </div>
+                <div class="screw"></div>
+            </div>
+        </div>
 
-            <header id="mobile-header" class="md:hidden sticky top-0 z-10 p-4 h-16 flex items-center justify-center">
-                <h1 id="mobile-page-title" class="text-lg font-serif font-semibold" style="color: var(--color-accent);">
-                    Giới thiệu</h1>
+        <!-- VIEW: TRANG CHỦ (DOCKING HEADER EFFECT) -->
+        <div id="view-intro" class="view-pane active bg-[#fafafa]">
+
+            <div id="docked-header"
+                class="fixed backdrop-blur-md top-0 left-0 right-0 z-50 px-6 py-3 flex justify-between items-center bg-white/80 shadow-[0_4px_30px_-10px_rgba(0,0,0,0.05)] border-b border-slate-100 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] transform -translate-y-12 opacity-0 pointer-events-none">
+                <div>
+                    <h1 class="text-2xl font-black tracking-tighter text-slate-900" id="config-salon-name-docked">Mai
+                        Tây Studio</h1>
+                    <p class="text-[9px] uppercase tracking-[0.2em] text-slate-400 font-bold mt-0.5">Premium Hair Salon
+                    </p>
+                </div>
+                <div class="bg-slate-900 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md shadow-slate-900/10 cursor-pointer active:scale-90 transition-transform"
+                    onclick="switchTab('booking')">
+                    <i class="fa-solid fa-calendar-plus text-sm"></i>
+                </div>
+            </div>
+
+            <div class="relative w-full h-[300px] cursor-pointer group">
+                <div id="heroSliderContainer" class="absolute inset-0 w-full h-full bg-slate-900"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80"></div>
+
+                <div
+                    class="absolute top-0 left-0 right-0 px-6 py-6 flex justify-between items-center z-40 bg-transparent">
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tighter text-white drop-shadow-sm"
+                            id="config-salon-name">Mai Tây Studio</h1>
+                        <p class="text-[9px] uppercase tracking-[0.2em] text-white/80 font-bold mt-1 drop-shadow-sm">Đơn
+                            giản nhưng đẳng cấp</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md text-white w-11 h-11 rounded-full flex items-center justify-center border border-white/20 cursor-pointer active:scale-90 transition-transform"
+                        onclick="switchTab('booking')">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-10 left-6 right-6">
+                    <h2 class="text-white text-[32px] font-black leading-[1.1] mb-4 drop-shadow-md">Tôn Vinh<br>Vẻ Đẹp
+                        Nguyên Bản</h2>
+                    <div
+                        class="inline-flex items-center gap-2 bg-black/30 backdrop-blur-md rounded-full px-4 py-2 border border-white/10">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        <span id="config-open-hours"
+                            class="text-[9px] font-bold uppercase text-white tracking-[0.15em]">Mở cửa đến 20:00</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div
+                class="relative -mt-6 bg-[#fafafa] rounded-t-[2rem] pt-8 pb-4 z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+
+                <div class="px-6 mb-8">
+                    <div class="bg-white rounded-full p-2 flex items-center gap-3 overflow-hidden border border-slate-100 shadow-[0_8px_30px_-5px_rgba(0,0,0,0.03)] cursor-pointer"
+                        onclick="switchTab('offers')">
+                        <div
+                            class="bg-slate-900 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 relative z-10">
+                            <i class="fa-solid fa-bell text-[10px] animate-pulse"></i>
+                        </div>
+                        <div class="text-[11px] font-medium text-slate-600 overflow-hidden flex-1 relative">
+                            <div class="marquee-ready" id="homeMarquee"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 mb-10 hidden">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="h-[1px] flex-1 bg-slate-200"></div>
+                        <h3 class="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400">Thẻ Thành Viên</h3>
+                        <div class="h-[1px] flex-1 bg-slate-200"></div>
+                    </div>
+
+                    <div id="home-qr-logged-out"
+                        class="bg-white rounded-[1.5rem] p-5 border border-slate-100 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.03)] flex flex-col items-center text-center transition-all">
+                        <div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                            <i class="fa-solid fa-qrcode text-xl text-slate-400"></i>
+                        </div>
+                        <h4 class="font-black text-slate-900 text-sm mb-1">Tích Điểm Nhanh</h4>
+                        <p class="text-[11px] text-slate-500 font-medium mb-4 px-4">Đăng nhập để hiển thị mã định danh
+                            và nhận các ưu đãi độc quyền.</p>
+                        <button onclick="switchTab('member')"
+                            class="bg-slate-900 text-white px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-md shadow-slate-900/10">
+                            Đăng nhập ngay
+                        </button>
+                    </div>
+
+                    <div id="home-qr-logged-in"
+                        class="hidden bg-slate-900 rounded-[1.5rem] p-1.5 border border-slate-800 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)] relative overflow-hidden group cursor-pointer transition-all"
+                        onclick="switchTab('member')">
+                        <div
+                            class="absolute -top-10 -right-10 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none">
+                        </div>
+
+                        <div class="bg-slate-900 rounded-[1.25rem] p-3 flex items-center gap-4">
+                            <div
+                                class="bg-white p-2 rounded-xl shrink-0 w-[70px] h-[70px] flex items-center justify-center shadow-inner relative">
+                                <div id="home-qr-loading"
+                                    class="absolute inset-0 flex items-center justify-center bg-white rounded-xl z-10">
+                                    <i class="fa-solid fa-circle-notch fa-spin text-slate-200 text-lg"></i>
+                                </div>
+                                <img id="home-mini-qr" src="" class="w-full h-full object-contain relative z-20"
+                                    alt="QR Code"
+                                    onload="document.getElementById('home-qr-loading').style.display='none'">
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <p class="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">Hội viên
+                                    <span class="text-amber-400">Premium</span>
+                                </p>
+                                <h4 id="home-mini-name" class="font-black text-white text-base truncate mb-1">---</h4>
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-gem text-amber-400 text-[10px]"></i>
+                                    <span class="text-xs font-bold text-slate-300">0 Pt</span>
+                                </div>
+                            </div>
+
+                            <div
+                                class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/10 text-white/50 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                <i class="fa-solid fa-angle-right text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 mb-10">
+                    <div id="dynamicHeroBlock"></div>
+                </div>
+
+
+                <div class="px-6 mb-10">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="h-[1px] flex-1 bg-slate-200"></div>
+                        <h3 class="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400">Hệ thống chi nhánh
+                        </h3>
+                        <div class="h-[1px] flex-1 bg-slate-200"></div>
+
+
+                    </div>
+
+                    <div class="flex flex-col gap-3">
+                        <div
+                            class="bg-white rounded-[1.25rem] p-3 grid gap-4 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.03)] border border-slate-100 items-center overflow-hidden">
+                            <div class="w-full h-[180px] shrink-0 rounded-2xl overflow-hidden relative shadow-inner">
+                                <img src="./asset/images/BGMT.jpg" alt="Mai Tây Hair Salon"
+                                    class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-slate-900/5"></div>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between mb-0.5">
+                                    <h4 class="font-black text-slate-900 text-sm truncate pr-2">Mai Tây Hair Salon</h4>
+                                    <span
+                                        class="text-[8px] font-bold text-slate-500 uppercase tracking-widest bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md shrink-0">Chi
+                                        nhánh 1</span>
+                                </div>
+                                <p class="text-[10px] text-slate-500 font-medium truncate mb-2.5">Tổ 1, Hiền Hoà, Phước
+                                    Thái, Long Thành</p>
+
+                                <div class="flex items-center gap-2">
+                                    <a href="https://maps.app.goo.gl/BzWVzTNrE4AbQ7Le9" target="_blank"
+                                        class="flex-1 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-wider py-2 rounded-lg flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+                                        <i class="fa-solid fa-location-arrow text-[10px]"></i> Mở bản đồ
+                                    </a>
+                                    <a href="tel:0938123962"
+                                        class="w-8 h-8 bg-slate-50 text-slate-600 border border-slate-100 rounded-lg flex items-center justify-center active:scale-95 transition-all hover:bg-slate-100">
+                                        <i class="fa-solid fa-phone text-[10px]"></i>
+                                    </a>
+                                    <div class="w-[1px] h-4 bg-slate-200 mx-0.5"></div>
+                                    <a href="https://www.facebook.com/MaiTayHairSalon" target="_blank"
+                                        class="w-7 h-7 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors">
+                                        <i class="fa-brands fa-facebook text-xs"></i>
+                                    </a>
+                                    <a href="https://www.tiktok.com/@xuan_mai_dinh2" target="_blank"
+                                        class="w-7 h-7 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors">
+                                        <i class="fa-brands fa-tiktok text-xs"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white rounded-[1.25rem] p-3 grid gap-4 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.03)] border border-slate-100 items-center overflow-hidden">
+                            <div class="w-full h-[180px] shrink-0 rounded-2xl overflow-hidden relative shadow-inner">
+                                <img src="./asset/images/BG.jpg" alt="Hiền Trần Hair Studio"
+                                    class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-slate-900/5"></div>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between mb-0.5">
+                                    <h4 class="font-black text-slate-900 text-sm truncate pr-2">Hiền Trần Hair Studio
+                                    </h4>
+                                    <span
+                                        class="text-[8px] font-bold text-slate-500 uppercase tracking-widest bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md shrink-0">Chi
+                                        nhánh 2</span>
+                                </div>
+                                <p class="text-[10px] text-slate-500 font-medium truncate mb-2.5">86 Nguyễn An Ninh, Thị
+                                    Trấn Long Thành</p>
+
+                                <div class="flex items-center gap-2">
+                                    <a href="https://maps.app.goo.gl/cGPnwoCFzhkd3jb27" target="_blank"
+                                        class="flex-1 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-wider py-2 rounded-lg flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+                                        <i class="fa-solid fa-location-arrow text-[10px]"></i> Mở bản đồ
+                                    </a>
+                                    <a href="tel:0933261780"
+                                        class="w-8 h-8 bg-slate-50 text-slate-600 border border-slate-100 rounded-lg flex items-center justify-center active:scale-95 transition-all hover:bg-slate-100">
+                                        <i class="fa-solid fa-phone text-[10px]"></i>
+                                    </a>
+                                    <div class="w-[1px] h-4 bg-slate-200 mx-0.5"></div>
+                                    <a href="https://www.facebook.com/HienTranHairStudio" target="_blank"
+                                        class="w-7 h-7 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors">
+                                        <i class="fa-brands fa-facebook text-xs"></i>
+                                    </a>
+                                    <a href="https://www.tiktok.com/@hientranhairstudio" target="_blank"
+                                        class="w-7 h-7 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors">
+                                        <i class="fa-brands fa-tiktok text-xs"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <footer class="py-8 px-6 text-center">
+                <div class="mem3 flex flex-col items-center">
+                    <p class="text-xs">Web/App vẫn đang được cập nhật và hoàn thiện mỗi ngày. Nếu có bất kỳ điều gì chưa ưng ý, mong bạn đừng ngần ngại góp ý để chúng mình cải thiện nhé.</p>
+                    
+                    <img class="w-[40px]" src="https://res.cloudinary.com/dbcixss3h/image/upload/v1780310001/dzmamzqpitkdqjnau4xw.gif"
+                        alt="Mem3"
+                        srcset="https://res.cloudinary.com/dbcixss3h/image/upload/v1780310001/dzmamzqpitkdqjnau4xw.gif">
+                  <p class="text-xs text-slate-400" >"Dev đang chạy deadline để hoàn thiện"</p> 
+                    </div>
+                <div class="w-8 h-[1px] bg-slate-200 mx-auto mb-4"></div>
+                <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">
+                    Design by <a href="http://facebook.com/HunqD" target="_blank" rel="noopener noreferrer"
+                        class="text-slate-900 transition-colors">Đinh Mạnh Hùng</a>
+                    <span class="mx-1">•</span>
+                    <span id="config-version"></span>
+                </p>
+            </footer>
+        </div>
+
+        <!-- VIEW: ƯU ĐÃI -->
+        <div id="view-offers" class="view-pane flex-col bg-slate-50">
+            <header class="sticky top-0 bg-white/90 backdrop-blur-md z-40 px-6 py-5 border-b border-slate-100">
+                <h2 class="text-xl font-black text-slate-900">Ví Ưu Đãi</h2>
+                <p class="text-xs text-slate-500 font-medium">Sử dụng ngay khi đặt lịch</p>
+            </header>
+            <div class="p-6 space-y-4" id="offersContainer">
+                <!-- Data will be rendered here from appConfig.offers -->
+            </div>
+        </div>
+
+        <!-- VIEW: FEED (THƯ VIỆN) -->
+        <div id="view-feed" class="view-pane bg-black !p-0 relative h-full">
+            <header
+                class="absolute top-0 left-0 right-0 z-40 px-6 pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-4 bg-gradient-to-b from-black/80 to-transparent flex justify-between items-center pointer-events-none transition-all">
+                <h2 class="text-2xl font-black text-white drop-shadow-md pointer-events-auto">Blink<i
+                        class="fa-solid fa-star text-[16px] pb-2"></i></h2>
+                <div class="flex gap-2 pointer-events-auto">
+                    <button
+                        class="shrink-0 bg-white/20 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase border border-white/10 shadow-lg">Mã
+                        cá nhân</button>
+                </div>
             </header>
 
-            <main id="content-container" class="flex-grow overflow-y-auto relative">
-
-                <!-- (MỚI) Thay thế TOÀN BỘ <div id="page-home"...> bằng khối này -->
-                <div id="page-home" class="page-content active">
-                    <div class="page-content-wrapper p-4 md:p-8 space-y-6">
-
-                        <!-- Slideshow (Giữ nguyên như của bạn) -->
-                        <div id="image-slideshow"
-                            class="relative rounded-3xl overflow-hidden shadow-lg aspect-video bg-gray-200">
-                            <div id="slider-container"
-                                class="flex h-full transition-transform duration-500 ease-in-out">
-
-                                <img src="./Asset/img/bg.webp" alt="Salon Interior 1"
-                                    class="slide w-full h-full object-cover flex-shrink-0">
-
-                                <div class="slide card-light w-full h-full flex-shrink-0 
-                            flex flex-col items-center justify-center 
-                            p-4 text-center scroll-reveal">
-
-                                    <i class="fas fa-calendar-check text-2xl mb-2"
-                                        style="color: var(--color-accent);"></i>
-                                    <h2 class="text-lg font-serif mb-1" style="color: var(--color-accent);">Đặt
-                                        Lịch Hẹn</h2>
-                                    <p class="mb-3 text-sm" style="color: var(--color-text-sec);">Sẵn sàng cho một diện
-                                        mạo
-                                        mới? Đặt lịch ngay.</p>
-                                    <button id="home-book-now-btn" class="btn-primary py-2 px-5 text-sm">
-                                        <i class="fas fa-magic mr-1.5"></i> Đặt lịch ngay
-                                    </button>
-
-                                </div>
-                            </div>
-                            <div id="slideshow-title" class="absolute top-0 left-0 z-10 p-4 md:p-4">
-                                <h1 class="text-xs md:text-3xl font-serif text-white">Chào mừng đến Salon</h1>
-                                <p class="text-xs text-gray-200">Nơi nghệ thuật tóc thăng hoa.</p>
-                            </div>
-                            <button id="slider-prev-btn" class="slider-btn absolute bottom-3 left-3 z-10">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button id="slider-next-btn" class="slider-btn absolute bottom-3 right-3 z-10">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                            <button id="slider-pause-btn" class="slider-btn absolute top-3 right-3 z-10">
-                                <i class="fas fa-pause"></i>
-                                <i class="fas fa-play"></i>
-                            </button>
-
-                        </div>
-                        <!-- Kết thúc Slideshow -->
-
-
-
-                        <!-- (MỚI) Hệ thống 2 Chi Nhánh -->
-                        <h2 class="text-2xl md:text-3xl font-serif text-gray-900 pt-4 text-center md:text-left">Hệ thống
-                            Salon của chúng tôi</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                            <!-- Chi nhánh 1 -->
-                            <div class="card-light p-5 space-y-3 scroll-reveal">
-                                <h3 class="text-2xl font-serif" style="color: var(--color-accent);">Mai Tây Hair Salon
-                                </h3>
-                                <p class="text-sm flex items-start" style="color: var(--color-text-sec);">
-                                    <i class="fas fa-map-marker-alt w-5 text-center mr-2 pt-1"
-                                        style="color: var(--color-accent);"></i>
-                                    <span>Hiền Hoà, Phước Thái, Long Thành, Đồng Nai</span>
-                                </p>
-                                <div class="flex flex-wrap gap-2">
-                                    <a href="tel:+84938123962" class="btn-secondary">
-                                        <i class="fas fa-phone mr-2"></i> Gọi ngay
-                                    </a>
-                                    <a href="https://www.google.com/maps/dir//Mai+T%C3%A2y+Hair+Salon,+Hi%E1%BB%81n+H%C3%B2a,+Ph%C6%B0%E1%BB%9Bc+Th%C3%A1i,+Long+Th%C3%A0nh+District,+Dong+Nai,+Vietnam/@10.6896533,106.979639,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x31751b732591aa11:0xe260b226497b27e8!2m2!1d107.0209244!2d10.6895717?entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D"
-                                        target="_blank" class="btn-secondary">
-                                        <i class="fas fa-map-marked-alt mr-2"></i> Xem bản đồ
-                                    </a>
-                                </div>
-                                 <p class="text-sm flex items-start" style="color: var(--color-text-sec);">
-                                    <i class="fas fa-solid fa-link w-5 text-center mr-2 pt-1"
-                                        style="color: var(--color-accent);"></i>
-                                    <span>Mạng xã hội</span>
-                                </p>
-                                 <div class="flex flex-wrap gap-2">
-                                    <a href="https://www.facebook.com/MaiTayHairSalon" class="btn-secondary ">
-                                        <i class="fa-brands fa-facebook mr-2"></i>  Facebook
-                                    </a>
-                                     <a href="https://www.tiktok.com/@xuan_mai_dinh2" class="btn-secondary">
-                                        <i class="fa-brands fa-tiktok mr-2"></i>  Tiktok
-                                    </a>
-                                </div>
-                            </div>
-
-                            <!-- Chi nhánh 2 -->
-                            <div class="card-light p-5 space-y-3 scroll-reveal">
-                                <h3 class="text-2xl font-serif" style="color: var(--color-accent);">Hiền Trần Hair Studio
-                                </h3>
-                                <p class="text-sm flex items-start" style="color: var(--color-text-sec);">
-                                    <i class="fas fa-map-marker-alt w-5 text-center mr-2 pt-1"
-                                        style="color: var(--color-accent);"></i>
-                                    <span>86 Nguyễn An Ninh, TT.Long Thành, Đồng Nai</span>
-                                </p>
-                                <div class="flex flex-wrap gap-2">
-                                    <a href="tel:+84938123962" class="btn-secondary">
-                                        <i class="fas fa-phone mr-2"></i> Gọi ngay
-                                    </a>
-                                      <a href="https://www.google.com/maps/dir//86+Nguy%E1%BB%85n+An+Ninh+%C4%90%C6%B0%E1%BB%9Dng,+Long+Th%C3%A0nh,+%C4%90%E1%BB%93ng+Nai,+Vi%E1%BB%87t+Nam/@10.7825287,106.8697181,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x31751fd485623be5:0xd1c680682e689cff!2m2!1d106.95212!2d10.7825396?entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D"
-                                        target="_blank" class="btn-secondary">
-                                        <i class="fas fa-map-marked-alt mr-2"></i> Xem bản đồ
-                                    </a>
-                                </div>
-                                <p class="text-sm flex items-start" style="color: var(--color-text-sec);">
-                                    <i class="fas fa-solid fa-link w-5 text-center mr-2 pt-1"
-                                        style="color: var(--color-accent);"></i>
-                                    <span>Mạng xã hội</span>
-                                </p>
-                                 <div class="flex flex-wrap gap-2">
-                                    <a href="https://www.facebook.com/HienTranHairStudio" class="btn-secondary ">
-                                        <i class="fa-brands fa-facebook mr-2"></i>  Facebook
-                                    </a>
-                                     <a href="https://www.tiktok.com/@hientranhairstudio" class="btn-secondary">
-                                        <i class="fa-brands fa-tiktok mr-2"></i>  Tiktok
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- (MỚI) Nội dung Giới thiệu (viết lại) -->
-                        <div id="about-content" class="w-full space-y-4 pt-4">
-                            <div class="card-light p-5 space-y-2 scroll-reveal">
-                                <h3 class="text-lg font-serif" style="color: var(--color-accent);">Triết lý của chúng
-                                    tôi</h3>
-                                <p class="text-sm" style="color: var(--color-text-sec);">Chúng tôi tin rằng mái tóc là
-                                    một tuyên ngôn. Không chỉ là cắt tóc, chúng tôi kiến tạo nên phong cách, giúp bạn
-                                    thể hiện cá tính độc đáo và sự tự tin từ bên trong.</p>
-                            </div>
-                            <div class="card-light p-5 space-y-2 scroll-reveal">
-                                <h3 class="text-lg font-serif" style="color: var(--color-accent);">Hành trình</h3>
-                                <p class="text-sm" style="color: var(--color-text-sec);">Từ một salon nhỏ với đam mê
-                                    cháy bỏng, Mai Tây & Hiền Trần đã phát triển thành một hệ thống uy tín, là điểm đến
-                                    tin cậy cho hàng ngàn khách hàng tìm kiếm sự hoàn hảo.</p>
-                            </div>
-                            <div class="card-light p-5 space-y-2 scroll-reveal">
-                                <h3 class="text-lg font-serif" style="color: var(--color-accent);">Đội ngũ</h3>
-                                <p class="text-sm" style="color: var(--color-text-sec);">Chúng tôi tự hào hội tụ những
-                                    'nghệ sĩ' tóc hàng đầu, không ngừng học hỏi và cập nhật xu hướng, để biến mọi ý
-                                    tưởng của bạn thành hiện thực một cách tinh tế nhất.</p>
-                            </div>
-                        </div>
-                    </div>
+            <div id="swipe-hint-overlay"
+                class="absolute inset-0 z-50 flex-col items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-500 opacity-0 pointer-events-none hidden">
+                <div class="flex flex-col items-center transform translate-y-10 animate-[bounce_1.5s_infinite]">
+                    <i class="fa-solid fa-hand-pointer text-white text-5xl mb-4 drop-shadow-lg"></i>
+                    <i class="fa-solid fa-chevron-up text-white/50 text-2xl -mt-2 mb-1 animate-pulse"></i>
+                    <i class="fa-solid fa-chevron-up text-white/80 text-2xl -mt-4 mb-3 animate-pulse"
+                        style="animation-delay: 0.2s"></i>
+                    <span class="text-white font-bold text-xs uppercase tracking-widest drop-shadow-md">Vuốt lên để xem
+                        tiếp</span>
                 </div>
-                <!-- Kết thúc phần thay thế -->
+            </div>
 
-                <div id="page-booking" class="page-content">
-                    <div class="page-content-wrapper p-4 md:p-8 space-y-4">
-                        <h1 class="text-2xl md:text-3xl font-serif text-gray-900 hidden md:block">Đặt lịch hẹn</h1>
-
-                        <div id="booking-tabs" class="w-full card-light">
-                            <div class="border-b">
-                                <nav class="flex -mb-px" aria-label="Tabs">
-                                    <button data-tab-button="tab-new-booking"
-                                        class="tab-button active w-1/2 text-sm font-medium text-center">
-                                        Đặt lịch mới
-                                    </button>
-                                    <button data-tab-button="tab-booking-history"
-                                        class="tab-button w-1/2 text-sm font-medium text-center">
-                                        Lịch sử của tôi
-                                    </button>
-                                </nav>
-                            </div>
-
-                            <div class="p-4 md:p-6">
-                                <div data-tab-panel="tab-new-booking" class="tab-panel space-y-6">
-                                    <div id="booking-step-1" class="booking-step space-y-3">
-                                        <h3 class="text-xl font-serif text-gray-900">1. Chọn chi nhánh</h3>
-                                        <div id="branch-list" class="space-y-2">
-                                            <div class="skeleton h-20 w-full"></div>
-                                        </div>
-                                    </div>
-                                    <div id="booking-step-2" class="booking-step space-y-3 hidden">
-                                        <h3 class="text-xl font-serif text-gray-900">2. Chọn ngày</h3>
-                                        <div id="date-list" class="grid grid-cols-4 gap-2"></div>
-                                    </div>
-                                    <div id="booking-step-3" class="booking-step space-y-3 hidden">
-                                        <h3 class="text-xl font-serif text-gray-900">3. Chọn khung giờ</h3>
-                                        <div id="timeslot-list" class="grid grid-cols-3 gap-2">
-                                            <div class="skeleton h-14 w-full"></div>
-                                        </div>
-                                    </div>
-                                    <div id="booking-step-4" class="booking-step space-y-3 hidden">
-                                        <h3 class="text-xl font-serif text-gray-900">4. Chọn kỹ thuật viên</h3>
-                                        <div id="technician-list" class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                            <div class="skeleton h-32 w-full"></div>
-                                        </div>
-                                    </div>
-                                    <div id="booking-step-5" class="booking-step space-y-4 hidden">
-                                        <h3 class="text-xl font-serif text-gray-900">5. Thông tin của bạn</h3>
-                                        <div>
-                                            <label for="client-name" class="block text-sm font-medium text-gray-700">Tên
-                                                của bạn *</label>
-                                            <input type="text" id="client-name"
-                                                class="mt-1 block w-full form-input-light">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Phương thức liên hệ
-                                                *</label>
-                                            <div class="mt-2 flex space-x-4">
-                                                <label class="flex items-center"><input type="radio"
-                                                        name="contact-method" value="phone" class="form-radio-light"
-                                                        checked><span class="ml-2 text-sm text-gray-700">Gọi
-                                                        điện</span></label>
-                                                <label class="flex items-center"><input type="radio"
-                                                        name="contact-method" value="social"
-                                                        class="form-radio-light"><span
-                                                        class="ml-2 text-sm text-gray-700">Mạng xã hội</span></label>
-                                            </div>
-                                        </div>
-                                        <div id="contact-phone-group">
-                                            <label for="client-phone" class="block text-sm font-medium text-gray-700">Số
-                                                điện thoại *</label>
-                                            <input type="tel" id="client-phone"
-                                                class="mt-1 block w-full form-input-light">
-                                        </div>
-                                        <div id="contact-social-group" class="hidden space-y-2">
-                                            <label for="social-platform"
-                                                class="block text-sm font-medium text-gray-700">Nền tảng *</label>
-                                            <select id="social-platform" class="mt-1 block w-full form-input-light">
-                                                <option value="facebook">Facebook</option>
-                                                <option value="zalo">Zalo</option>
-                                                <option value="instagram">Instagram</option>
-                                            </select>
-                                            <label for="social-detail"
-                                                class="block text-sm font-medium text-gray-700">Link / Username / SĐT
-                                                *</label>
-                                            <input type="text" id="social-detail"
-                                                class="mt-1 block w-full form-input-light">
-                                        </div>
-                                        <div>
-                                            <label for="priority-code"
-                                                class="block text-sm font-medium text-gray-700">Mã ưu tiên (nếu
-                                                có)</label>
-                                            <input type="text" id="priority-code"
-                                                class="mt-1 block w-full form-input-light">
-                                        </div>
-                                        <button id="submit-booking" class="w-full btn-primary">Xác nhận đặt
-                                            lịch</button>
-                                    </div>
-                                    <div id="booking-step-6" class="booking-step space-y-4 text-center hidden">
-                                        <i class="fas fa-check-circle text-green-500 text-5xl"></i>
-                                        <h3 class="text-xl font-semibold text-gray-900">Đặt lịch thành công!</h3>
-                                        <p class="text-gray-600">Mã đặt chỗ của bạn là:</p>
-                                        <div class="p-3 rounded-2xl"
-                                            style="background-color: var(--color-accent-light-bg); border: 1px solid var(--color-accent);">
-                                            <p id="booking-code" class="text-2xl font-bold tracking-wider"
-                                                style="color: var(--color-accent);"></p>
-                                        </div>
-                                        <button id="new-booking-button"
-                                            class="w-full py-2 px-4 rounded-full font-medium transition active:scale-95 bg-gray-200 text-gray-800 hover:bg-gray-300">
-                                            Đặt lịch mới
-                                        </button>
-                                    </div>
-                                    <button id="booking-back-button" class="text-sm hover:underline hidden"
-                                        style="color: var(--color-accent);">&larr; Quay lại</button>
-                                </div>
-                                <div data-tab-panel="tab-booking-history" class="tab-panel hidden space-y-4">
-                                    <div id="booking-history-list" class="space-y-3">
-                                        <p class="text-sm text-center text-gray-500">Không có lịch sử đặt chỗ.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="page-gallery" class="page-content">
-                    <div class="page-content-wrapper p-4 md:p-8 space-y-4">
-                        <h1 class="text-2xl md:text-3xl font-serif text-gray-900 hidden md:block">Bộ sưu tập</h1>
-
-                        <div class="flex !mt-0 justify-end items-center">
-                            <p class="text-sm" style="color: var(--color-text-sec);">Những khoảnh khắc và tác phẩm từ
-                                khách
-                                hàng của chúng tôi.</p>
-                            <div class="card-light !rounded-full !p-1 flex space-x-1">
-                                <button id="gallery-toggle-justified" class="gallery-toggle-btn active">
-                                    <i class="fas fa-grip-horizontal w-5 text-center"></i>
-                                </button>
-                                <button id="gallery-toggle-grid" class="gallery-toggle-btn ">
-                                    <i class="fas fa-table-cells w-5 text-center"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                            <div class="skeleton w-full h-auto aspect-[4/5]"></div>
-                            <div class="skeleton w-full h-auto aspect-[4/5]"></div>
-                            <div class="skeleton w-full h-auto aspect-[4/5] hidden md:block"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="page-news" class="page-content">
-                    <div class="page-content-wrapper p-4 md:p-8 space-y-4">
-                        <h1 class="text-2xl md:text-3xl font-serif text-gray-900 hidden md:block">Tin tức & Ưu đãi</h1>
-
-                        <div id="news-tabs" class="w-full card-light">
-                            <div class="border-b">
-                                <nav class="flex -mb-px" aria-label="Tabs">
-                                    <button data-tab-button="tab-news-all"
-                                        class="tab-button active w-1/2 text-sm font-medium text-center">
-                                        Tin tức & Ưu đãi
-                                    </button>
-                                    <button data-tab-button="tab-news-recruit"
-                                        class="tab-button w-1/2 text-sm font-medium text-center">
-                                        Tuyển sinh
-                                    </button>
-                                </nav>
-                            </div>
-                            <div class="p-4 md:p-6 space-y-3">
-                                <div data-tab-panel="tab-news-all" class="tab-panel space-y-3" id="news-all-container">
-                                    <div class="skeleton h-24 w-full"></div>
-                                </div>
-                                <div data-tab-panel="tab-news-recruit" class="tab-panel hidden space-y-3">
-                                    <h3 class="text-lg font-serif" style="color: var(--color-accent);">Chương trình
-                                        tuyển sinh</h3>
-                                    <p class="text-sm" style="color: var(--color-text-sec);">Thông tin về các khóa học,
-                                        tuyển dụng học viên, thợ phụ. Liên hệ hotline... để biết thêm chi tiết.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="page-review" class="page-content">
-                    <div class="page-content-wrapper p-4 md:p-8 space-y-6">
-                        <h1 class="text-2xl md:text-3xl font-serif text-gray-900 hidden md:block">Đánh giá & CSKH</h1>
-
-                        <div class="p-4 rounded-2xl text-center scroll-reveal"
-                            style="background-color: var(--color-accent-light-bg); border: 1px solid var(--color-accent);">
-                            <h3 class="text-lg font-serif" style="color: var(--color-accent);">Yêu cầu CSKH</h3>
-                            <p class="text-sm my-2" style="color: var(--color-text-sec);">Nếu bạn có bất kỳ thắc mắc
-                                hoặc cần hỗ trợ, vui lòng liên hệ.</p>
-                            <a href="https://www.m.me/MaiTayHairSalon" class="inline-block btn-primary text-sm py-2">
-                                <i class="fab fa-facebook-messenger mr-2"></i> Nhắn tin ngay
-                            </a>
-                        </div>
-
-                        <div id="review-form-container" class="card-light p-4 md:p-6 space-y-4 scroll-reveal">
-                            <h3 class="text-xl font-serif text-gray-900">Gửi đánh giá của bạn</h3>
-                            <div>
-                                <label for="review-name" class="block text-sm font-medium text-gray-700">Tên khách hàng
-                                    *</label>
-                                <input type="text" id="review-name" class="mt-1 block w-full form-input-light">
-                            </div>
-                            <div>
-                                <label for="review-phone" class="block text-sm font-medium text-gray-700">Số điện thoại
-                                    *</label>
-                                <input type="tel" id="review-phone" class="mt-1 block w-full form-input-light">
-                            </div>
-                            <label class="flex items-center hidden">
-                                <input type="checkbox" id="review-anonymous" class="form-checkbox-light">
-                                <span class="ml-2 text-sm text-gray-700 ">Đánh giá ẩn danh</span>
-                            </label>
-                            <div class="space-y-3 pt-2">
-                                <div class="star-rating-group">
-                                    <label class="block text-sm font-medium text-gray-700">Dịch vụ</label>
-                                    <div data-rating-for="service" class="flex space-x-1 text-2xl cursor-pointer">
-                                        <i class="fas fa-star" data-value="1"></i><i class="fas fa-star"
-                                            data-value="2"></i><i class="fas fa-star" data-value="3"></i><i
-                                            class="fas fa-star" data-value="4"></i><i class="fas fa-star"
-                                            data-value="5"></i>
-                                    </div>
-                                    <input type="hidden" id="rating-service" value="0">
-                                    <input type="text" id="rating-detail-service"
-                                        class="mt-2 hidden w-full form-input-light text-sm"
-                                        placeholder="Bạn không hài lòng về điều gì?">
-                                </div>
-                                <div class="star-rating-group">
-                                    <label class="block text-sm font-medium text-gray-700">Thái độ</label>
-                                    <div data-rating-for="attitude" class="flex space-x-1 text-2xl cursor-pointer">
-                                        <i class="fas fa-star" data-value="1"></i><i class="fas fa-star"
-                                            data-value="2"></i><i class="fas fa-star" data-value="3"></i><i
-                                            class="fas fa-star" data-value="4"></i><i class="fas fa-star"
-                                            data-value="5"></i>
-                                    </div>
-                                    <input type="hidden" id="rating-attitude" value="0">
-                                    <input type="text" id="rating-detail-attitude"
-                                        class="mt-2 hidden w-full form-input-light text-sm"
-                                        placeholder="Bạn không hài lòng về điều gì?">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="review-feedback" class="block text-sm font-medium text-gray-700">Cảm nhận
-                                    của bạn</label>
-                                <textarea id="review-feedback" rows="4"
-                                    class="mt-1 block w-full form-input-light"></textarea>
-                            </div>
-                            <button id="submit-review" class="w-full btn-primary">Gửi đánh giá</button>
-                        </div>
-                        <div id="review-thank-you" class="hidden text-center space-y-3 p-4 bg-green-50 rounded-2xl"> <i
-                                class="fas fa-check-circle text-green-500 text-4xl"></i>
-                            <h3 class="text-lg font-semibold text-green-800">Cảm ơn bạn đã đánh giá!</h3>
-                            <p class="text-sm text-green-700">Ý kiến của bạn rất quan trọng.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <footer class="w-full text-center p-6 mt-8">
-                    <p class="text-xs" style="color: var(--color-text-sec); opacity: 0.6;">
-                        Design by 
-                        <a href="https://www.facebook.com/HunqD/" class="font-bold hover:opacity-100 transition-opacity" style="color: var(--color-accent); opacity: 1;" target="_blank">
-                            Đinh Mạnh Hùng 👑
-                        </a>
-                    </p>
-                </footer>
-            </main>
-
-            <nav id="bottom-nav" class="flex items-center justify-between md:hidden fixed z-10">
-                <button data-page="page-home" data-title="Giới thiệu"
-                    class="nav-button active flex flex-row items-center justify-center">
-                    <i class="fas fa-home text-2xl"></i><span class="nav-text text-sm font-medium ml-2">Giới
-                        thiệu</span>
-                </button>
-                <button data-page="page-booking" data-title="Đặt lịch hẹn"
-                    class="nav-button flex flex-row items-center justify-center">
-                    <i class="fas fa-calendar-alt text-2xl"></i><span class="nav-text text-sm font-medium ml-2">Đặt
-                        lịch</span>
-                </button>
-                <button data-page="page-gallery" data-title="Bộ sưu tập"
-                    class="nav-button flex flex-row items-center justify-center ">
-                    <i class="fas fa-images text-2xl"></i><span class="nav-text text-sm font-medium ml-2">Bộ sưu
-                        tập</span>
-                </button>
-                <button data-page="page-news" data-title="Tin tức"
-                    class="nav-button flex flex-row items-center justify-center ">
-                    <i class="fas fa-newspaper text-2xl"></i><span class="nav-text text-sm font-medium ml-2">Tin
-                        tức</span>
-                </button>
-                <button data-page="page-review" data-title="Đánh giá"
-                    class="nav-button flex flex-row items-center justify-center ">
-                    <i class="fas fa-star text-2xl"></i><span class="nav-text text-sm font-medium ml-2">Đánh giá</span>
-                </button>
-            </nav>
-
+            <div id="feedContainer" class="h-full w-full snap-y snap-mandatory overflow-y-scroll no-scrollbar">
+            </div>
         </div>
-    </div>
 
-    <div id="modal"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden opacity-0 transition-opacity duration-300">
-        <div class="relative p-5 border w-full max-w-sm shadow-lg rounded-lg bg-white">
-            <div class="mt-3 text-center">
-                <h3 id="modal-title" class="text-lg leading-6 font-serif font-medium text-gray-900">Thông báo</h3>
-                <div class="mt-2 px-7 py-3">
-                    <p id="modal-message" class="text-sm text-gray-600"></p>
+        <!-- VIEW: ĐẶT LỊCH -->
+        <div id="view-booking" class="view-pane flex-col relative bg-slate-50/50 h-full w-full">
+
+            <header class="sticky top-0 bg-white/80 backdrop-blur-xl z-40 px-6 pt-5 pb-3 border-b border-slate-100">
+                <div class="bg-slate-100/80 p-1 rounded-xl flex">
+                    <button onclick="switchBookingSubTab('flow')" id="btn-sub-flow"
+                        class="flex-1 py-2 text-[11px] font-bold text-slate-900 bg-white shadow-sm rounded-lg transition-all sub-nav-btn">Đặt
+                        lịch mới</button>
+                    <button onclick="switchBookingSubTab('lookup')" id="btn-sub-lookup"
+                        class="flex-1 py-2 text-[11px] font-bold text-slate-500 rounded-lg transition-all sub-nav-btn">Lịch
+                        của tôi</button>
                 </div>
-                <div class="items-center px-4 py-3">
-                    <button id="modal-close-button"
-                        class="px-4 py-2 text-base font-medium rounded-full w-full btn-primary">
-                        Đã hiểu
+
+                <div id="booking-header-tools" class="flex items-center justify-between mt-5">
+                    <button id="btnBack" onclick="prevStep()"
+                        class="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 rounded-full text-slate-600 shadow-sm opacity-0 pointer-events-none transition-all active:bg-slate-50">
+                        <i class="fa-solid fa-angle-left text-xs"></i>
+                    </button>
+                    <div class="flex gap-1.5" id="progressDots">
+                        <span class="w-4 h-2 rounded-full bg-slate-900 transition-all"></span>
+                        <span class="w-2 h-2 rounded-full bg-slate-200 transition-all"></span>
+                        <span class="w-2 h-2 rounded-full bg-slate-200 transition-all"></span>
+                        <span class="w-2 h-2 rounded-full bg-slate-200 transition-all"></span>
+                        <span class="w-2 h-2 rounded-full bg-slate-200 transition-all"></span>
+                    </div>
+                    <div class="w-8 text-right text-[10px] font-black text-slate-400">0<span id="stepCounter">1</span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="booking-flow-container"
+                class="flex flex-col px-6 pt-5 pb-[200px] flex-1 overflow-y-auto scroll-smooth">
+
+                <div id="step1" class="flex flex-col animate-[fadeIn_0.3s_ease-out]">
+                    <h3 class="text-xl font-black mb-1 text-slate-900 tracking-tight">Chọn Chi Nhánh</h3>
+                    <p class="text-[11px] text-slate-500 mb-6 font-medium uppercase tracking-widest">Cơ sở thuận tiện
+                        nhất cho bạn</p>
+                    <div id="listBranch" class="flex flex-col gap-3"></div>
+                </div>
+
+                <div id="step2" class="hidden flex-col animate-[fadeIn_0.3s_ease-out]">
+                    <h3 class="text-xl font-black mb-1 text-slate-900 tracking-tight">Chọn Dịch Vụ</h3>
+                    <p class="text-[11px] text-slate-500 mb-6 font-medium uppercase tracking-widest">Bạn muốn làm mới
+                        mình thế nào?</p>
+                    <div id="listService" class="flex flex-col gap-3"></div>
+                </div>
+
+                <div id="step3" class="hidden flex-col animate-[fadeIn_0.3s_ease-out]">
+                    <h3 class="text-xl font-black mb-1 text-slate-900 tracking-tight">Chọn Chuyên Gia</h3>
+                    <p class="text-[11px] text-slate-500 mb-6 font-medium uppercase tracking-widest">Người sáng tạo tác
+                        phẩm cho bạn</p>
+                    <div id="listStaff" class="grid grid-cols-2 gap-3"></div>
+                </div>
+
+                <div id="step4" class="hidden flex-col animate-[fadeIn_0.3s_ease-out]">
+                    <div class="flex justify-between items-end mb-4">
+                        <div>
+                            <h3 class="text-xl font-black mb-1 text-slate-900 tracking-tight">Chọn Thời Gian</h3>
+                            <p class="text-[11px] text-slate-500 font-medium uppercase tracking-widest">Lịch trống của
+                                chuyên gia</p>
+                        </div>
+                        <button onclick="jumpToToday()"
+                            class="text-[9px] font-black bg-white text-slate-900 border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm active:bg-slate-50 transition-colors">HÔM
+                            NAY</button>
+                    </div>
+                    <div id="customDatePicker"
+                        class="flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-3 border-b border-slate-100 snap-x">
+                    </div>
+                    <div id="timeLoading"
+                        class="hidden text-center py-6 bg-white rounded-2xl shadow-sm border border-slate-100"><i
+                            class="fa-solid fa-circle-notch fa-spin text-slate-300 text-2xl"></i></div>
+                    <div id="timeSlotGrid" class="grid grid-cols-4 gap-2"></div>
+                </div>
+
+                <div id="step5" class="hidden flex-col animate-[fadeIn_0.3s_ease-out]">
+
+                    <div
+                        class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white p-6 rounded-[2rem] mb-6 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.4)] border border-slate-700/50 relative overflow-hidden group">
+                        <div
+                            class="absolute -top-12 -right-12 w-40 h-40 bg-white/5 rounded-full blur-[30px] pointer-events-none">
+                        </div>
+                        <i
+                            class="fa-regular fa-star absolute right-4 top-4 text-4xl text-white opacity-5 rotate-12"></i>
+
+                        <div class="relative z-10 flex flex-col">
+                            <div class="flex items-center justify-between mb-4">
+                                <div
+                                    class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-full px-3 py-1.5 border border-white/10 shadow-inner">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span class="text-[8px] font-black uppercase tracking-[0.2em] text-white">Thẻ lịch
+                                        hẹn</span>
+                                </div>
+                                <i class="fa-solid fa-gem text-slate-400 text-xs"></i>
+                            </div>
+
+                            <div class="flex items-end justify-between pb-6">
+                                <div>
+                                    <h4 class="text-[44px] font-black leading-none mb-2 text-white drop-shadow-md"
+                                        id="sumTime">00:00</h4>
+                                    <p class="text-[12px] font-bold text-slate-300 tracking-wide" id="sumDayOfWeek">Thứ
+                                        ..., ngày --/--/----</p>
+                                </div>
+                                <div class="text-right pb-1">
+                                    <p class="text-[8px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">Cơ sở
+                                    </p>
+                                    <p class="text-[11px] font-black text-white truncate uppercase tracking-widest"
+                                        id="sumBranch">---</p>
+                                </div>
+                            </div>
+
+                            <div class="relative w-full h-[1px] mb-5">
+                                <div class="absolute inset-0 border-t border-dashed border-white/20"></div>
+                                <div
+                                    class="absolute -left-8 top-1/2 -translate-y-1/2 w-4 h-4 bg-slate-50/50 rounded-full">
+                                </div>
+                                <div
+                                    class="absolute -right-8 top-1/2 -translate-y-1/2 w-4 h-4 bg-slate-50/50 rounded-full">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-4">
+                                <div
+                                    class="flex justify-between items-center bg-white/5 p-3 rounded-xl border border-white/5">
+                                    <p
+                                        class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-1.5">
+                                        <i class="fa-solid fa-scissors text-slate-500"></i> Dịch vụ
+                                    </p>
+                                    <p class="text-xs font-black text-white" id="sumService">---</p>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center bg-white/5 p-3 rounded-xl border border-white/5">
+                                    <p
+                                        class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-1.5">
+                                        <i class="fa-solid fa-user-tie text-slate-500"></i> Chuyên gia
+                                    </p>
+                                    <p class="text-xs font-black text-white" id="sumStaff">---</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="finalForm" onsubmit="event.preventDefault(); submitBooking();"
+                        class="flex flex-col gap-3">
+                        <input type="text" id="cusName" placeholder="Tên của bạn *" required
+                            class="w-full bg-white border-2 border-slate-100 p-4 rounded-2xl font-bold text-sm outline-none focus:border-slate-900 transition-colors shadow-sm placeholder:text-slate-400">
+                        <input type="tel" id="cusPhone" placeholder="Số điện thoại *" required
+                            class="w-full bg-white border-2 border-slate-100 p-4 rounded-2xl font-bold text-sm outline-none focus:border-slate-900 transition-colors shadow-sm placeholder:text-slate-400">
+                        <input type="email" id="cusEmail" placeholder="Email nhận vé điện tử (Tuỳ chọn)"
+                            class="w-full bg-white border-2 border-slate-100 p-4 rounded-2xl font-bold text-sm outline-none focus:border-slate-900 transition-colors shadow-sm placeholder:text-slate-400">
+                    </form>
+                </div>
+            </div>
+
+            <div id="booking-lookup-container" class="hidden flex-col px-6 pt-5 pb-32">
+                <div
+                    class="bg-white p-6 rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border border-slate-100">
+                    <div
+                        class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-100">
+                        <i class="fa-solid fa-magnifying-glass text-slate-900"></i>
+                    </div>
+                    <h3 class="text-lg font-black mb-1 text-slate-900 tracking-tight">Quản lý lịch hẹn</h3>
+                    <p class="text-[11px] text-slate-500 mb-6 font-medium uppercase tracking-widest">Nhập số điện thoại
+                        của bạn</p>
+                    <div class="relative">
+                        <input type="tel" id="lookupPhone" placeholder="090..."
+                            class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl font-bold text-sm pr-14 outline-none focus:border-slate-900 focus:bg-white transition-colors">
+                        <button onclick="lookupBooking()" id="btnLookup"
+                            class="absolute right-2 top-2 bottom-2 w-12 bg-slate-900 text-white rounded-xl flex items-center justify-center active:scale-95 transition-transform shadow-md">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div id="lookupResults" class="mt-6 flex flex-col gap-3"></div>
+                </div>
+            </div>
+
+            <div id="bookingAction"
+                class="hidden fixed bottom-0 left-0 right-0 px-6 pt-12 pb-2 bg-gradient-to-t from-slate-50 via-slate-50/95 to-transparent z-[90] pointer-events-none">
+                <button id="btnNext" onclick="nextStep()"
+                    class="w-full pointer-events-auto bg-slate-900 text-white py-4 mb-[100px] rounded-2xl font-black tracking-[0.2em] uppercase text-[11px] active:scale-95 transition-all shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)] hover:bg-slate-800">TIẾP
+                    TỤC</button>
+            </div>
+
+            <div id="bookingSuccessModal"
+                class="fixed inset-0 z-[9999] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-500 ease-out">
+                <div class="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity duration-500"></div>
+
+                <div
+                    class="relative w-full max-w-sm bg-white/90 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] border border-white/40 transform scale-95 opacity-0 transition-all duration-500 ease-out flex flex-col items-center text-center overflow-hidden">
+
+                    <div
+                        class="absolute -top-12 -left-12 w-32 h-32 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none">
+                    </div>
+                    <div
+                        class="absolute -bottom-12 -right-12 w-32 h-32 bg-slate-400/10 rounded-full blur-3xl pointer-events-none">
+                    </div>
+
+                    <div
+                        class="w-14 h-14 bg-slate-900 rounded-full flex items-center justify-center mb-5 shadow-lg shadow-slate-900/10 relative z-10">
+                        <i class="fa-solid fa-check text-xl text-white"></i>
+                    </div>
+
+                    <p class="text-[9px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Mai Tây Hair Salon
+                    </p>
+                    <h3 class="text-slate-900 text-lg font-black tracking-tight mb-6">ĐẶT LỊCH THÀNH CÔNG</h3>
+
+                    <div class="w-full bg-white border border-slate-100 rounded-[1.75rem] p-4 shadow-sm mb-6 relative">
+                        <div
+                            class="absolute -left-[7px] top-1/2 -translate-y-1/2 w-3 h-3 bg-slate-50 border-r border-slate-100 rounded-full">
+                        </div>
+                        <div
+                            class="absolute -right-[7px] top-1/2 -translate-y-1/2 w-3 h-3 bg-slate-50 border-l border-slate-100 rounded-full">
+                        </div>
+
+                        <p class="text-[8px] font-black tracking-widest text-slate-400 uppercase mb-2">Mã Đặt Lịch
+                            Hàng</p>
+
+                        <div class="flex items-center justify-center gap-3 bg-slate-50 rounded-xl py-3 px-4 border border-slate-100/50 mb-4 group active:scale-[0.98] transition-all cursor-pointer"
+                            id="btnCopyBookingCode">
+                            <span id="mdlBookingCode"
+                                class="font-mono text-2xl font-black tracking-widest text-slate-900 pl-4">------</span>
+                            <button
+                                class="w-7 h-7 bg-white rounded-lg flex items-center justify-center border shadow-sm text-slate-400 hover:text-slate-900 transition-colors shrink-0">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
+                        </div>
+
+                        <div class="space-y-2.5 text-left border-t border-dashed border-slate-100 pt-3.5 px-1">
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="font-medium text-slate-400">Dịch vụ:</span>
+                                <span id="mdlService" class="font-bold text-slate-800 truncate max-w-[180px]">---</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="font-medium text-slate-400">Stylist:</span>
+                                <span id="mdlStaff" class="font-bold text-slate-800">---</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="font-medium text-slate-400">Thời gian:</span>
+                                <span id="mdlTime"
+                                    class="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md font-mono">--:--</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="font-medium text-slate-400">Ngày hẹn:</span>
+                                <span id="mdlDate" class="font-bold text-slate-800">--/--/----</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="font-medium text-slate-400">Chi nhánh:</span>
+                                <span id="mdlBranch" class="font-bold text-slate-800 truncate max-w-[160px]">---</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-[10px] text-slate-400 font-medium mb-6 leading-relaxed px-2">Hệ thống đã lưu giữ chỗ
+                        cho bạn. Vui lòng chụp lại màn hình hoặc sao chép mã số trên để tra cứu lịch hẹn.</p>
+
+                    <button id="btnCloseSuccessModal"
+                        class="w-full bg-slate-900 text-white py-3.5 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] active:scale-[0.98] transition-all shadow-md shadow-slate-900/10">
+                        XÁC NHẬN
                     </button>
                 </div>
             </div>
         </div>
+
+        <div id="view-about" class="view-pane bg-[#f8fafc] relative overflow-x-hidden pb-40">
+            <style>
+                /* Lightweight Animations */
+                .premium-fade-up {
+                    animation: premiumFadeUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                .delay-100 {
+                    animation-delay: 100ms;
+                }
+
+                .delay-200 {
+                    animation-delay: 200ms;
+                }
+
+                .delay-300 {
+                    animation-delay: 300ms;
+                }
+
+                @keyframes premiumFadeUp {
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                /* Minimal TOC */
+                .toc-minimal {
+                    position: fixed;
+                    right: 24px;
+                    bottom: 100px;
+                    z-index: 90;
+                    display: flex;
+                    gap: 8px;
+                    background: rgba(255, 255, 255, 0.9);
+                    backdrop-filter: blur(10px);
+                    padding: 8px;
+                    border-radius: 24px;
+                    box-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.1);
+                    border: 1px solid rgba(241, 245, 249, 1);
+                }
+
+                .toc-minimal a {
+                    width: 32px;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50%;
+                    color: #94a3b8;
+                    transition: all 0.3s ease;
+                }
+
+                .toc-minimal a.active {
+                    background: #0f172a;
+                    color: #ffffff;
+                    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+                }
+            </style>
+
+            <div class="toc-minimal">
+                <a href="javascript:void(0)"
+                    onclick="document.getElementById('sec-intro').scrollIntoView({behavior:'smooth'})" class="active"><i
+                        class="fa-solid fa-leaf text-xs"></i></a>
+                <a href="javascript:void(0)"
+                    onclick="document.getElementById('sec-journey').scrollIntoView({behavior:'smooth'})"><i
+                        class="fa-solid fa-timeline text-xs"></i></a>
+                <a href="javascript:void(0)"
+                    onclick="document.getElementById('sec-stylists').scrollIntoView({behavior:'smooth'})"><i
+                        class="fa-solid fa-user-tie text-xs"></i></a>
+                <a href="javascript:void(0)"
+                    onclick="document.getElementById('sec-contact').scrollIntoView({behavior:'smooth'})"><i
+                        class="fa-solid fa-address-book text-xs"></i></a>
+            </div>
+
+            <div id="sec-intro" class="pt-24 pb-12 px-6 text-center premium-fade-up">
+                <span
+                    class="inline-block px-4 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 mb-6 shadow-sm">
+                    Since 2018
+                </span>
+                <h2 class="text-[40px] font-black text-slate-900 leading-[1.1] tracking-tight mb-4">
+                    Mai Tây<br>
+                    <span class="text-slate-400 font-light italic text-[32px]">Hair Salon.</span>
+                </h2>
+                <p class="text-[13px] text-slate-500 font-medium leading-relaxed max-w-[280px] mx-auto">
+                    Chúng tôi tin rằng mái tóc là sự phản chiếu nội tâm. Tôn vinh vẻ đẹp nguyên bản, mang lại sự tinh tế
+                    không bị lỗi thời.
+                </p>
+            </div>
+
+            <div class="px-6 mb-20 premium-fade-up delay-100">
+                <div
+                    class="w-full h-[320px] rounded-[2rem] overflow-hidden bg-slate-200 shadow-[0_20px_50px_-15px_rgba(15,23,42,0.1)] border-4 border-white">
+                    <img src="./asset/images/BGMT.jpg" class="w-full h-full object-cover grayscale-[15%]"
+                        alt="Mai Tay Studio">
+                </div>
+
+                <div class="flex justify-center gap-8 mt-10">
+                    <div class="text-center">
+                        <p class="font-black text-slate-900 text-2xl tracking-tighter">8+</p>
+                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mt-1">Năm kinh nghiệm
+                        </p>
+                    </div>
+                    <div class="w-[1px] bg-slate-200 h-10 mt-1"></div>
+                    <div class="text-center">
+                        <p class="font-black text-slate-900 text-2xl tracking-tighter">10k+</p>
+                        <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold mt-1">Khách hàng</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sec-journey" class="px-6 mb-24 premium-fade-up delay-200">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="h-[1px] flex-1 bg-slate-200"></div>
+                    <h3 class="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400">Hành trình kiến tạo
+                    </h3>
+                    <div class="h-[1px] flex-1 bg-slate-200"></div>
+                </div>
+
+                <div class="relative border-l-2 border-slate-100 ml-4 space-y-10 py-2">
+
+                    <div class="relative pl-8">
+                        <div
+                            class="absolute w-3 h-3 bg-slate-900 rounded-full -left-[7px] top-10 ring-4 ring-[#f8fafc]">
+                        </div>
+
+                        <div
+                            class="group bg-white rounded-[2rem] p-2 border border-slate-100 shadow-[0_8px_30px_-5px_rgba(0,0,0,0.04)]">
+                            <div class="relative w-full h-[180px] rounded-[1.5rem] overflow-hidden bg-slate-100">
+                                <img src="./asset/images/BGMT.jpg"
+                                    class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                                    alt="Khởi đầu">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent">
+                                </div>
+                                <div class="absolute bottom-4 left-5">
+                                    <h4 class="text-[34px] font-black text-white leading-none tracking-tighter mb-1">
+                                        2018</h4>
+                                    <p class="text-[9px] font-black uppercase tracking-[0.2em] text-white/80">Bước đi
+                                        đầu tiên</p>
+                                </div>
+                            </div>
+                            <div class="p-5 pt-4">
+                                <p class="text-[12px] text-slate-600 font-medium leading-relaxed">
+                                    Mai Tây ra đời với sứ mệnh định nghĩa lại trải nghiệm làm tóc: Sự riêng tư, yên tĩnh
+                                    và sự tận tâm tuyệt đối.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative pl-8">
+                        <div
+                            class="absolute w-3 h-3 bg-slate-300 rounded-full -left-[7px] top-10 ring-4 ring-[#f8fafc]">
+                        </div>
+
+                        <div
+                            class="group bg-white rounded-[2rem] p-2 border border-slate-100 shadow-[0_8px_30px_-5px_rgba(0,0,0,0.04)]">
+                            <div class="relative w-full h-[180px] rounded-[1.5rem] overflow-hidden bg-slate-100">
+                                <img src="./asset/images/BG.jpg"
+                                    class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                                    alt="Đổi mới">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent">
+                                </div>
+                                <div class="absolute bottom-4 left-5">
+                                    <h4 class="text-[34px] font-black text-white leading-none tracking-tighter mb-1">
+                                        2025</h4>
+                                    <p class="text-[9px] font-black uppercase tracking-[0.2em] text-white/80">Mở rộng và
+                                        Kết nối
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="p-5 pt-4">
+                                <p class="text-[12px] text-slate-600 font-medium leading-relaxed">
+                                    Đáp lại sự ủng hộ của quý khách, chúng tôi mở rộng cơ sở mới tại <b>TT.Long
+                                        Thành</b> thuận tiện hơn, giúp tối ưu thời gian di chuyển và nâng tầm trải
+                                    nghiệm chăm sóc tóc chuyên nghiệp.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative pl-8">
+                        <div
+                            class="absolute w-3 h-3 bg-slate-300 rounded-full -left-[7px] top-10 ring-4 ring-[#f8fafc]">
+                        </div>
+
+                        <div
+                            class="group bg-slate-900 rounded-[2rem] p-2 border border-slate-800 shadow-[0_15px_40px_-10px_rgba(15,23,42,0.3)]">
+                            <div class="relative w-full h-[180px] rounded-[1.5rem] overflow-hidden bg-slate-800">
+                                <img src="./asset/images/BG2.jpg"
+                                    class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105 opacity-80"
+                                    alt="Tương lai">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent">
+                                </div>
+                                <div class="absolute bottom-4 left-5">
+                                    <h4 class="text-[34px] font-black text-white leading-none tracking-tighter mb-1">
+                                        2026</h4>
+                                    <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-300">The
+                                        Future</p>
+                                </div>
+                            </div>
+                            <div class="p-5 pt-4">
+                                <p class="text-[12px] text-slate-300 font-medium leading-relaxed">
+                                    Hoàn thiện hệ sinh thái quản lý thông minh. Khách hàng chủ động tối đa trải nghiệm
+                                    không chạm và cá nhân hóa.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="sec-stylists" class="px-5 mb-28 premium-fade-up delay-300">
+                <div class="flex items-center gap-4 mb-16">
+                    <div class="h-[1px] flex-1 bg-slate-200"></div>
+                    <h3 class="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400">Stylist</h3>
+                    <div class="h-[1px] flex-1 bg-slate-200"></div>
+                </div>
+
+                <div class="flex flex-col gap-20">
+
+                    <div class="relative pt-12 group">
+                        <div
+                            class="relative bg-rose-200 rounded-[2.5rem] p-3 border border-white shadow-[0_15px_40px_-10px_rgba(225,29,72,0.08)]">
+                            <img src="./asset/images/MaiTay.png"
+                                class="absolute -top-16 right-0 w-[80%] h-[calc(100%-1rem)] scale-105 object-contain object-bottom z-10 filter drop-shadow-[0_20px_20px_rgba(15,23,42,0.15)] transform transition-transform duration-700 group-hover:scale-115 group-hover:-translate-y-2"
+                                alt="Mai Tây">
+
+                            <div class="h-40 w-full relative z-0"></div>
+
+                            <div
+                                class="relative z-20 bg-white/80 backdrop-blur-2xl border border-white p-6 rounded-[2rem] shadow-[0_10px_30px_-5px_rgba(0,0,0,0.05)] w-[95%]">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h4 class="text-2xl font-black text-slate-900 tracking-tight leading-none mb-1">
+                                            Mai Tây</h4>
+                                        <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Art
+                                            Director</p>
+                                    </div>
+                                    <div
+                                        class="w-10 h-10 shrink-0 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100 shadow-sm text-slate-600">
+                                        <i class="fa-solid fa-scissors text-xs"></i>
+                                    </div>
+                                </div>
+                                <p class="text-[12px] text-slate-600 font-medium leading-relaxed mb-4">
+                                    Ghi gì cho ngầu
+                                </p>
+                                <div class="flex gap-2">
+                                    <span
+                                        class="text-[9px] font-bold text-slate-500 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">Kỹ
+                                        thuật cắt</span>
+                                    <span
+                                        class="text-[9px] font-bold text-slate-500 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">Tạo
+                                        form</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative pt-12 group">
+
+                        <div
+                            class="relative bg-slate-200 rounded-[2.5rem] p-3 border border-slate-100 shadow-[0_20px_50px_-10px_rgba(15,23,42,0.3)]">
+
+                            <img src="./asset/images/HienTran.png"
+                                class="absolute -top-16 left-0 w-[80%] h-[calc(100%-1rem)] object-contain object-bottom z-10 filter drop-shadow-[0_20px_20px_rgba(255,255,255,1)] transform transition-transform duration-700 group-hover:scale-105 group-hover:-translate-y-2"
+                                alt="Hiền Trần">
+
+                            <div class="h-40 w-full relative z-0"></div>
+
+                            <div
+                                class="relative z-20 bg-slate-700/80 backdrop-blur-2xl border border-slate-700/50 p-6 rounded-[2rem] shadow-2xl w-[88%] ml-auto">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h4 class="text-2xl font-black text-white tracking-tight leading-none mb-1">Hiền
+                                            Trần</h4>
+                                        <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">
+                                            Master Colorist</p>
+                                    </div>
+                                    <div
+                                        class="w-10 h-10 shrink-0 rounded-full bg-white/10 flex items-center justify-center border border-white/5 shadow-sm text-slate-300">
+                                        <i class="fa-solid fa-palette text-xs"></i>
+                                    </div>
+                                </div>
+                                <p class="text-[12px] text-slate-300 font-medium leading-relaxed mb-4">
+                                    Phù thủy màu sắc. Người mang lại sức sống, sự rực rỡ và chữa lành tuyệt đối cho mái
+                                    tóc của bạn.
+                                </p>
+                                <div class="flex gap-2">
+                                    <span
+                                        class="text-[9px] font-bold text-slate-300 bg-white/10 border border-white/5 px-3 py-1.5 rounded-full shadow-sm">Nhuộm
+                                        High-end</span>
+                                    <span
+                                        class="text-[9px] font-bold text-slate-300 bg-white/10 border border-white/5 px-3 py-1.5 rounded-full shadow-sm">Phục
+                                        hồi</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="sec-contact" class="px-6 mb-20 premium-fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="h-[1px] flex-1 bg-slate-200"></div>
+                    <h3 class="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400">Kết nối trực tiếp</h3>
+                    <div class="h-[1px] flex-1 bg-slate-200"></div>
+                </div>
+
+                <div class="space-y-4">
+                    <div
+                        class="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.03)]">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-base font-black text-slate-900">Mai Tây Hair Salon</h4>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Chi nhánh 1
+                                </p>
+                            </div>
+                            <div class="flex gap-2">
+                                <a href="https://facebook.com/link-fb-1" class="text-slate-300 hover:text-slate-900"><i
+                                        class="fa-brands fa-facebook text-sm"></i></a>
+                                <a href="https://tiktok.com/@link-tiktok-1"
+                                    class="text-slate-300 hover:text-slate-900"><i
+                                        class="fa-brands fa-tiktok text-sm"></i></a>
+                            </div>
+                        </div>
+                        <p class="text-[12px] text-slate-500 font-medium mb-6"><i
+                                class="fa-solid fa-location-dot mr-2 text-slate-300"></i>Tổ 1, Hiền Hoà, Phước Thái,
+                            Long Thành</p>
+                        <div class="flex gap-2">
+                            <a href="https://maps.app.goo.gl/BzWVzTNrE4AbQ7Le9"
+                                class="flex-1 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest py-3 rounded-xl text-center shadow-md shadow-slate-900/10 active:scale-95 transition-all">Chỉ
+                                đường</a>
+                            <a href="tel:0900XXXXXX"
+                                class="w-12 h-12 bg-slate-50 text-slate-900 rounded-xl flex items-center justify-center border border-slate-100 active:scale-95 transition-all"><i
+                                    class="fa-solid fa-phone-volume text-sm"></i></a>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.03)]">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-base font-black text-slate-900">Hiền Trần Hair Studio</h4>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Chi nhánh 2
+                                </p>
+                            </div>
+                            <div class="flex gap-2">
+                                <a href="https://facebook.com/link-fb-2" class="text-slate-300 hover:text-slate-900"><i
+                                        class="fa-brands fa-facebook text-sm"></i></a>
+                                <a href="https://tiktok.com/@link-tiktok-2"
+                                    class="text-slate-300 hover:text-slate-900"><i
+                                        class="fa-brands fa-tiktok text-sm"></i></a>
+                            </div>
+                        </div>
+                        <p class="text-[12px] text-slate-500 font-medium mb-6"><i
+                                class="fa-solid fa-location-dot mr-2 text-slate-300"></i>86 Nguyễn An Ninh, Thị Trấn
+                            Long Thành</p>
+                        <div class="flex gap-2">
+                            <a href="https://maps.app.goo.gl/cGPnwoCFzhkd3jb27"
+                                class="flex-1 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest py-3 rounded-xl text-center shadow-md shadow-slate-900/10 active:scale-95 transition-all">Chỉ
+                                đường</a>
+                            <a href="tel:0900XXXXXX"
+                                class="w-12 h-12 bg-slate-50 text-slate-900 rounded-xl flex items-center justify-center border border-slate-100 active:scale-95 transition-all"><i
+                                    class="fa-solid fa-phone-volume text-sm"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="switchTab('booking')"
+                    class="w-full mt-10 bg-slate-900 text-white font-black text-[11px] uppercase tracking-[0.2em] py-5 rounded-[2rem] shadow-2xl active:scale-95 transition-all group overflow-hidden relative">
+                    <span class="relative z-10">Bắt đầu trải nghiệm ngay</span>
+                    <div
+                        class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <div id="view-member" class="view-pane bg-slate-50 h-full w-full pb-32">
+            <header class="sticky top-0 bg-white/90 backdrop-blur-md z-40 px-6 pt-5 pb-3 border-b border-slate-100">
+                <h2 class="text-xl font-black text-slate-900 tracking-tight">Thành Viên</h2>
+                <p class="text-[11px] text-slate-500 font-medium uppercase tracking-widest mt-1">Đặc quyền cá nhân hóa
+                </p>
+            </header>
+
+            <div class="px-6 pt-6 flex-col">
+
+                <div id="member-auth-section" class="flex flex-col animate-[fadeIn_0.3s_ease-out]">
+
+                    <div class="bg-slate-200/50 p-1 rounded-xl flex mb-6">
+                        <button onclick="toggleAuthMode('login')" id="btn-tab-login"
+                            class="flex-1 py-2.5 text-[11px] font-bold text-slate-900 bg-white shadow-sm rounded-lg transition-all">Đăng
+                            nhập</button>
+                        <button onclick="toggleAuthMode('register')" id="btn-tab-register"
+                            class="flex-1 py-2.5 text-[11px] font-bold text-slate-500 rounded-lg transition-all hover:text-slate-700">Đăng
+                            ký mới</button>
+                    </div>
+
+                    <div
+                        class="bg-white p-6 rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border border-slate-100 relative overflow-hidden">
+
+                        <h3 id="auth-title" class="text-lg font-black mb-1 text-slate-900 tracking-tight">Chào mừng trở
+                            lại</h3>
+                        <p id="auth-subtitle" class="text-[11px] text-slate-500 mb-6 font-medium">Vui lòng đăng nhập để
+                            tiếp tục</p>
+
+                        <form id="authForm" onsubmit="handleAuthSubmit(event)" class="flex flex-col gap-3">
+                            <input type="text" id="authName" placeholder="Tên của bạn *" required
+                                class="hidden w-full bg-[#f5f5f7] border border-transparent p-4 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:bg-white focus:border-slate-300 transition-all placeholder:text-slate-400">
+
+                            <input type="email" id="authEmail" placeholder="Email *" required
+                                class="w-full bg-[#f5f5f7] border border-transparent p-4 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:bg-white focus:border-slate-300 transition-all placeholder:text-slate-400">
+
+                            <input type="password" id="authPass" placeholder="Mật khẩu *" required
+                                class="w-full bg-[#f5f5f7] border border-transparent p-4 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:bg-white focus:border-slate-300 transition-all placeholder:text-slate-400">
+
+                            <div class="flex justify-end mb-2">
+                                <button type="button" onclick="toggleAuthMode('forgot')" id="btn-forgot-pass"
+                                    class="text-[10px] font-bold text-slate-400 hover:text-slate-900 transition-colors">Quên
+                                    mật khẩu?</button>
+                            </div>
+
+                            <button type="submit" id="btn-auth-submit"
+                                class="w-full bg-slate-900 text-white py-4 mt-1 rounded-xl font-black tracking-[0.2em] uppercase text-[10px] active:scale-95 transition-all shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)] hover:bg-slate-800">
+                                ĐĂNG NHẬP
+                            </button>
+                        </form>
+
+                        <div id="social-login-group">
+                            <div class="relative w-full h-[1px] my-6 bg-slate-100 flex items-center justify-center">
+                                <span
+                                    class="bg-white px-3 text-[9px] font-black uppercase text-slate-300 tracking-widest">Hoặc</span>
+                            </div>
+
+                            <button onclick="handleGoogleLogin()" type="button"
+                                class="w-full bg-white border-2 border-slate-100 text-slate-700 py-3.5 rounded-xl font-bold text-[11px] flex items-center justify-center gap-3 active:scale-95 transition-all hover:bg-slate-50 hover:border-slate-200">
+                                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-4 h-4"
+                                    alt="Google">
+                                <span>Tiếp tục với Google</span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="member-profile-section" class="hidden flex-col animate-[fadeIn_0.3s_ease-out]">
+
+                    <div
+                        class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white p-6 rounded-[2rem] mb-6 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.4)] border border-slate-700/50 relative overflow-hidden group">
+
+
+                        <div
+                            class="absolute -top-12 -right-12 w-40 h-40 bg-white/5 rounded-full blur-[30px] pointer-events-none">
+                        </div>
+                        <i class="fa-solid fa-crown absolute right-4 top-4 text-4xl text-white opacity-5 rotate-12"></i>
+
+                        <div class="relative z-10 flex flex-col items-center">
+                            <div class="w-full flex justify-between items-start mb-6">
+                                <div>
+                                    <p class="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">Hội
+                                        viên</p>
+                                    <h4 id="profile-name" class="text-xl font-black text-white tracking-tight">---</h4>
+                                </div>
+                                <div
+                                    class="bg-white/10 backdrop-blur-md rounded-full px-3 py-1 border border-white/10 shadow-inner flex items-center gap-1.5">
+                                    <i class="fa-solid fa-gem text-amber-400 text-[10px]"></i>
+                                    <span
+                                        class="text-[9px] font-black uppercase tracking-widest text-white mt-0.5">MEMBER</span>
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-white p-3 rounded-2xl w-[180px] h-[180px] flex items-center justify-center relative shadow-[0_0_30px_rgba(255,255,255,0.1)] group-hover:scale-105 transition-transform duration-500">
+                                <div id="qr-loading"
+                                    class="absolute inset-0 flex items-center justify-center bg-white rounded-2xl z-10">
+                                    <i class="fa-solid fa-circle-notch fa-spin text-slate-200 text-3xl"></i>
+                                </div>
+                                <img id="profile-qr" src="" class="w-full h-full object-contain relative z-20"
+                                    alt="Mã Thành Viên"
+                                    onload="document.getElementById('qr-loading').style.display='none'">
+                            </div>
+
+                            <div class="mt-4 text-center">
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Mã định
+                                    danh (UID)</p>
+                                <p id="profile-uid" class="text-sm font-mono font-bold text-white tracking-[0.1em]">---
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="relative w-full h-[1px] my-6">
+                            <div class="absolute inset-0 border-t border-dashed border-white/20"></div>
+                            <div class="absolute -left-8 top-1/2 -translate-y-1/2 w-4 h-4 bg-slate-50 rounded-full">
+                            </div>
+                            <div class="absolute -right-8 top-1/2 -translate-y-1/2 w-4 h-4 bg-slate-50 rounded-full">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between px-2">
+                            <span class="text-[10px] text-slate-300 font-medium">Tích điểm nhận ưu đãi <i
+                                    class="fa-solid fa-angle-right ml-1"></i></span>
+                            <span class="text-sm font-black text-white">0 Pt</span>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white rounded-[2rem] p-6 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border border-slate-100 mb-4 animate-[fadeIn_0.3s_ease-out]">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Hồ sơ cá nhân</h3>
+                            <button onclick="toggleEditProfileForm(true)" id="btn-edit-profile"
+                                class="text-[10px] font-black text-slate-900 bg-slate-100 px-3 py-1.5 rounded-lg active:scale-95 transition-transform uppercase tracking-wider">Chỉnh
+                                sửa</button>
+                        </div>
+
+                        <div id="profile-view-mode" class="space-y-4">
+                            <div class="flex items-center gap-4 pb-4 border-b border-slate-50">
+                                <img id="view-avatar"
+                                    src="https://ui-avatars.com/api/?name=User&background=f1f5f9&color=0f172a&bold=true"
+                                    class="w-14 h-14 rounded-full object-cover border border-slate-100 shadow-sm">
+                                <div class="flex-1 min-w-0">
+                                    <h4 id="view-name" class="font-black text-slate-800 text-sm truncate">---</h4>
+                                    <div class="flex items-center gap-2 mt-0.5">
+                                        <p id="view-email-masked"
+                                            class="text-[11px] text-slate-400 font-medium truncate">***</p>
+                                        <p id="view-email-real"
+                                            class="text-[11px] text-slate-400 font-medium truncate hidden">---</p>
+                                        <button type="button" onclick="toggleSensitiveInfo('email')"
+                                            class="text-slate-400 hover:text-slate-600 active:scale-95 shrink-0 transition-colors">
+                                            <i id="icon-toggle-email" class="fa-solid fa-eye-slash text-[10px]"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 text-[11px] font-medium text-slate-600">
+                                <div class="bg-slate-50/50 p-3 rounded-xl">
+                                    <span
+                                        class="text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-0.5">Số
+                                        điện thoại</span>
+                                    <div class="flex items-center justify-between">
+                                        <span id="view-phone-masked"
+                                            class="font-mono font-bold tracking-wider">***</span>
+                                        <span id="view-phone-real"
+                                            class="font-mono font-bold tracking-wider hidden">---</span>
+                                        <button type="button" onclick="toggleSensitiveInfo('phone')"
+                                            class="text-slate-400 hover:text-slate-600 active:scale-95 shrink-0 transition-colors">
+                                            <i id="icon-toggle-phone" class="fa-solid fa-eye-slash text-[10px]"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-50/50 p-3 rounded-xl">
+                                    <span
+                                        class="text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-0.5">Giới
+                                        tính</span>
+                                    <span id="view-gender" class="font-bold">---</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50/50 p-4 rounded-xl space-y-2.5">
+                                <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block">Mạng
+                                    xã hội</span>
+                                <div class="flex flex-wrap items-center gap-4 text-slate-500 text-xs">
+                                    <a id="link-fb" href="#" target="_blank"
+                                        class="flex items-center gap-1.5 hover:text-slate-900 opacity-40 pointer-events-none transition-all"><i
+                                            class="fa-brands fa-facebook text-slate-400"></i> Facebook</a>
+                                    <a id="link-tiktok" href="#" target="_blank"
+                                        class="flex items-center gap-1.5 hover:text-slate-900 opacity-40 pointer-events-none transition-all"><i
+                                            class="fa-brands fa-tiktok text-slate-400"></i> TikTok</a>
+                                    <a id="link-ig" href="#" target="_blank"
+                                        class="flex items-center gap-1.5 hover:text-slate-900 opacity-40 pointer-events-none transition-all"><i
+                                            class="fa-brands fa-instagram text-slate-400"></i> Instagram</a>
+                                </div>
+                            </div>
+
+                            <button id="btn-show-password-form" onclick="toggleChangePasswordForm(true)"
+                                class="w-full mt-2 flex items-center justify-between p-4 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors active:scale-95 group border border-slate-100/50">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm border border-slate-100 group-hover:text-slate-900 transition-colors">
+                                        <i class="fa-solid fa-lock text-xs"></i>
+                                    </div>
+                                    <span class="text-[11px] font-bold uppercase tracking-widest">Đổi mật khẩu</span>
+                                </div>
+                                <i class="fa-solid fa-angle-right text-slate-300"></i>
+                            </button>
+
+                            <form id="profile-password-mode" onsubmit="handleChangePassword(event)"
+                                class="hidden space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-100 mt-2 animate-[slideUp_0.3s_ease-out]">
+
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-black uppercase tracking-widest text-slate-400">Mật
+                                        khẩu hiện tại *</label>
+                                    <div class="relative">
+                                        <input type="password" id="old-password" required
+                                            class="w-full bg-white p-3.5 pr-10 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:border-slate-300 border border-transparent transition-all shadow-sm">
+                                        <button type="button"
+                                            onclick="togglePasswordVisibility('old-password', 'icon-old-pass')"
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+                                            <i id="icon-old-pass" class="fa-solid fa-eye-slash text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-black uppercase tracking-widest text-slate-400">Mật
+                                        khẩu mới (Ít nhất 6 ký tự) *</label>
+                                    <div class="relative">
+                                        <input type="password" id="new-password" required minlength="6"
+                                            class="w-full bg-white p-3.5 pr-10 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:border-slate-300 border border-transparent transition-all shadow-sm">
+                                        <button type="button"
+                                            onclick="togglePasswordVisibility('new-password', 'icon-new-pass')"
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+                                            <i id="icon-new-pass" class="fa-solid fa-eye-slash text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-black uppercase tracking-widest text-slate-400">Xác
+                                        nhận mật khẩu mới *</label>
+                                    <div class="relative">
+                                        <input type="password" id="confirm-password" required minlength="6"
+                                            class="w-full bg-white p-3.5 pr-10 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:border-slate-300 border border-transparent transition-all shadow-sm">
+                                        <button type="button"
+                                            onclick="togglePasswordVisibility('confirm-password', 'icon-confirm-pass')"
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+                                            <i id="icon-confirm-pass" class="fa-solid fa-eye-slash text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-2 pt-2">
+                                    <button type="button" onclick="toggleChangePasswordForm(false)"
+                                        class="flex-1 py-3 rounded-xl font-bold text-[11px] uppercase tracking-widest bg-white border border-slate-200 text-slate-600 active:scale-95 transition-transform">Hủy</button>
+                                    <button type="submit" id="btn-save-password"
+                                        class="flex-1 py-3 rounded-xl font-bold text-[11px] uppercase tracking-widest bg-slate-900 text-white active:scale-95 transition-transform shadow-md">Cập
+                                        nhật</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <form id="profile-edit-mode" onsubmit="handleSaveProfile(event)" class="hidden space-y-4">
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-black uppercase tracking-widest text-slate-400">Họ và tên
+                                    *</label>
+                                <input type="text" id="edit-name" required
+                                    class="w-full bg-[#f5f5f7] p-3.5 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:bg-white focus:border-slate-300 transition-all">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-black uppercase tracking-widest text-slate-400">Số
+                                        điện thoại</label>
+                                    <input type="tel" id="edit-phone"
+                                        class="w-full bg-[#f5f5f7] p-3.5 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:bg-white focus:border-slate-300 transition-all">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-black uppercase tracking-widest text-slate-400">Giới
+                                        tính</label>
+                                    <select id="edit-gender"
+                                        class="w-full bg-[#f5f5f7] p-3.5 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:bg-white focus:border-slate-300 transition-all appearance-none">
+                                        <option value="">Chưa chọn</option>
+                                        <option value="Nam">Nam</option>
+                                        <option value="Nữ">Nữ</option>
+                                        <option value="Khác">Khác</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="space-y-3 pt-2 border-t border-slate-100">
+                                <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block">Liên
+                                    kết mạng xã hội</span>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"><i
+                                            class="fa-brands fa-facebook"></i></span>
+                                    <input type="url" id="edit-fb" placeholder="https://facebook.com/..."
+                                        class="w-full bg-[#f5f5f7] pl-10 pr-4 p-3.5 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:bg-white focus:border-slate-300 transition-all">
+                                </div>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"><i
+                                            class="fa-brands fa-tiktok"></i></span>
+                                    <input type="url" id="edit-tiktok" placeholder="https://tiktok.com/@..."
+                                        class="w-full bg-[#f5f5f7] pl-10 pr-4 p-3.5 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:bg-white focus:border-slate-300 transition-all">
+                                </div>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"><i
+                                            class="fa-brands fa-instagram"></i></span>
+                                    <input type="url" id="edit-ig" placeholder="https://instagram.com/..."
+                                        class="w-full bg-[#f5f5f7] pl-10 pr-4 p-3.5 rounded-xl font-medium text-[13px] text-slate-900 outline-none focus:bg-white focus:border-slate-300 transition-all">
+                                </div>
+                            </div>
+                            <div class="flex gap-2 pt-2">
+                                <button type="button" onclick="toggleEditProfileForm(false)"
+                                    class="flex-1 py-3 rounded-xl font-bold text-[11px] uppercase tracking-widest bg-slate-100 text-slate-600 active:scale-95 transition-transform">Hủy</button>
+                                <button type="submit" id="btn-save-profile"
+                                    class="flex-1 py-3 rounded-xl font-bold text-[11px] uppercase tracking-widest bg-slate-900 text-white active:scale-95 transition-transform shadow-md shadow-slate-900/10">Lưu
+                                    lại</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="bg-white rounded-[2rem] p-3 border border-slate-100 shadow-sm flex flex-col gap-2">
+                        <button onclick="handleLogout()"
+                            class="flex items-center justify-between p-4 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors active:scale-95 group">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm border border-slate-100 group-hover:border-rose-100 group-hover:text-rose-500 transition-colors">
+                                    <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+                                </div>
+                                <span class="text-[11px] font-bold uppercase tracking-widest">Đăng xuất tài khoản</span>
+                            </div>
+                            <i class="fa-solid fa-angle-right text-slate-300"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- <div id="view-store" class="view-pane bg-[#fbfbfd] relative overflow-x-hidden">
+
+            <div class="absolute inset-0 z-0 pointer-events-none opacity-[0.02]"
+                style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');">
+            </div>
+
+            <header class="relative z-50 pt-[calc(3rem+env(safe-area-inset-top,0px))] pb-6 px-6 text-center">
+                <p class="text-[9px] font-black uppercase tracking-[0.5em] text-slate-400 mb-2">The Collection</p>
+                <h2 class="text-2xl font-black text-slate-900 tracking-tighter leading-none">Boutique</h2>
+            </header>
+
+            <div class="flex flex-col gap-24 pb-[120px]">
+
+                <div class="relative w-full flex flex-col items-center pt-10 premium-fade-up">
+
+                    <div
+                        class="absolute top-0 left-0 right-0 text-center z-0 pointer-events-none select-none overflow-hidden flex justify-center">
+                        <span
+                            class="text-[130px] font-black text-slate-100/80 tracking-tighter leading-[0.8] ml-[-20px]">OWAY</span>
+                    </div>
+
+                    <div
+                        class="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white rounded-full blur-[50px] z-0">
+                    </div>
+
+                    <img src="./asset/images/BG.jpg"
+                        class="relative z-10 w-auto h-[380px] object-contain filter drop-shadow-[0_30px_40px_rgba(0,0,0,0.15)] transform hover:scale-105 hover:-translate-y-4 transition-all duration-700 ease-out"
+                        alt="Oway Silk">
+
+                    <div
+                        class="relative z-20 mt-[-60px] w-[85%] bg-white/70 backdrop-blur-xl border border-white p-7 rounded-[2rem] shadow-[0_20px_50px_-10px_rgba(15,23,42,0.05)] text-center">
+                        <span
+                            class="inline-block px-3 py-1.5 bg-slate-900 text-white text-[8px] font-black uppercase tracking-[0.2em] rounded-full mb-4 shadow-md">Phục
+                            hồi chuyên sâu</span>
+                        <h3 class="text-[22px] font-black text-slate-900 leading-tight tracking-tight mb-3">Lụa Tơ Tằm
+                            Sinh Học</h3>
+                        <p class="text-[12px] text-slate-500 font-medium leading-relaxed mb-6 px-2">
+                            Tái tạo cấu trúc từ sâu bên trong, trả lại vẻ mềm mượt nguyên bản. Bước đệm hoàn hảo để duy
+                            trì nếp tóc salon tại nhà.
+                        </p>
+                        <div class="inline-block border-b-2 border-slate-900 pb-1">
+                            <span class="text-sm font-black text-slate-900 tracking-widest">650.000 VNĐ</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="relative w-full flex flex-col items-center pt-10 premium-fade-up delay-100">
+
+                    <div
+                        class="absolute top-0 left-0 right-0 text-center z-0 pointer-events-none select-none overflow-hidden flex justify-center">
+                        <span
+                            class="text-[130px] font-black text-slate-100/80 tracking-tighter leading-[0.8] ml-[-20px]">HEAT</span>
+                    </div>
+
+                    <div
+                        class="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-rose-50 rounded-full blur-[50px] z-0">
+                    </div>
+
+                    <img src="./asset/images/BG.jpg"
+                        class="relative z-10 w-auto h-[360px] object-contain filter drop-shadow-[0_30px_40px_rgba(225,29,72,0.1)] transform hover:scale-105 hover:-translate-y-4 transition-all duration-700 ease-out"
+                        alt="Heat Protection">
+
+                    <div
+                        class="relative z-20 mt-[-50px] w-[85%] bg-white/70 backdrop-blur-xl border border-white p-7 rounded-[2rem] shadow-[0_20px_50px_-10px_rgba(15,23,42,0.05)] text-center">
+                        <span
+                            class="inline-block px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-100 text-[8px] font-black uppercase tracking-[0.2em] rounded-full mb-4">Bảo
+                            vệ nhiệt độ</span>
+                        <h3 class="text-[22px] font-black text-slate-900 leading-tight tracking-tight mb-3">Xịt Dưỡng Ẩm
+                            Vô Hình</h3>
+                        <p class="text-[12px] text-slate-500 font-medium leading-relaxed mb-6 px-2">
+                            Lớp khiên bảo vệ tóc khỏi nhiệt độ cực cao của máy sấy và máy tạo kiểu. Giữ form bồng bềnh
+                            suốt 24h.
+                        </p>
+                        <div class="inline-block border-b-2 border-slate-900 pb-1">
+                            <span class="text-sm font-black text-slate-900 tracking-widest">320.000 VNĐ</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div> -->
+
+
+        <!-- VIEW: GÓP Ý (FEEDBACK) -->
+        <div id="view-feedback" class="view-pane bg-[#fbfbfd]">
+            <header class="pt-[calc(3rem+env(safe-area-inset-top,0px))] pb-8 px-6 text-center relative">
+                <h2 class="text-[32px] font-black tracking-tighter text-slate-900 mb-2">Lắng nghe bạn</h2>
+                <p class="text-[13px] text-slate-500 font-medium leading-relaxed max-w-[280px] mx-auto">Trải nghiệm của
+                    bạn là ưu tiên hàng đầu để chúng tôi hoàn thiện mỗi ngày.</p>
+            </header>
+
+            <div class="px-6 mb-8 relative z-20">
+                <!-- KHỐI KẾT NỐI LIÊN LẠC TRỰC TIẾP (PHONE & FACEBOOK) -->
+                <div class="grid grid-cols-3 gap-3 mb-8">
+                    <a href="tel:0938123962"
+                        class="bg-white p-5 rounded-[1.5rem] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.03)] border border-slate-100/50 flex flex-col items-center justify-center gap-3 active:scale-95 transition-all group hover:border-slate-200">
+                        <div
+                            class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center group-hover:bg-slate-900 transition-colors duration-300">
+                            <i
+                                class="fa-solid fa-phone text-slate-900 group-hover:text-white transition-colors duration-300"></i>
+                        </div>
+                        <div class="text-center">
+                            <span
+                                class="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 block">Hotline</span>
+                            <span class="text-[9px] text-slate-400 font-mono mt-0.5 block">0938.123.962</span>
+                        </div>
+                    </a>
+                    <a href="https://www.facebook.com/MaiTayHairSalon" target="_blank"
+                        class="bg-white p-5 rounded-[1.5rem] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.03)] border border-slate-100/50 flex flex-col items-center justify-center gap-3 active:scale-95 transition-all group hover:border-slate-200">
+                        <div
+                            class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center group-hover:bg-[#1877f2] transition-colors duration-300">
+                            <i
+                                class="fa-brands fa-facebook-f text-slate-900 group-hover:text-white transition-colors duration-300 text-lg"></i>
+                        </div>
+                        <div class="text-center">
+                            <span
+                                class="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 block">Facebook</span>
+                            <span class="text-[9px] text-slate-400 mt-0.5 block">Mai Tây Salon</span>
+                        </div>
+                    </a>
+                    <a href="https://www.facebook.com/HienTranHairStudio" target="_blank"
+                        class="bg-white p-5 rounded-[1.5rem] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.03)] border border-slate-100/50 flex flex-col items-center justify-center gap-3 active:scale-95 transition-all group hover:border-slate-200">
+                        <div
+                            class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center group-hover:bg-[#1877f2] transition-colors duration-300">
+                            <i
+                                class="fa-brands fa-facebook-f text-slate-900 group-hover:text-white transition-colors duration-300 text-lg"></i>
+                        </div>
+                        <div class="text-center">
+                            <span
+                                class="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 block">Facebook</span>
+                            <span class="text-[9px] text-slate-400 mt-0.5 block">Hiền Trần Hair Studio</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- BẢN FORM ĐÁNH GIÁ ĐỒNG BỘ FIREBASE -->
+                <div
+                    class="bg-white p-7 rounded-[2rem] shadow-[0_8px_30px_-5px_rgba(0,0,0,0.04)] border border-slate-100/50 relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2">
+                    </div>
+
+                    <h3 class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6 text-center">Đánh
+                        giá chi tiết</h3>
+
+                    <form id="nativeFeedbackForm" onsubmit="window.submitFeedback(event)" class="space-y-6">
+
+                        <!-- TIÊU CHÍ 1: THÁI ĐỘ PHỤC VỤ -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-700">Thái độ phục vụ</span>
+                                <span id="txt-rating-attitude"
+                                    class="text-[11px] font-mono text-amber-500 font-bold">5.0</span>
+                            </div>
+                            <div class="flex gap-2 star-rating" id="stars-attitude">
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="1" onclick="window.rateStar('attitude', 1)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="2" onclick="window.rateStar('attitude', 2)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="3" onclick="window.rateStar('attitude', 3)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="4" onclick="window.rateStar('attitude', 4)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="5" onclick="window.rateStar('attitude', 5)"></i>
+                            </div>
+                            <input type="hidden" id="fbRating-attitude" value="5">
+                        </div>
+
+                        <!-- TIÊU CHÍ 2: CHẤT LƯỢNG DỊCH VỤ -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-700">Chất lượng tóc / Dịch vụ</span>
+                                <span id="txt-rating-service"
+                                    class="text-[11px] font-mono text-amber-500 font-bold">5.0</span>
+                            </div>
+                            <div class="flex gap-2 star-rating" id="stars-service">
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="1" onclick="window.rateStar('service', 1)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="2" onclick="window.rateStar('service', 2)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="3" onclick="window.rateStar('service', 3)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="4" onclick="window.rateStar('service', 4)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="5" onclick="window.rateStar('service', 5)"></i>
+                            </div>
+                            <input type="hidden" id="fbRating-service" value="5">
+                        </div>
+
+                        <!-- TIÊU CHÍ 3: KHÔNG GIAN / TRẢI NGHIỆM -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-700">Không gian & Trải nghiệm</span>
+                                <span id="txt-rating-space"
+                                    class="text-[11px] font-mono text-amber-500 font-bold">5.0</span>
+                            </div>
+                            <div class="flex gap-2 star-rating" id="stars-space">
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="1" onclick="window.rateStar('space', 1)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="2" onclick="window.rateStar('space', 2)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="3" onclick="window.rateStar('space', 3)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="4" onclick="window.rateStar('space', 4)"></i>
+                                <i class="fa-solid fa-star text-2xl text-amber-400 cursor-pointer transition-transform hover:scale-110"
+                                    data-index="5" onclick="window.rateStar('space', 5)"></i>
+                            </div>
+                            <input type="hidden" id="fbRating-space" value="5">
+                        </div>
+
+                        <hr class="border-slate-100 my-2">
+
+                        <!-- CHỌN ẨN DANH (APPLE PREMIUM STYLE TOGGLE) -->
+                        <div
+                            class="flex items-center justify-between bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center border shadow-sm text-slate-400"
+                                    id="anonymous-icon">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800">Gửi ẩn danh</p>
+                                    <p class="text-[10px] text-slate-400">Giữ kín thông tin cá nhân của bạn</p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="fbAnonymous" class="sr-only peer"
+                                    onchange="window.toggleAnonymousMode(this)">
+                                <div
+                                    class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-slate-900">
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- THÔNG TIN LIÊN HỆ (SẼ BỊ KHÓA KHI CHỌN ẨN DANH) -->
+                        <div id="infoFieldsGroup" class="space-y-3 transition-all duration-300">
+                            <input type="text" id="fbName" placeholder="Tên của bạn" required
+                                class="w-full bg-[#f5f5f7] border border-transparent p-4 rounded-xl font-medium text-[13px] text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-slate-300 focus:ring-4 focus:ring-slate-100/50 transition-all">
+
+                            <input type="tel" id="fbPhone" placeholder="Số điện thoại" required
+                                class="w-full bg-[#f5f5f7] border border-transparent p-4 rounded-xl font-medium text-[13px] text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-slate-300 focus:ring-4 focus:ring-slate-100/50 transition-all">
+                        </div>
+
+                        <textarea id="fbMessage" placeholder="Chia sẻ thêm về trải nghiệm của bạn..." required rows="4"
+                            class="w-full bg-[#f5f5f7] border border-transparent p-4 rounded-xl font-medium text-[13px] text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-slate-300 focus:ring-4 focus:ring-slate-100/50 transition-all resize-none"></textarea>
+
+                        <button type="submit" id="btnSubmitFeedback"
+                            class="w-full mt-2 bg-slate-900 text-white py-4 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] active:scale-95 transition-all shadow-[0_8px_20px_-5px_rgba(15,23,42,0.3)] hover:bg-slate-800 flex items-center justify-center gap-2">
+                            <span>Gửi Góp Ý Premium</span>
+                            <i class="fa-solid fa-paper-plane text-[10px] mb-[1px]"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <footer class="py-8 px-5 text-center">
+                <p class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-300">
+                    Dev by <a href="http://facebook.com/HunqD" target="_blank" rel="noopener noreferrer"
+                        class="text-slate-400 hover:text-slate-900 transition-colors">Đinh Mạnh Hùng</a>
+                </p>
+            </footer>
+        </div>
+
+
+
+        <nav
+            class="bottom-nav fixed bottom-6 left-1/2 transform -translate-x-1/2 w-[92%] max-w-[380px] h-[68px] bg-white/95 backdrop-blur-xl border border-slate-200 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] rounded-[2rem] flex items-center justify-start overflow-x-auto no-scrollbar snap-x snap-mandatory px-3 gap-1 z-[100] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]">
+
+            <button onclick="switchTab('intro')" id="nav-intro"
+                class="nav-item active shrink-0 min-w-[70px] snap-center flex flex-col items-center justify-center text-slate-900">
+                <i class="fa-solid fa-house text-[18px] mb-1"></i><span class="text-[9px] font-bold">Trang chủ</span>
+            </button>
+            <button onclick="switchTab('booking')" id="nav-booking"
+                class="nav-item shrink-0 min-w-[70px] snap-center flex flex-col items-center justify-center text-slate-400">
+                <i class="fa-solid fa-calendar-plus text-[18px] mb-1"></i><span class="text-[9px] font-bold">Đặt
+                    lịch</span>
+            </button>
+            <button onclick="switchTab('feed')" id="nav-feed"
+                class="nav-item shrink-0 min-w-[70px] snap-center flex flex-col items-center justify-center text-slate-400">
+                <i class="fa-solid fa-star text-[18px] mb-1"></i><span class="text-[9px] font-bold">Blink</span>
+            </button>
+            <button onclick="switchTab('about')" id="nav-about"
+                class="nav-item shrink-0 min-w-[70px] snap-center flex flex-col items-center justify-center text-slate-400">
+                <i class="fa-solid fa-circle-info text-[18px] mb-1"></i><span class="text-[9px] font-bold">Giới
+                    thiệu</span>
+            </button>
+            <!-- <button onclick="switchTab('pricing')" id="nav-pricing"
+                class="nav-item shrink-0 min-w-[70px] snap-center flex flex-col items-center justify-center text-slate-400">
+                <i class="fa-solid fa-tags text-[18px] mb-1"></i><span class="text-[9px] font-bold">Bảng giá</span>
+            </button> -->
+            <button onclick="switchTab('offers')" id="nav-offers"
+                class="nav-item shrink-0 min-w-[70px] snap-center flex flex-col items-center justify-center text-slate-400">
+                <i class="fa-solid fa-ticket text-[18px] mb-1"></i><span class="text-[9px] font-bold">Ưu đãi</span>
+            </button>
+            <!-- <button onclick="switchTab('store')" id="nav-store"
+                class="nav-item shrink-0 min-w-[70px] snap-center flex flex-col items-center justify-center text-slate-400">
+                <i class="fa-solid fa-bag-shopping text-[18px] mb-1"></i><span class="text-[9px] font-bold">Cửa
+                    hàng</span>
+            </button> -->
+            <!-- <button onclick="switchTab('member')" id="nav-member"
+                class="nav-item shrink-0 min-w-[70px] snap-center flex flex-col items-center justify-center text-slate-400">
+                <i class="fa-solid fa-crown text-[18px] mb-1"></i><span class="text-[9px] font-bold">Thành viên</span>
+            </button> -->
+            <button onclick="switchTab('feedback')" id="nav-feedback"
+                class="nav-item shrink-0 min-w-[70px] snap-center flex flex-col items-center justify-center text-slate-400">
+                <i class="fa-solid fa-headset text-[18px] mb-1"></i><span class="text-[9px] font-bold">Góp ý</span>
+            </button>
+        </nav>
+
     </div>
 
-    <div id="lightbox-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[99] p-4">
-        <div class="relative max-w-3xl max-h-full">
-            <button id="lightbox-close-btn"
-                class="absolute -top-10 right-0 text-white text-3xl hover:opacity-75 transition-opacity">
-                <i class="fas fa-times"></i>
-            </button>
-            <img id="lightbox-img" src="" alt="Ảnh phóng to"
-                class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-lg">
-            <p id="lightbox-caption" class="text-center text-white text-sm mt-3"></p>
+
+    <div id="custom-modal-overlay"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[9999] hidden items-center justify-center opacity-0 transition-opacity duration-300">
+        <div id="custom-modal-box"
+            class="bg-white rounded-[2rem] p-6 w-[85%] max-w-[320px] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] transform scale-95 transition-transform duration-300 flex flex-col items-center text-center">
+            <div id="modal-icon-container" class="w-14 h-14 rounded-full flex items-center justify-center mb-4">
+                <i id="modal-icon" class="fa-solid fa-bell text-xl"></i>
+            </div>
+            <h3 id="modal-title" class="text-lg font-black text-slate-900 mb-2">Thông báo</h3>
+            <p id="modal-message" class="text-[13px] text-slate-500 font-medium mb-6 leading-relaxed">Nội dung thông báo
+            </p>
+            <div id="modal-actions" class="w-full flex gap-3">
+                <button id="modal-btn-cancel"
+                    class="hidden flex-1 py-3.5 rounded-xl font-bold text-[11px] uppercase tracking-widest bg-slate-100 text-slate-600 hover:bg-slate-200 active:scale-95 transition-all">Hủy</button>
+                <button id="modal-btn-confirm"
+                    class="flex-1 py-3.5 rounded-xl font-bold text-[11px] uppercase tracking-widest bg-slate-900 text-white shadow-md hover:bg-slate-800 active:scale-95 transition-all">Đồng
+                    ý</button>
+            </div>
         </div>
     </div>
 
 
-    <script type="module" src="./Asset/js/main.js"></script>
+    <script src="./asset/iOS.js"></script>
+    <script type="module" src="./asset/main.js"></script>
+
 </body>
 
 </html>

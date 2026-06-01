@@ -1,0 +1,329 @@
+/* =========================================
+    LOADING SCREEN (WHITE BACKGROUND)
+   ========================================= */
+#loading {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: inherit;
+    overflow: hidden;
+    container-type: inline-size;
+}
+
+.cut-panel {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    /* NỀN TRẮNG */
+    transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1), opacity 1.2s ease-in;
+    z-index: 1;
+}
+
+/* Ép khối trên dư ra 2px để chờm qua khối dưới, xóa hoàn toàn khe hở đồ họa */
+.panel-top {
+    clip-path: polygon(0 0, 100% 0, 100% calc(50% + 50cqw + 2px), 0 calc(50% - 50cqw + 2px));
+}
+
+/* Ép khối dưới dư ra 2px để lùi sâu vào trong, tạo thành 1 tấm nền trắng nguyên khối */
+.panel-bottom {
+    clip-path: polygon(0 calc(50% - 50cqw - 2px), 100% calc(50% + 50cqw - 2px), 100% 100%, 0 100%);
+}
+
+/* Tia cắt màu đen mờ (Shadow xám) */
+.slash-line {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150vmax;
+    height: 2px;
+    background: #0f172a;
+    box-shadow: 0 0 15px rgba(15, 23, 42, 0.4);
+    transform: translate(-50%, -50%) rotate(45deg) scaleX(0);
+    z-index: 5;
+    opacity: 0;
+}
+
+@keyframes slashEffect {
+    0% {
+        transform: translate(-50%, -50%) rotate(45deg) scaleX(0);
+        opacity: 1;
+        height: 1px;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) rotate(45deg) scaleX(1);
+        opacity: 1;
+        height: 2px;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(45deg) scaleX(1.5);
+        opacity: 0;
+        height: 12px;
+    }
+}
+
+/* --- Kéo màu Xám Than / Đen Nhám --- */
+.scissors-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 240px;
+    transform: translate(-50%, -50%) rotate(-45deg) scale(0.65);
+    z-index: 10;
+    transition: opacity 0.5s ease;
+}
+
+.scissor-half {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 240px;
+    transform-origin: 30px 130px;
+    will-change: transform;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Nửa 1: Màu Đen (Slate-900) */
+.scissor-half-1 {
+    z-index: 2;
+}
+
+.scissor-half-1 .blade {
+    position: absolute;
+    top: 25px;
+    left: 21px;
+    width: 9px;
+    height: 105px;
+    background-color: #0f172a;
+    border-radius: 100% 0 0 0;
+    box-shadow: inset -1px 0 0 #334155;
+}
+
+.scissor-half-1 .pivot-circle {
+    position: absolute;
+    top: 122px;
+    left: 22px;
+    width: 16px;
+    height: 16px;
+    background-color: #0f172a;
+    border-radius: 50%;
+}
+
+.scissor-half-1 .handle-stem {
+    position: absolute;
+    top: 130px;
+    left: 30px;
+    width: 6px;
+    height: 35px;
+    background-color: #0f172a;
+    transform-origin: top left;
+    transform: rotate(-20deg);
+    border-radius: 3px;
+}
+
+.scissor-half-1 .handle-ring {
+    position: absolute;
+    top: 160px;
+    left: 38px;
+    width: 20px;
+    height: 30px;
+    border: 4px solid #0f172a;
+    border-radius: 40% 60% 50% 50%;
+    background: transparent;
+    transform: rotate(-15deg);
+}
+
+.scissor-half-1 .finger-tang {
+    position: absolute;
+    top: 185px;
+    left: 55px;
+    width: 10px;
+    height: 4px;
+    background-color: #0f172a;
+    border-radius: 0 4px 4px 0;
+    transform: rotate(25deg);
+}
+
+/* Nửa 2: Màu Xám đậm (Slate-700) tạo độ sâu */
+.scissor-half-2 {
+    z-index: 1;
+}
+
+.scissor-half-2 .blade {
+    position: absolute;
+    top: 25px;
+    left: 30px;
+    width: 9px;
+    height: 105px;
+    background-color: #334155;
+    border-radius: 0 100% 0 0;
+    box-shadow: inset 1px 0 0 #475569;
+}
+
+.scissor-half-2 .pivot-circle {
+    position: absolute;
+    top: 122px;
+    left: 22px;
+    width: 16px;
+    height: 16px;
+    background-color: #334155;
+    border-radius: 50%;
+}
+
+.scissor-half-2 .handle-stem {
+    position: absolute;
+    top: 130px;
+    right: 30px;
+    width: 6px;
+    height: 35px;
+    background-color: #334155;
+    transform-origin: top right;
+    transform: rotate(10deg);
+    border-radius: 3px;
+}
+
+.scissor-half-2 .handle-ring {
+    position: absolute;
+    top: 160px;
+    right: 30px;
+    width: 20px;
+    height: 32px;
+    border: 4px solid #334155;
+    border-radius: 50% 50% 40% 60%;
+    background: transparent;
+    transform: rotate(5deg);
+}
+
+.scissor-half-2 .bumper {
+    position: absolute;
+    top: 175px;
+    right: 27px;
+    width: 4px;
+    height: 4px;
+    background-color: #cbd5e1;
+    border-radius: 2px;
+}
+
+/* Ốc vít */
+.screw {
+    position: absolute;
+    top: 128px;
+    left: 28px;
+    width: 4px;
+    height: 4px;
+    background-color: #94a3b8;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.is-normal-cutting .scissor-half-1 {
+    animation: cutLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.is-normal-cutting .scissor-half-2 {
+    animation: cutRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes cutLeft {
+
+    0%,
+    100% {
+        transform: rotate(-8deg);
+    }
+
+    50% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes cutRight {
+
+    0%,
+    100% {
+        transform: rotate(8deg);
+    }
+
+    50% {
+        transform: rotate(0deg);
+    }
+}
+
+.is-preparing .scissor-half-1 {
+    transform: rotate(-25deg);
+}
+
+.is-preparing .scissor-half-2 {
+    transform: rotate(25deg);
+}
+
+.is-snapping .scissor-half-1 {
+    transform: rotate(0deg);
+    transition: transform 0.08s cubic-bezier(1, 0, 0.5, 1);
+}
+
+.is-snapping .scissor-half-2 {
+    transform: rotate(0deg);
+    transition: transform 0.08s cubic-bezier(1, 0, 0.5, 1);
+}
+
+.page-split-active .panel-top {
+    transform: translate(30cqw, -30cqw);
+    opacity: 0;
+}
+
+.page-split-active .panel-bottom {
+    transform: translate(-30cqw, 30cqw);
+    opacity: 0;
+}
+
+.page-split-active .scissors-wrapper {
+    opacity: 0;
+}
+
+/* Chữ hiển thị thành màu Đen */
+.minimal-text {
+    position: absolute;
+    bottom: 8vh;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #0f172a;
+    letter-spacing: 0.3em;
+    font-weight: 800;
+    font-size: 0.75rem;
+    z-index: 10;
+}
+
+.app-footer {
+            padding: 40px 20px;
+            text-align: center;
+            background: #fafafa;
+        }
+
+        .footer-line {
+            height: 1px;
+            width: 40px;
+            background: #e2e8f0;
+            margin: 0 auto 16px;
+        }
+
+        .credits-text {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #cbd5e1;
+        }
+
+        
